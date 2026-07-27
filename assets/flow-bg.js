@@ -162,7 +162,7 @@ const SimplexNoise = (function() {
 
   function renderFrame() {
     // Fade previous frame with a dark overlay — creates the trailing effect
-    ctx.fillStyle = 'rgba(30, 54, 44, 0.05)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, W, H);
 
     time += 0.0008;
