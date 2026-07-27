@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-27T00:00:00Z",
+  "title": "Design System: Mustafa Deari Ahmed — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "bg": { "role": "neutral", "displayName": "Void Black", "canonical": "#0d1117", "tonalRamp": ["#050708", "#0a0d11", "#0d1117", "#161b22", "#30363d", "#8b949e", "#c9d1d9", "#f0f6fc"] },
+      "panel": { "role": "neutral", "displayName": "Raised Panel", "canonical": "#161b22", "tonalRamp": ["#08090b", "#101318", "#161b22", "#1e242c", "#30363d", "#8b949e", "#c9d1d9", "#f0f6fc"] },
+      "border": { "role": "neutral", "displayName": "Hairline Border", "canonical": "#30363d", "tonalRamp": ["#0d1117", "#161b22", "#22262c", "#30363d", "#454c56", "#5c6470", "#8b949e", "#c9d1d9"] },
+      "accent": { "role": "primary", "displayName": "Terminal Mint", "canonical": "#4fd1a5", "tonalRamp": ["#0f3327", "#164a37", "#1f6650", "#298568", "#39a37e", "#4fd1a5", "#82e0c1", "#c3f0dd"] },
+      "accent-dim": { "role": "primary", "displayName": "Terminal Mint, Dimmed", "canonical": "#39a37e", "tonalRamp": ["#0b261c", "#123626", "#1a4d38", "#256b4d", "#39a37e", "#4fd1a5", "#82e0c1", "#c3f0dd"] },
+      "amber": { "role": "secondary", "displayName": "Signal Amber", "canonical": "#d4a72c", "tonalRamp": ["#3a3120", "#4d3f1e", "#6b571f", "#93791f", "#b89325", "#d4a72c", "#e3c565", "#f2e0a3"] },
+      "text": { "role": "neutral", "displayName": "Console Text", "canonical": "#c9d1d9", "tonalRamp": ["#0d1117", "#30363d", "#565d66", "#8b949e", "#a8b0b8", "#c9d1d9", "#dde2e7", "#f0f6fc"] },
+      "text-dim": { "role": "neutral", "displayName": "Muted Console Text", "canonical": "#8b949e", "tonalRamp": ["#0d1117", "#282c33", "#454c56", "#5c6470", "#727a85", "#8b949e", "#aab2bb", "#c9d1d9"] },
+      "white": { "role": "neutral", "displayName": "Bright White", "canonical": "#f0f6fc", "tonalRamp": ["#8b949e", "#a8b0b8", "#c9d1d9", "#dde2e7", "#e8edf2", "#f0f6fc", "#f5f9fc", "#ffffff"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The h1 name on the home hero and sub-page section headers." },
+      "title": { "displayName": "Title", "purpose": "Card titles, service titles, and the brand mark — the highest-emphasis line inside a component." },
+      "body": { "displayName": "Body", "purpose": "Default paragraph copy; a compact 13.5px variant is used for card/service descriptions." },
+      "label": { "displayName": "Label", "purpose": "Section titles, nav links, the terminal prompt, footnote, and status-tag pills." }
+    },
+    "shadows": [
+      { "name": "card-hover-lift", "value": "0 12px 28px rgba(0,0,0,.35), 0 0 0 1px rgba(79,209,165,.12)", "purpose": "The only shadow in the system; applied to cards/service tiles on hover alongside a -5px lift." }
+    ],
+    "motion": [
+      { "name": "hover-standard", "value": "ease .15s-.2s", "purpose": "Default transition speed for button/card hover, nav underline, and color transitions." },
+      { "name": "reveal-on-scroll", "value": "opacity .6s ease, transform .6s ease", "purpose": "Fade+translateY(18px→0) entrance for content blocks as they enter the viewport, staggered up to 240ms." },
+      { "name": "typewriter", "value": "40ms per character, staggered 250ms per element", "purpose": "Hero prompt and name type themselves in on page load." },
+      { "name": "cursor-blink", "value": "1s step-end infinite", "purpose": "Blinking block cursor after the hero h1." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "600px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main call-to-action, e.g. \"View Projects\".",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">View Projects</a>",
+      "css": ".ds-btn-primary { display: inline-block; position: relative; overflow: hidden; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; border: 1px solid #39a37e; color: #4fd1a5; padding: 9px 16px; font-size: 13px; border-radius: 4px; text-decoration: none; transition: all .15s ease, transform .15s ease; } .ds-btn-primary:hover { background: #39a37e; color: #0d1117; transform: translateY(-2px); } .ds-btn-primary:focus-visible { outline: 2px solid #4fd1a5; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary call-to-action, e.g. \"Contact Me\".",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\">Contact Me</a>",
+      "css": ".ds-btn-ghost { display: inline-block; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; border: 1px solid #30363d; color: #8b949e; padding: 9px 16px; font-size: 13px; border-radius: 4px; text-decoration: none; transition: all .15s ease; } .ds-btn-ghost:hover { border-color: #8b949e; color: #c9d1d9; } .ds-btn-ghost:focus-visible { outline: 2px solid #4fd1a5; outline-offset: 2px; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Service tile or project card — flat at rest, lifts with a soft mint-tinted shadow on hover.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Website Development</div><p class=\"ds-card-desc\">Design and development of websites, including multilingual sites.</p></div>",
+      "css": ".ds-card { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 20px; transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; } .ds-card:hover { border-color: #39a37e; transform: translateY(-5px); box-shadow: 0 12px 28px rgba(0,0,0,.35), 0 0 0 1px rgba(79,209,165,.12); } .ds-card-title { color: #f0f6fc; font-size: 15px; font-weight: bold; margin: 0 0 8px 0; } .ds-card-title::before { content: '\\25b8 '; color: #39a37e; } .ds-card-desc { color: #8b949e; margin: 0; font-size: 13.5px; }"
+    },
+    {
+      "name": "Status Tag Pill",
+      "kind": "chip",
+      "refersTo": "tag-pill",
+      "description": "Project status badge (live / shipped / completed / design).",
+      "html": "<span class=\"ds-tag-pill\">live</span>",
+      "css": ".ds-tag-pill { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; color: #d4a72c; font-size: 11px; border: 1px solid #3a3120; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Top nav link with a left-growing underline on hover/active.",
+      "html": "<a class=\"ds-nav-link ds-nav-link--active\" href=\"#\">Home</a>",
+      "css": ".ds-nav-link { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; color: #8b949e; font-size: 13px; position: relative; text-decoration: none; padding-bottom: 2px; transition: color .15s ease; } .ds-nav-link::after { content: ''; position: absolute; left: 0; right: 100%; bottom: -3px; height: 1px; background: #4fd1a5; transition: right .2s ease; } .ds-nav-link:hover, .ds-nav-link--active { color: #4fd1a5; } .ds-nav-link:hover::after, .ds-nav-link--active::after { right: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Night Build",
+    "overview": "The site reads as a single terminal session left running late at night: a whoami prompt, // comments, a blinking text cursor, monospace type throughout. It is precise and quietly confident — the craft is meant to speak for itself rather than announce itself, so there is no marketing chrome, no gradient hero illustration, no glassmorphism. Yet it is not cold: the near-black background is offset by a warm amber secondary and two slow-drifting blurred color blobs that give the dark canvas ambient glow, like monitor bloom in a dark room, rather than stark cyberpunk starkness. Everything, including headings, is set in the same monospace stack. Hierarchy comes from size, weight, and color, not from switching typefaces — this is deliberate and load-bearing, not an oversight to \"fix\" with a display font.",
+    "keyCharacteristics": [
+      "One font family for the entire system; hierarchy is size/weight/color only.",
+      "Flat surfaces at rest; depth and glow appear only on hover/interaction.",
+      "A single accent (mint) carries all interactive/primary meaning; amber is reserved for status-like content (role title, project tags).",
+      "Ambient, not decorative: background blobs and the scanline overlay create atmosphere without competing with content.",
+      "Motion is purposeful and fully disabled under prefers-reduced-motion (typewriter, cursor blink, blob drift, reveal-on-scroll, hover lifts)."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Terminal Mint is the only color that means \"interactive.\" Signal Amber marks status/metadata and must never double as a link, button, or active-state color — mixing the two collapses the system's only semantic distinction.", "section": "colors" },
+      { "name": "The One Font Rule", "body": "No second typeface is ever introduced for \"elegance\" or contrast. If a new element needs more visual weight, it gets a larger size or Bright White, not a different font.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Nothing casts a shadow at rest. Shadow is exclusively a hover/interaction signal, never a static styling choice — a component that needs to look \"important\" gets a border or Bright White text, not a permanent shadow.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the entire system on one monospace font family; introduce new hierarchy through size, weight, or the three neutral text colors.",
+      "Do keep cards and panels flat at rest and reserve shadow for the hover-lift state only.",
+      "Do use Signal Amber strictly for status/metadata (role line, project tags) and never for links, buttons, or other interactive elements.",
+      "Do respect prefers-reduced-motion on every animation (typewriter, cursor blink, blob drift, reveal-on-scroll, hover transforms) — this is already implemented site-wide and must be preserved in any new component.",
+      "Do keep the content column narrow (820px max-width) — this is a reading-width personal site, not a wide marketing layout."
+    ],
+    "donts": [
+      "Don't introduce a second (serif/display) typeface for \"polish\" — it breaks the terminal illusion the whole system is built on.",
+      "Don't add gradients, glassmorphism, or drop shadows at rest — the only permitted shadow is the single hover-lift value documented in Elevation & Depth.",
+      "Don't use rounded/pill shapes beyond the documented radii (4px/6px/10px/50%) or introduce heavier, more playful corner rounding.",
+      "Don't invent additional accent colors — Terminal Mint and Signal Amber are the only two, each with a fixed, non-overlapping role."
+    ]
+  }
+}
