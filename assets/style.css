@@ -76,33 +76,13 @@ nav.links a:hover::after{right:0;}
 nav.links a.active{color:var(--accent);}
 nav.links a.active::after{right:0;}
 
-.blob{
+#bg-canvas{
   position:fixed;
-  border-radius:50%;
-  filter:blur(90px);
-  opacity:.28;
-  pointer-events:none;
+  inset:0;
+  width:100vw;
+  height:100vh;
   z-index:0;
-}
-.blob1{
-  width:420px;height:420px;
-  background:radial-gradient(circle at 30% 30%, var(--accent), transparent 70%);
-  top:-140px;left:-120px;
-  animation:drift1 22s ease-in-out infinite;
-}
-.blob2{
-  width:380px;height:380px;
-  background:radial-gradient(circle at 70% 70%, var(--amber), transparent 70%);
-  bottom:-150px;right:-110px;
-  animation:drift2 26s ease-in-out infinite;
-}
-@keyframes drift1{
-  0%,100%{transform:translate(0,0) scale(1);}
-  50%{transform:translate(60px,40px) scale(1.1);}
-}
-@keyframes drift2{
-  0%,100%{transform:translate(0,0) scale(1);}
-  50%{transform:translate(-50px,-30px) scale(1.08);}
+  filter:hue-rotate(90deg) saturate(1.2);
 }
 
 main,footer{position:relative;z-index:1;}
@@ -246,12 +226,11 @@ footer{padding:48px 0 64px;}
 @media (max-width:600px){
   nav.links a{margin-inline-end:14px;font-size:12px;}
   section{padding:44px 0;}
-  .blob{opacity:.18;}
 }
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto;}
-  .blob,.brand .dot,h1 .cursor{animation:none;}
+  .brand .dot,h1 .cursor{animation:none;}
   .reveal{opacity:1;transform:none;transition:none;}
   .btn:hover{transform:none;}
   .service-card:hover,.card:hover{transform:none;}
