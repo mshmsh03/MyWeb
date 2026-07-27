@@ -142,9 +142,9 @@ const SimplexNoise = (function() {
   // Fewer particles on narrow / lower-power screens
   const PARTICLE_COUNT = window.innerWidth < 700 ? 1000 : 2200;
   const NOISE_SCALE = 0.0025;
-  const SPEED = 1.1;
-  const MOUSE_RADIUS = 150;
-  const MOUSE_FORCE = 2.2;
+  const SPEED = 0.7;
+  const MOUSE_RADIUS = 130;
+  const MOUSE_FORCE = 4;
 
   const particles = [];
   function createParticle() {
@@ -162,7 +162,7 @@ const SimplexNoise = (function() {
 
   function renderFrame() {
     // Fade previous frame with a dark overlay — creates the trailing effect
-    ctx.fillStyle = 'rgba(13, 17, 23, 0.04)';
+    ctx.fillStyle = 'rgba(30, 54, 44, 0.05)';
     ctx.fillRect(0, 0, W, H);
 
     time += 0.0008;
