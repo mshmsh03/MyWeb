@@ -87,8 +87,7 @@ nav.links a.active::after{right:0;}
 
 main,footer{position:relative;z-index:1;}
 main{display:block;}
-section{padding:64px 0;border-bottom:1px solid var(--border);}
-section:last-of-type{border-bottom:none;}
+section{padding:64px 0;}
 
 .prompt{color:var(--accent-dim);font-size:13px;margin-bottom:14px;min-height:1em;}
 
