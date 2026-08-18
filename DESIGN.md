@@ -36,6 +36,12 @@ typography:
     fontWeight: 400
     lineHeight: 1.4
     letterSpacing: "0.12em"
+  rtl-body:
+    fontFamily: "'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: 1.9
+    letterSpacing: "normal"
 rounded:
   sm: "4px"
   md: "6px"
@@ -124,6 +130,7 @@ A near-black terminal palette carrying one cool accent and one warm accent, with
 **Display Font:** SFMono-Regular, with Consolas / Liberation Mono / Menlo / Courier as fallbacks
 **Body Font:** same stack
 **Label Font:** same stack
+**Arabic / Kurdish Sorani:** Noto Sans Arabic, with Segoe UI / Tahoma as fallbacks
 
 **Character:** One monospace voice throughout, functioning as both a technical signal (this person builds software) and a hierarchy tool — size, weight, and the three neutral text colors (Console / Muted / Bright White) do all the work a second typeface would normally do.
 
@@ -133,8 +140,29 @@ A near-black terminal palette carrying one cool accent and one warm accent, with
 - **Body** (400, 15px, line-height 1.7): default paragraph text; a compact 13.5px variant is used for card/service descriptions where density matters more than reading comfort.
 - **Label** (400, 12px, letter-spacing 0.12em, uppercase where used): section titles (prefixed with `// `), nav links (13px, not uppercase), the terminal prompt line, footnote, and the 11px status-tag pills.
 
+### Right-to-left type
+
+Arabic and Kurdish Sorani are set in **Noto Sans Arabic** at line-height 1.9 —
+looser than the Latin 1.7, because a proportional face at the mono size reads
+tight. This is the one sanctioned exception to the One Font Rule, and it exists
+because there is no monospace Arabic in any system font stack: forcing the mono
+stack on those scripts produces fallback glyphs with broken letter joining,
+which is illegible rather than characterful. Noto Sans Arabic was chosen over
+the other candidates because it covers the Kurdish-specific letters (`ڕ ڵ ۆ ێ`)
+that many Arabic faces omit.
+
+The terminal voice is preserved by keeping every *machine* string in the mono
+face and LTR in all three languages — the `mustafa@portfolio` wordmark, the
+`whoami` prompt, the `//` section markers, the `/* … */` annotations in the
+About copy, email addresses, phone numbers, and URLs. The contrast between a
+proportional sentence and a monospace code fragment inside it is the point, not
+an inconsistency to flatten.
+
 ### Named Rules
-**The One Font Rule.** No second typeface is ever introduced for "elegance" or contrast. If a new element needs more visual weight, it gets a larger size or Bright White, not a different font.
+**The One Font Rule.** No second typeface is introduced for "elegance" or
+contrast. Hierarchy comes from size, weight, and the three neutral text colors.
+The single exception is script coverage, above: a language the mono stack
+cannot render gets a face that can, and nothing else does.
 
 ## Layout
 
@@ -191,3 +219,30 @@ The hero's `whoami` line and the blinking block cursor after the h1 are the syst
 - **Don't** add gradients, glassmorphism, or drop shadows at rest — the only permitted shadow is the single hover-lift value documented in Elevation & Depth.
 - **Don't** use rounded/pill shapes beyond the documented radii (`4px`/`6px`/`10px`/`50%`) or introduce heavier, more playful corner rounding.
 - **Don't** invent additional accent colors — Terminal Mint and Signal Amber are the only two, each with a fixed, non-overlapping role.
+
+## Where things live (post-Next.js migration, 2026-08-19)
+| Concern | File |
+|---|---|
+| Colour, type, motion tokens; base element styles; scanline overlay | `app/globals.css` |
+| Section/card/button/list vocabulary | `components/sections.jsx` |
+| Header, Footer, Typewriter, FlowBackground | `components/*.jsx` |
+| Nav labels, contact details, page titles | `lib/site-data.js` |
+| Page content, one file per page per language | `app/[lang]/_content/` |
+| Deployment, basePath, URLs | `DEPLOY.md` |
+
+**Motion is now gated centrally.** `html[data-motion="on"]` is set before first
+paint only when JS runs *and* the visitor has not asked for reduced motion;
+every animation in the system hangs off it, and `components/Reveal.jsx` decides
+only *when* an element enters, never *what* it does. No-JS, failed hydration,
+and `prefers-reduced-motion` all resolve to the same state: the page fully
+rendered, with no animation.
+
+That closes a gap the pre-Next site had — `flow-bg.js` ran an unconditional
+`requestAnimationFrame` loop with no reduced-motion check, contradicting the
+site-wide rule stated above. `components/FlowBackground.jsx` now simply does not
+load the script when the preference is set.
+
+**The background is a flow field, not blobs.** The "two slow-drifting blurred
+color blobs" described in the Overview above were replaced by the particle flow
+field in `public/assets/flow-bg.js` (2026-07-27). The ambient-glow intent is the
+same; the mechanism is not.
