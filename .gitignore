@@ -1,0 +1,7 @@
+node_modules/
+.next/
+out/
+
+# Per-machine Claude Code permission grants — despite living in the repo,
+# these are personal to whoever is running the tool, not project config.
+.claude/settings.local.json

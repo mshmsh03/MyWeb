@@ -1,0 +1,269 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-mono);
+    --font-sans: var(--font-mono);
+    --font-mono: var(--font-mono);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* ---------- Terminal palette ----------
+   The GitHub-dark family the site has always used, named for what each colour
+   does rather than what it is: `line` is every rule and border, `dim` is
+   secondary text, `accent` is the single green that marks anything live or
+   interactive, `amber` is reserved for status (the role line, project tags).
+   Two accents, never three. */
+@theme {
+    --color-bg: #0d1117;
+    --color-panel: #161b22;
+    --color-line: #30363d;
+    --color-accent: #4fd1a5;
+    --color-accent-dim: #39a37e;
+    --color-amber: #d4a72c;
+    --color-fg: #c9d1d9;
+    --color-fg-dim: #8b949e;
+    --color-bright: #f0f6fc;
+    --shadow-lift: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(79, 209, 165, 0.12);
+}
+
+/* ---------- Motion tokens ----------
+   Shared with the sibling sites: one easing family, exponential deceleration.
+   `static` keeps these emitted so the raw CSS in the motion layer below can
+   reference them by var(). Overriding Tailwind's two transition defaults
+   re-times every transition-* utility on the site at once. */
+@theme static {
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --default-transition-duration: 200ms;
+    --default-transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root {
+    --background: #0d1117;
+    --foreground: #c9d1d9;
+    --card: #161b22;
+    --card-foreground: #c9d1d9;
+    --popover: #161b22;
+    --popover-foreground: #c9d1d9;
+    --primary: #4fd1a5;
+    --primary-foreground: #0d1117;
+    --secondary: #161b22;
+    --secondary-foreground: #c9d1d9;
+    --muted: #161b22;
+    --muted-foreground: #8b949e;
+    --accent: #39a37e;
+    --accent-foreground: #0d1117;
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: #30363d;
+    --input: #30363d;
+    --ring: #4fd1a5;
+    --radius: 0.375rem;
+
+    /* The identity is a terminal, so the Latin face is the system monospace
+       stack — no webfont, nothing to download, and it renders as whatever
+       "code" looks like on the reader's own machine. */
+    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    /* Arabic and Kurdish Sorani have no equivalent system monospace, and
+       forcing one produces fallback glyphs with broken joining. Noto Sans
+       Arabic covers both scripts, including the Kurdish-specific letters
+       (ڕ ڵ ۆ ێ) that many Arabic faces omit. */
+    --font-rtl: 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-mono;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    @apply bg-bg text-fg;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  ::selection {
+    background: var(--color-accent-dim);
+    color: var(--color-bg);
+  }
+  a {
+    @apply text-accent;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  h1 {
+    @apply text-bright;
+    margin: 0 0 8px;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.3;
+  }
+
+  /* RTL: the mono stack has no Arabic, so both RTL languages switch to Noto
+     Sans Arabic and get slightly looser leading — a proportional face at the
+     mono size reads tight. Code fragments keep the mono face on purpose (see
+     .mono below); that contrast is the point, not an oversight. */
+  [dir="rtl"] {
+    font-family: var(--font-rtl);
+    line-height: 1.9;
+  }
+  [dir="rtl"] h1 {
+    font-family: var(--font-rtl);
+    line-height: 1.5;
+  }
+}
+
+@layer components {
+  .wrap {
+    @apply mx-auto max-w-[820px] px-6;
+  }
+  /* Anything that is literally code or a machine string — the wordmark, the
+     shell prompt, the C-style annotations in the About copy, an email address
+     — stays in the mono face, and .ltr-fixed additionally keeps it LTR so the
+     bidi algorithm cannot reorder it inside an Arabic or Kurdish paragraph. */
+  .mono {
+    font-family: var(--font-mono);
+  }
+  .ltr-fixed {
+    unicode-bidi: isolate;
+    direction: ltr;
+    display: inline-block;
+    font-family: var(--font-mono);
+  }
+}
+
+/* The CRT scanline wash. One fixed, non-interactive layer over everything;
+   at 0.8% white on a 2px pitch it is felt rather than seen. */
+.scanlines::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.008) 0px,
+    rgba(255, 255, 255, 0.008) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOTION
+
+   Same machinery as the sibling sites — html[data-motion="on"], set before
+   first paint only when JS runs AND the visitor has not asked for reduced
+   motion, with components/Reveal.jsx deciding *when* and this layer deciding
+   *what*. No JS, stalled hydration, and prefers-reduced-motion all resolve to
+   the same safe state: the page fully rendered, with no animation.
+
+   The grammar is this site's own, though: a terminal does not slide things
+   around, it prints them. So the vocabulary is a caret that blinks, text that
+   types, and blocks that come up from below as if scrolled into the buffer.
+
+   Two vars tune everything below, inheritable so a parent can set them:
+     --m-delay  when it starts
+     --m-dur    how long it runs
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes m-register {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes m-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* The caret at the end of the typed line. */
+@keyframes m-blink {
+  50% { opacity: 0; }
+}
+
+/* The @ in the wordmark, breathing like a connection indicator. */
+@keyframes m-pulse {
+  0%, 100% { opacity: 1; text-shadow: 0 0 0 rgba(79, 209, 165, 0); }
+  50%      { opacity: 0.7; text-shadow: 0 0 8px rgba(79, 209, 165, 0.8); }
+}
+
+@layer components {
+  [data-motion='on'] .m-register,
+  [data-motion='on'] .m-fade {
+    animation-delay: var(--m-delay, 0ms);
+    animation-duration: var(--m-dur, 600ms);
+    animation-timing-function: var(--ease-out-quart);
+    animation-fill-mode: both;
+  }
+  [data-motion='on'] .m-register { animation-name: m-register; }
+  [data-motion='on'] .m-fade     { animation-name: m-fade; }
+
+  [data-motion='on'] .m-caret {
+    animation: m-blink 1s step-end infinite;
+  }
+  [data-motion='on'] .m-pulse {
+    animation: m-pulse 2.4s ease-in-out infinite;
+  }
+
+  /* ---------- Scroll reveals ---------- */
+  [data-motion='on'] [data-reveal]:not([data-reveal='in']),
+  [data-motion='on'] [data-reveal-group]:not([data-reveal-group='in']) > * {
+    opacity: 0;
+  }
+
+  [data-motion='on'] [data-reveal='in'] {
+    animation-delay: var(--m-delay, 0ms);
+    animation-duration: var(--m-dur, 600ms);
+    animation-timing-function: var(--ease-out-quart);
+    animation-fill-mode: both;
+  }
+  [data-motion='on'] [data-reveal='in'][data-variant='register'] { animation-name: m-register; }
+  [data-motion='on'] [data-reveal='in'][data-variant='fade']     { animation-name: m-fade; }
+  /* `wipe` exists in the shared Reveal API but has no terminal equivalent, so
+     it resolves to the same rise rather than to nothing. */
+  [data-motion='on'] [data-reveal='in'][data-variant='wipe']     { animation-name: m-register; }
+
+  /* A stack of cards is a list, so it may arrive as one. Capped at four steps:
+     past that every remaining sibling shares the last delay, so a long list
+     still finishes in 240ms rather than dripping. */
+  [data-motion='on'] [data-reveal-group='in'] > * {
+    animation: m-register var(--m-dur, 600ms) var(--ease-out-quart) both;
+    animation-delay: calc(var(--m-delay, 0ms) + 240ms);
+  }
+  [data-motion='on'] [data-reveal-group='in'] > *:nth-child(1) { animation-delay: calc(var(--m-delay, 0ms) + 0ms); }
+  [data-motion='on'] [data-reveal-group='in'] > *:nth-child(2) { animation-delay: calc(var(--m-delay, 0ms) + 80ms); }
+  [data-motion='on'] [data-reveal-group='in'] > *:nth-child(3) { animation-delay: calc(var(--m-delay, 0ms) + 160ms); }
+  [data-motion='on'] [data-reveal-group='in'] > *:nth-child(4) { animation-delay: calc(var(--m-delay, 0ms) + 240ms); }
+}
