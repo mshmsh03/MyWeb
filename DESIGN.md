@@ -101,7 +101,7 @@ Everything, including headings, is set in the same monospace stack. Hierarchy co
 - Flat surfaces at rest; depth and glow appear only on hover/interaction.
 - A single accent (mint) carries all interactive/primary meaning; amber is reserved for status-like content (role title, project tags).
 - Ambient, not decorative: background blobs and the scanline overlay create atmosphere without competing with content.
-- Motion is purposeful and fully disabled under `prefers-reduced-motion` (typewriter, cursor blink, blob drift, reveal-on-scroll, hover lifts).
+- Motion is purposeful and disabled under `prefers-reduced-motion` (typewriter, cursor blink, reveal-on-scroll, hover lifts). The one exception is the ambient flow-field background, which always runs — see the Motion section for why.
 
 ## Colors
 
@@ -211,7 +211,7 @@ The hero's `whoami` line and the blinking block cursor after the h1 are the syst
 - **Do** keep the entire system on one monospace font family; introduce new hierarchy through size, weight, or the three neutral text colors.
 - **Do** keep cards and panels flat at rest and reserve shadow for the hover-lift state only.
 - **Do** use `Signal Amber` strictly for status/metadata (role line, project tags) and never for links, buttons, or other interactive elements.
-- **Do** respect `prefers-reduced-motion` on every animation (typewriter, cursor blink, blob drift, reveal-on-scroll, hover transforms) — this is already implemented site-wide and must be preserved in any new component.
+- **Do** respect `prefers-reduced-motion` on every animation (typewriter, cursor blink, reveal-on-scroll, hover transforms) — implemented site-wide and must be preserved in any new component. The ambient background is the one documented exception; do not extend it to anything else.
 - **Do** keep the content column narrow (`820px` max-width) — this is a reading-width personal site, not a wide marketing layout.
 
 ### Don't:
@@ -237,10 +237,23 @@ only *when* an element enters, never *what* it does. No-JS, failed hydration,
 and `prefers-reduced-motion` all resolve to the same state: the page fully
 rendered, with no animation.
 
-That closes a gap the pre-Next site had — `flow-bg.js` ran an unconditional
-`requestAnimationFrame` loop with no reduced-motion check, contradicting the
-site-wide rule stated above. `components/FlowBackground.jsx` now simply does not
-load the script when the preference is set.
+**One deliberate exception: the flow-field background always animates.**
+`components/FlowBackground.jsx` loads `flow-bg.js` unconditionally, outside the
+`data-motion` switch. This has been reverted twice by well-meaning passes that
+read it as a bug; it is not one.
+
+The reasoning: reduced motion exists to suppress motion that disorients — things
+that enter, exit, track the cursor's focus, or move the reader's place on the
+page. This is ambient wallpaper. It drifts slowly at low contrast behind an
+opaque content column, and nothing about the page's layout or reading position
+depends on it. Gating it does not produce a calmer page, it produces a dead flat
+one — and the site owner's own machine has Windows animations off, so gating it
+means *he* never sees his own background. He has asked for it twice.
+
+Everything else — typewriter, caret blink, scroll reveals, hover lifts — remains
+fully gated under `prefers-reduced-motion`. If you are tempted to make this
+consistent with the rest, don't; change the words here first and get the owner to
+agree.
 
 **The background is a flow field, not blobs.** The "two slow-drifting blurred
 color blobs" described in the Overview above were replaced by the particle flow

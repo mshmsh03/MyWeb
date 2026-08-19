@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { asset } from '@/lib/site-data';
 
@@ -10,29 +9,18 @@ import { asset } from '@/lib/site-data';
 // pausing, so it is loaded as a plain script rather than rewritten as a
 // component — React has nothing to add to it.
 //
-// It is gated on the same html[data-motion] switch as everything else. The
-// script itself has no prefers-reduced-motion check and runs an unconditional
-// requestAnimationFrame loop, so the only way to honour the preference — which
-// DESIGN.md commits to site-wide — is to not load it at all. Not loading it
-// also saves the download and the loop for anyone who asked for stillness.
+// DELIBERATE EXCEPTION to the site-wide prefers-reduced-motion rule: this one
+// always runs. Do not "fix" it — it has been reverted twice already.
 //
-// The canvas element still renders either way: it is the ground the content
-// sits above, and leaving it out would shift nothing but would make the
-// z-index stack differ between the two states.
+// Everything else on the site (typewriter, caret, scroll reveals, hover lifts)
+// still switches off under reduced motion via html[data-motion]. This does not,
+// because it is ambient wallpaper rather than an entrance: nothing enters,
+// exits, moves under the cursor's focus, or shifts the reading position. The
+// drift is slow and low-contrast, sitting behind an opaque content column.
+// Gating it produced a dead flat background, which is a worse page for the
+// owner — whose own machine has Windows animations off — than a slow drift is
+// for a reduced-motion visitor. Owner's call, made twice; see DESIGN.md.
 export default function FlowBackground() {
-  const [animate, setAnimate] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setAnimate(!mq.matches);
-    sync();
-    // Turning the preference on mid-session cannot unload a running script, so
-    // this only ever takes effect on the next page load — but it does mean a
-    // visitor who turns it *off* gets the background without a reload.
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
-  }, []);
-
   return (
     <>
       <canvas
@@ -42,7 +30,7 @@ export default function FlowBackground() {
       />
       {/* lazyOnload: it is decoration, and must never compete with the content
           for the first paint. */}
-      {animate ? <Script src={asset('/assets/flow-bg.js')} strategy="lazyOnload" /> : null}
+      <Script src={asset('/assets/flow-bg.js')} strategy="lazyOnload" />
     </>
   );
 }
