@@ -1,0 +1,5 @@
+# Normalise line endings on the way into the repo. Without this, git on
+# Windows warns "LF will be replaced by CRLF" on every file it touches, and a
+# file rewritten by a tool that emits LF shows up as a whole-file diff.
+# Stored as LF, checked out as LF everywhere — the editors here all cope.
+* text=auto eol=lf

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mshmsh03.github.io/MyWeb/sitemap.xml
