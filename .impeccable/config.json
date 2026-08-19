@@ -1,0 +1,50 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font-size",
+        "value": "13px",
+        "createdAt": "2026-08-18T23:03:00.760Z",
+        "reason": "DESIGN.md Typography > Hierarchy documents this step (nav 13px, card/service descriptions 13.5px, status pills 11px, labels 12px, card titles 15-16px); the frontmatter ramp only lists four of them"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "13.5px",
+        "createdAt": "2026-08-18T23:03:00.872Z",
+        "reason": "DESIGN.md Typography > Hierarchy documents this step (nav 13px, card/service descriptions 13.5px, status pills 11px, labels 12px, card titles 15-16px); the frontmatter ramp only lists four of them"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "11px",
+        "createdAt": "2026-08-18T23:03:00.986Z",
+        "reason": "DESIGN.md Typography > Hierarchy documents this step (nav 13px, card/service descriptions 13.5px, status pills 11px, labels 12px, card titles 15-16px); the frontmatter ramp only lists four of them"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "12px",
+        "createdAt": "2026-08-18T23:03:01.094Z",
+        "reason": "DESIGN.md Typography > Hierarchy documents this step (nav 13px, card/service descriptions 13.5px, status pills 11px, labels 12px, card titles 15-16px); the frontmatter ramp only lists four of them"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "12.5px",
+        "createdAt": "2026-08-18T23:03:01.220Z",
+        "reason": "DESIGN.md Typography > Hierarchy documents this step (nav 13px, card/service descriptions 13.5px, status pills 11px, labels 12px, card titles 15-16px); the frontmatter ramp only lists four of them"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "16px",
+        "createdAt": "2026-08-18T23:03:01.333Z",
+        "reason": "DESIGN.md Typography > Hierarchy documents this step (nav 13px, card/service descriptions 13.5px, status pills 11px, labels 12px, card titles 15-16px); the frontmatter ramp only lists four of them"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "noto sans arabic",
+        "createdAt": "2026-08-18T23:04:39.759Z",
+        "reason": "Now documented in DESIGN.md Typography > Right-to-left type as the sanctioned exception to the One Font Rule: no system monospace covers Arabic or Kurdish Sorani"
+      }
+    ]
+  }
+}
