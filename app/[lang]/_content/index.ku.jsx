@@ -1,5 +1,5 @@
-import { NAME } from '../../../lib/site-data';
-import Typewriter from '../../../components/Typewriter';
+import { NAME, pagePath } from '@/lib/site-data';
+import Typewriter from '@/components/Typewriter';
 import {
   Button,
   ButtonRow,
@@ -11,7 +11,11 @@ import {
   ServiceCard,
   ServicesGrid,
   Tagline,
-} from '../../../components/sections';
+} from '@/components/sections';
+
+// The route shape (which segments, where the trailing slash goes) is
+// pagePath's business, not the copy's — this file only says *which* page.
+const LANG = 'ku';
 
 export default function IndexKu() {
   return (
@@ -30,8 +34,8 @@ export default function IndexKu() {
           خوێندکاری ئەندازیاری کۆمپیوتەرم بە ئەزموونی کردەیی لە پەرەپێدانی نەرمەکاڵا و سیستەمی ڕەقەکاڵادا.
         </Tagline>
         <ButtonRow>
-          <Button href="/ku/projects/">پڕۆژەکان ببینە</Button>
-          <Button href="/ku/contact/" tone="ghost">
+          <Button href={pagePath(LANG, 'projects')}>پڕۆژەکان ببینە</Button>
+          <Button href={pagePath(LANG, 'contact')} tone="ghost">
             پەیوەندیم پێوە بکە
           </Button>
         </ButtonRow>
@@ -52,7 +56,7 @@ export default function IndexKu() {
           </ServiceCard>
         </ServicesGrid>
         <CtaRow text="حەز دەکەیت پێکەوە کار بکەین؟ پەیوەندیم پێوە بکە.">
-          <Button href="/ku/contact/">پەیوەندیم پێوە بکە</Button>
+          <Button href={pagePath(LANG, 'contact')}>پەیوەندیم پێوە بکە</Button>
         </CtaRow>
       </Section>
     </>

@@ -1,4 +1,4 @@
-import { CardStack, PageHeader, ProjectCard, Section } from '../../../components/sections';
+import { CardStack, PageHeader, ProjectCard, Section } from '@/components/sections';
 
 export default function ProjectsAr() {
   return (

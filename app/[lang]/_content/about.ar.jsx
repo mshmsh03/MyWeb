@@ -1,3 +1,4 @@
+import { pagePath } from '@/lib/site-data';
 import {
   AboutItem,
   AboutList,
@@ -5,7 +6,11 @@ import {
   CtaRow,
   PageHeader,
   Section,
-} from '../../../components/sections';
+} from '@/components/sections';
+
+// The route shape (which segments, where the trailing slash goes) is
+// pagePath's business, not the copy's — this file only says *which* page.
+const LANG = 'ar';
 
 export default function AboutAr() {
   return (
@@ -24,7 +29,7 @@ export default function AboutAr() {
           </AboutItem>
         </AboutList>
         <CtaRow text="مهتم بالعمل معًا؟ تواصل معي.">
-          <Button href="/ar/contact/">تواصل معي</Button>
+          <Button href={pagePath(LANG, 'contact')}>تواصل معي</Button>
         </CtaRow>
       </Section>
     </>

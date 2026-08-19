@@ -1,4 +1,4 @@
-import { FOOTNOTE } from '../lib/site-data';
+import { FOOTNOTE } from '@/lib/site-data';
 
 export default function Footer() {
   return (

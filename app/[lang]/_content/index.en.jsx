@@ -1,5 +1,5 @@
-import { NAME } from '../../../lib/site-data';
-import Typewriter from '../../../components/Typewriter';
+import { NAME, pagePath } from '@/lib/site-data';
+import Typewriter from '@/components/Typewriter';
 import {
   Button,
   ButtonRow,
@@ -11,7 +11,11 @@ import {
   ServiceCard,
   ServicesGrid,
   Tagline,
-} from '../../../components/sections';
+} from '@/components/sections';
+
+// The route shape (which segments, where the trailing slash goes) is
+// pagePath's business, not the copy's — this file only says *which* page.
+const LANG = 'en';
 
 export default function IndexEn() {
   return (
@@ -30,8 +34,8 @@ export default function IndexEn() {
           Computer Engineering student with hands-on experience across software development and hardware systems.
         </Tagline>
         <ButtonRow>
-          <Button href="/en/projects/">View Projects</Button>
-          <Button href="/en/contact/" tone="ghost">
+          <Button href={pagePath(LANG, 'projects')}>View Projects</Button>
+          <Button href={pagePath(LANG, 'contact')} tone="ghost">
             Contact Me
           </Button>
         </ButtonRow>
@@ -52,7 +56,7 @@ export default function IndexEn() {
           </ServiceCard>
         </ServicesGrid>
         <CtaRow text="Interested in working together? Get in touch.">
-          <Button href="/en/contact/">Contact Me</Button>
+          <Button href={pagePath(LANG, 'contact')}>Contact Me</Button>
         </CtaRow>
       </Section>
     </>
