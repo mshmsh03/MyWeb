@@ -13,7 +13,7 @@ export default function ProjectsAr() {
           >
             موقع إلكتروني مباشر ومتعدد اللغات طُوِّر لشركة إنشاءات.
           </ProjectCard>
-          <ProjectCard title="الإرادة المشرقة — موقع الشركة" tag="مُسلَّم">
+          <ProjectCard title="برايت فوليشن — موقع الشركة" tag="مُسلَّم">
             موقع إلكتروني طُوِّر لشركة هندسية.
           </ProjectCard>
           <ProjectCard title="ملف تعريفي لشركة إنشاءات" tag="مكتمل">
