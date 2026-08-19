@@ -23,7 +23,7 @@ export default function AboutEn() {
           </AboutItem>
           <AboutItem note="what I do">
             Experienced in both software and hardware: website development and deployment, hardware diagnostics
-            and repair, and local network setup for shared office devices.
+            and repair (including part replacement), and local network setup for shared office devices.
           </AboutItem>
           <AboutItem note="why">
             Motivated by understanding systems end-to-end — from website code to hardware internals — and by

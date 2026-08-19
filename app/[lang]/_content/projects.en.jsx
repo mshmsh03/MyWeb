@@ -11,9 +11,14 @@ export default function ProjectsEn() {
             tag="live"
             link={{ href: 'https://www.ellincompany.com', label: 'www.ellincompany.com' }}
           >
-            Live, multilingual website developed for a construction company.
+            Live, trilingual (English, Arabic, Kurdish) website for a construction company,
+            including full production deployment and hosting.
           </ProjectCard>
-          <ProjectCard title="Bright Volition — Company Website" tag="shipped">
+          <ProjectCard
+            title="Bright Volition — Company Website"
+            tag="shipped"
+            link={{ href: 'https://brightvolition.com', label: 'brightvolition.com' }}
+          >
             Website developed for an engineering firm.
           </ProjectCard>
           <ProjectCard title="Construction Company Portfolio" tag="completed">

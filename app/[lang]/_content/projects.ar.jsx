@@ -11,9 +11,14 @@ export default function ProjectsAr() {
             tag="مباشر"
             link={{ href: 'https://www.ellincompany.com', label: 'www.ellincompany.com' }}
           >
-            موقع إلكتروني مباشر ومتعدد اللغات طُوِّر لشركة إنشاءات.
+            موقع إلكتروني مباشر وثلاثي اللغة (الإنجليزية والعربية والكردية) لشركة إنشاءات،
+            يشمل نشرًا واستضافة إنتاجيَّين كاملين.
           </ProjectCard>
-          <ProjectCard title="برايت فوليشن — موقع الشركة" tag="مُسلَّم">
+          <ProjectCard
+            title="برايت فوليشن — موقع الشركة"
+            tag="مُسلَّم"
+            link={{ href: 'https://brightvolition.com', label: 'brightvolition.com' }}
+          >
             موقع إلكتروني طُوِّر لشركة هندسية.
           </ProjectCard>
           <ProjectCard title="ملف تعريفي لشركة إنشاءات" tag="مكتمل">
