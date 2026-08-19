@@ -13,34 +13,36 @@ export function Section({ id, className = '', children }) {
   );
 }
 
-// Every section is introduced the way a comment introduces a block of code.
-// The `//` is decoration, so it is generated rather than typed into the copy —
-// and it stays in the mono face in Arabic and Kurdish, where the label beside
-// it does not.
-export function SectionTitle({ children }) {
+// Both of the site's labels — the section headings and the subpage header —
+// are introduced the way a comment introduces a block of code. The `//` is
+// decoration, so it is generated rather than typed into the copy, and it stays
+// in the mono face in Arabic and Kurdish where the label beside it does not.
+function CommentLabel({ as: Tag = 'div', className = '', children }) {
   return (
-    <div className="mb-6 text-xs tracking-[.12em] text-fg-dim uppercase">
+    <Tag className={`text-xs tracking-[.12em] text-fg-dim uppercase ${className}`}>
       <span aria-hidden="true" className="mono text-accent-dim">
         //{' '}
       </span>
       {children}
-    </div>
+    </Tag>
   );
 }
 
+export function SectionTitle({ children }) {
+  return <CommentLabel className="mb-6">{children}</CommentLabel>;
+}
+
 // The subpage header. Deliberately just the section label — the page's real
-// title is the browser tab; repeating it as an <h1> would be the same words
-// twice on a page this short.
+// title is the browser tab; repeating it as a display <h1> would be the same
+// words twice on a page this short. It takes the body leading rather than the
+// tighter one text-xs implies, so a wrapped Arabic heading stays readable.
 export function PageHeader({ children }) {
   return (
     <section className="pt-11 pb-2 sm:pt-16">
       <div className="wrap">
-        <h1 className="m-fade text-xs tracking-[.12em] text-fg-dim uppercase" style={{ fontSize: '12px', lineHeight: 1.7 }}>
-          <span aria-hidden="true" className="mono text-accent-dim">
-            //{' '}
-          </span>
+        <CommentLabel as="h1" className="m-fade leading-[1.7]">
           {children}
-        </h1>
+        </CommentLabel>
       </div>
     </section>
   );

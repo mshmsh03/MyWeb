@@ -1,5 +1,5 @@
-import { NAME } from '../../../lib/site-data';
-import Typewriter from '../../../components/Typewriter';
+import { NAME, pagePath } from '@/lib/site-data';
+import Typewriter from '@/components/Typewriter';
 import {
   Button,
   ButtonRow,
@@ -11,7 +11,11 @@ import {
   ServiceCard,
   ServicesGrid,
   Tagline,
-} from '../../../components/sections';
+} from '@/components/sections';
+
+// The route shape (which segments, where the trailing slash goes) is
+// pagePath's business, not the copy's — this file only says *which* page.
+const LANG = 'ar';
 
 export default function IndexAr() {
   return (
@@ -28,8 +32,8 @@ export default function IndexAr() {
         <Role>طالب هندسة حاسوب — برمجيات وعتاد</Role>
         <Tagline>طالب هندسة حاسوب بخبرة عملية في تطوير البرمجيات وأنظمة العتاد.</Tagline>
         <ButtonRow>
-          <Button href="/ar/projects/">عرض المشاريع</Button>
-          <Button href="/ar/contact/" tone="ghost">
+          <Button href={pagePath(LANG, 'projects')}>عرض المشاريع</Button>
+          <Button href={pagePath(LANG, 'contact')} tone="ghost">
             تواصل معي
           </Button>
         </ButtonRow>
@@ -49,7 +53,7 @@ export default function IndexAr() {
           </ServiceCard>
         </ServicesGrid>
         <CtaRow text="مهتم بالعمل معًا؟ تواصل معي.">
-          <Button href="/ar/contact/">تواصل معي</Button>
+          <Button href={pagePath(LANG, 'contact')}>تواصل معي</Button>
         </CtaRow>
       </Section>
     </>

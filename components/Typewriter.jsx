@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
+// How long each character takes to land.
+const CHAR_MS = 40;
+
 // The hero's signature: the prompt and the name are typed out rather than
-// rendered, at 40ms a character, staggered so they read as one session.
+// rendered, one character at a time, staggered so they read as one session.
 //
 // The full text is rendered on the server and only *replaced* by the typing
 // animation once this mounts and motion is actually on — so the page is
@@ -20,12 +23,10 @@ export default function Typewriter({ text, delay = 0, caret = false, className =
     let timer;
     setShown('');
 
-    const start = setTimeout(function step() {
+    const start = setTimeout(function type() {
+      i += 1;
       setShown(text.slice(0, i));
-      if (i <= text.length) {
-        i += 1;
-        timer = setTimeout(step, 40);
-      }
+      if (i < text.length) timer = setTimeout(type, CHAR_MS);
     }, delay);
 
     return () => {

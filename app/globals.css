@@ -1,36 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-    --font-heading: var(--font-mono);
-    --font-sans: var(--font-mono);
-    --font-mono: var(--font-mono);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
-    --color-foreground: var(--foreground);
-    --color-background: var(--background);
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-}
 
 /* ---------- Terminal palette ----------
    The GitHub-dark family the site has always used, named for what each colour
@@ -49,6 +17,18 @@
     --color-fg-dim: #8b949e;
     --color-bright: #f0f6fc;
     --shadow-lift: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(79, 209, 165, 0.12);
+
+    /* The identity is a terminal, so the Latin face is the system monospace
+       stack — no webfont, nothing to download, and it renders as whatever
+       "code" looks like on the reader's own machine. */
+    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+
+    /* One radius scale off a 6px card corner. Cards and buttons take -md; the
+       rest of the scale is here so anything added later stays in step. */
+    --radius-sm: 0.225rem;
+    --radius-md: 0.3rem;
+    --radius-lg: 0.375rem;
+    --radius-xl: 0.525rem;
 }
 
 /* ---------- Motion tokens ----------
@@ -64,40 +44,17 @@
 }
 
 :root {
-    --background: #0d1117;
-    --foreground: #c9d1d9;
-    --card: #161b22;
-    --card-foreground: #c9d1d9;
-    --popover: #161b22;
-    --popover-foreground: #c9d1d9;
-    --primary: #4fd1a5;
-    --primary-foreground: #0d1117;
-    --secondary: #161b22;
-    --secondary-foreground: #c9d1d9;
-    --muted: #161b22;
-    --muted-foreground: #8b949e;
-    --accent: #39a37e;
-    --accent-foreground: #0d1117;
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: #30363d;
-    --input: #30363d;
-    --ring: #4fd1a5;
-    --radius: 0.375rem;
-
-    /* The identity is a terminal, so the Latin face is the system monospace
-       stack — no webfont, nothing to download, and it renders as whatever
-       "code" looks like on the reader's own machine. */
-    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
     /* Arabic and Kurdish Sorani have no equivalent system monospace, and
        forcing one produces fallback glyphs with broken joining. Noto Sans
        Arabic covers both scripts, including the Kurdish-specific letters
-       (ڕ ڵ ۆ ێ) that many Arabic faces omit. */
+       (ڕ ڵ ۆ ێ) that many Arabic faces omit. Not a Tailwind namespace, so it
+       lives here rather than in @theme. */
     --font-rtl: 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-line outline-accent/50;
   }
   html {
     @apply font-mono;

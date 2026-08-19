@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
-import { LANGS, SITE, asset } from '../../lib/site-data';
-import { BASE } from '../../lib/metadata';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import MotionRoot from '../../components/MotionRoot';
-import FlowBackground from '../../components/FlowBackground';
+import { LANGS, SITE, asset } from '@/lib/site-data';
+import { BASE } from '@/lib/metadata';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import MotionRoot from '@/components/MotionRoot';
+import FlowBackground from '@/components/FlowBackground';
 import '../globals.css';
 
 export const viewport = {

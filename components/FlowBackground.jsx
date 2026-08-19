@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
-import { asset } from '../lib/site-data';
+import { asset } from '@/lib/site-data';
 
 // The flow-field canvas that drifts behind the whole site. It is a large,
 // self-contained vanilla script (simplex noise plus a particle system) that

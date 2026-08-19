@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BRAND, LANGS, PAGES, SITE, pagePath } from '../lib/site-data';
+import { BRAND, LANGS, PAGES, SITE, pagePath } from '@/lib/site-data';
 
 // The header lives in the layout, not in each page, so client-side navigation
 // leaves it mounted — it reads the active page from the URL rather than taking

@@ -1,4 +1,4 @@
-import { EMAIL, PHONE_DISPLAY, PHONE_HREF } from '../../../lib/site-data';
+import { EMAIL, PHONE_DISPLAY, PHONE_HREF } from '@/lib/site-data';
 import {
   Button,
   ButtonRow,
@@ -8,7 +8,7 @@ import {
   PageHeader,
   Reveal,
   Section,
-} from '../../../components/sections';
+} from '@/components/sections';
 
 export default function ContactEn() {
   return (
