@@ -11,9 +11,14 @@ export default function ProjectsKu() {
             tag="زیندوو"
             link={{ href: 'https://www.ellincompany.com', label: 'www.ellincompany.com' }}
           >
-            ماڵپەڕێکی زیندووی فرەزمان کە بۆ کۆمپانیایەکی بیناسازی دروست کراوە.
+            ماڵپەڕێکی زیندووی سێزمان (ئینگلیزی، عەرەبی و کوردی) بۆ کۆمپانیایەکی بیناسازی،
+            لەگەڵ بڵاوکردنەوە و هۆستکردنێکی تەواوی بەرهەمهێنان.
           </ProjectCard>
-          <ProjectCard title="برایت ڤۆلیشن — ماڵپەڕی کۆمپانیا" tag="ڕادەستکراو">
+          <ProjectCard
+            title="برایت ڤۆلیشن — ماڵپەڕی کۆمپانیا"
+            tag="ڕادەستکراو"
+            link={{ href: 'https://brightvolition.com', label: 'brightvolition.com' }}
+          >
             ماڵپەڕێک کە بۆ کۆمپانیایەکی ئەندازیاری دروست کراوە.
           </ProjectCard>
           <ProjectCard title="پرۆفایلی کۆمپانیایەکی بیناسازی" tag="تەواوکراو">
