@@ -11,8 +11,8 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '/MyWeb';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Next 16 auto-writes AGENTS.md/CLAUDE.md on every dev/build run; this repo
-  // doesn't want those generated files.
+  // Next 16 auto-writes AI coding-agent instruction files on every dev/build
+  // run; this repo doesn't want those generated files.
   agentRules: false,
 
   // GitHub Pages only hands back files that already exist on disk, so the whole
