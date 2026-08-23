@@ -68,7 +68,7 @@ export default function Header({ lang }) {
                 {i > 0 ? <span aria-hidden="true">|</span> : null}
                 <Link
                   href={pagePath(l, page)}
-                  lang={SITE[l].hreflang}
+                  hrefLang={SITE[l].hreflang}
                   aria-current={l === lang ? 'true' : undefined}
                   aria-label={`${t.langSwitchLabel}: ${SITE[l].langName}`}
                   className={`transition-colors hover:no-underline ${
