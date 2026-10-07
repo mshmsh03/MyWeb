@@ -10,3 +10,18 @@ out/
 # cache are personal to whoever is running the tool, not project config.
 .impeccable/config.local.json
 .impeccable/hook.cache.json
+
+# Design-critique archives and live-preview state (personal working notes)
+.impeccable/critique/
+.impeccable/live/
+
+# Skill packages installed with the skills CLI (personal dev tooling)
+.agents/
+skills-lock.json
+
+# Secrets and per-machine files
+.env*
+.vercel
+.DS_Store
+Thumbs.db
+*.log
