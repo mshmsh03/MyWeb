@@ -1,34 +1,23 @@
-import { asset } from '@/lib/site-data';
-import { requestLinkProps } from '@/lib/request';
+import './till.css';
+import { plexMono } from './font';
+import TillIsland from './TillIsland';
+import TillView from './TillView';
+import { describe, openingSale } from './sale';
 
-// The live till (the till's exhibit). Placeholder until it is built: the Qasa
-// sell screen. Qasa has no Arabic screenshot; the Kurdish one shows the same
-// right-to-left mirror.
+// The live till (the till's exhibit): a sale the visitor can ring up, pay in
+// dinars or dollars, and print.
 //
-// `data-frame` marks the element the till's screen grows into when the till
-// is chosen on the bench.
-const SHOT = { en: 'qasa-sell-en.png', ar: 'qasa-sell-ckb.png', ku: 'qasa-sell-ckb.png' };
-
-export default function Till({ lang, t, requestHref = '#request' }) {
+// The server draws the till with its opening sale already rung up, the totals
+// worked out by the same money rules the live till uses, and every control
+// disabled. That drawing is what a visitor without script sees, and what
+// stands in until the working till's code arrives (TillIsland).
+export default function Till({ lang, requestHref = '#request' }) {
+  const sale = openingSale(lang);
   return (
-    <div>
-      <div data-frame className="rounded-[10px] bg-graphite p-2.5 shadow-[0_22px_36px_-14px_rgb(3_18_13/0.75)]">
-        <img
-          src={asset(`/assets/work/${SHOT[lang]}`)}
-          width="1366"
-          height="820"
-          alt={t.jobs.qasa.alt}
-          loading="lazy"
-          decoding="async"
-          className="block h-auto w-full rounded-[3px]"
-        />
-      </div>
-      <a
-        {...requestLinkProps(requestHref, 'pos')}
-        className="mt-7 inline-flex min-h-12 items-center rounded-part border border-chalk-dim/60 px-5 font-semibold text-chalk transition-colors hover:border-chalk"
-      >
-        {t.bench.start}
-      </a>
+    <div className={plexMono.variable}>
+      <TillIsland lang={lang} requestHref={requestHref}>
+        <TillView sale={sale} view={describe(sale)} requestHref={requestHref} />
+      </TillIsland>
     </div>
   );
 }

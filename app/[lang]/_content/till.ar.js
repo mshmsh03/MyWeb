@@ -1,0 +1,72 @@
+// The live till's Arabic words. Same shape as till.en.js.
+
+export default {
+  name: 'عربي',
+  lang: 'ar',
+  dir: 'rtl',
+
+  language: 'لغة نظام البيع',
+  categories: 'الفئات',
+  all: 'الكل',
+  category: { hot: 'مشروبات ساخنة', cold: 'مشروبات باردة', sweets: 'حلويات' },
+  products: {
+    espresso: 'إسبريسو',
+    americano: 'أمريكانو',
+    cappuccino: 'كابتشينو',
+    icedLatte: 'لاتيه مثلج',
+    lemonade: 'ليموناضة',
+    kleicha: 'كليجة',
+    baklava: 'بقلاوة',
+    cheesecake: 'تشيز كيك',
+  },
+  sample: 'المنتجات والأسعار نموذجية، مأخوذة من {qasa}.',
+  rate: 'سعر صرف نموذجي',
+
+  order: 'طلب جديد',
+  paid: 'تم الدفع',
+  items: {
+    zero: 'لا أصناف',
+    one: 'صنف واحد',
+    two: 'صنفان',
+    few: '{n} أصناف',
+    many: '{n} صنفًا',
+    other: '{n} صنف',
+  },
+  empty: 'اختر منتجًا لإضافته.',
+  less: 'أنقص {name} واحدًا',
+  more: 'زد {name} واحدًا',
+  remove: 'احذف {name}',
+
+  discount: 'خصم {pct}',
+  subtotal: 'المجموع الفرعي',
+  discountRow: 'الخصم',
+  rounding: 'التقريب',
+  total: 'الإجمالي',
+  iqd: 'د.ع',
+
+  payIn: 'عملة الدفع',
+  dinars: 'دينار',
+  dollars: 'دولار',
+  received: 'المبلغ المستلم',
+  exact: 'بالضبط',
+  other: 'مبلغ آخر',
+  change: 'الباقي',
+  short: 'ينقص {amount}',
+  inDinars: 'يُعاد الباقي بالدينار.',
+  charge: 'استلام المبلغ',
+  newSale: 'بيع جديد',
+
+  printer: 'طابعة الإيصالات',
+  waiting: 'استلم المبلغ وسيُطبع الإيصال هنا.',
+  receipt: 'إيصال نموذجي',
+  cash: 'نقدًا',
+  sampleSale: 'عملية بيع نموذجية: لم يُدفع أي مبلغ.',
+  ask: 'هل تريد نظام بيع كهذا لمتجرك؟',
+
+  said: {
+    qty: '{name}: {qty}.',
+    removed: 'حُذف {name}.',
+    total: 'الإجمالي {total}.',
+    printed: 'طُبع الإيصال.',
+  },
+};
