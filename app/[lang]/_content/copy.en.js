@@ -35,6 +35,24 @@ export default {
     message: { hello: 'Hello Mustafa,', from: 'This is', need: 'I need:', join: ', ' },
   },
 
+  // The first screen: the three devices on the bench and its two actions.
+  bench: {
+    devices: { websites: 'Websites', pos: 'Point of sale', hardware: 'Hardware' },
+    start: 'Start a request',
+    see: 'See the work',
+  },
+
+  // The request builder. Its choices, field hints and message wording are
+  // the ticket's, above.
+  request: {
+    title: 'Start a request',
+    lead: 'Choose what you need and your message is written as you go. The site sends nothing itself: the message opens in your own WhatsApp or email.',
+    need: 'What do you need?',
+    optional: 'optional',
+    blank: 'Your message appears here as you write it.',
+    subject: 'Request from your website',
+  },
+
   home: {
     jobs: 'Past jobs',
     allJobs: 'All projects',

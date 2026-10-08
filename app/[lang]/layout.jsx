@@ -39,7 +39,7 @@ const arabic = Noto_Sans_Arabic({
 });
 
 export const viewport = {
-  themeColor: '#1a2a7c',
+  themeColor: '#0f3d30',
 };
 
 export const metadata = {
@@ -49,9 +49,13 @@ export const metadata = {
   icons: { icon: [{ url: asset('/assets/favicon.svg'), type: 'image/svg+xml' }] },
 };
 
-// Arms motion before the first paint, so a sheet never shows its resting state
-// for a frame and then starts over. It has to run inline and blocking: a
-// deferred script would paint first and cause exactly that flash.
+// Arms motion before the first paint, so nothing shows its resting state for a
+// frame and then starts over. It has to run inline and blocking: a deferred
+// script would paint first and cause exactly that flash.
+//
+// Motion is on unless the visitor has asked their system for less, or has
+// switched Effects off in the header (remembered in localStorage, which wins
+// over the system setting in either direction).
 //
 // Delivered through next/script at beforeInteractive rather than as a bare
 // <script> tag. A raw script element inside a component is server-rendered but
@@ -61,11 +65,11 @@ export const metadata = {
 //
 // The timer is the failsafe. Scroll reveals are hidden by CSS while data-motion
 // is "on", so if the bundle never runs, MotionRoot never sets data-hydrated and
-// motion is switched back off — leaving the page fully visible rather than
-// stranded at opacity 0.
-const ARM_MOTION = `(function(){try{var d=document.documentElement;
-if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-d.dataset.motion='on';
+// motion is switched back off, leaving the page fully visible.
+const ARM_MOTION = `(function(){try{var d=document.documentElement,s=null;
+try{s=localStorage.getItem('effects');}catch(e){}
+var on=s?s==='on':!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+d.dataset.motion=on?'on':'off';if(!on)return;
 setTimeout(function(){if(d.dataset.hydrated!=='1')d.dataset.motion='off';},3000);
 }catch(e){}})();`;
 

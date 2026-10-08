@@ -1,7 +1,8 @@
 'use client';
 
 import { useId, useState } from 'react';
-import { EMAIL, NAME, PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF } from '@/lib/site-data';
+import { NAME, PHONE_DISPLAY, PHONE_HREF } from '@/lib/site-data';
+import { compose, sendLinks } from '@/lib/request';
 import { NEXT_NO } from '@/lib/jobs';
 import { Button, FieldLabel, Icon, Serial, Sheet, TextLink } from './sections';
 
@@ -16,14 +17,6 @@ import { Button, FieldLabel, Icon, Serial, Sheet, TextLink } from './sections';
 //
 // `t` is the ticket's copy; `children` is whatever is printed across the top
 // of the sheet (on the home page, the name and what he does).
-
-function compose(t, name, picked, details) {
-  const lines = [t.message.hello];
-  if (name.trim()) lines.push(`${t.message.from} ${name.trim()}.`);
-  if (picked.length) lines.push(`${t.message.need} ${picked.map((k) => t.jobs[k]).join(t.message.join)}.`);
-  if (details.trim()) lines.push(details.trim());
-  return lines.join('\n');
-}
 
 const INPUT = 'w-full min-w-0 border-0 bg-transparent py-1 text-ink placeholder:text-ink-soft focus:outline-none';
 
@@ -44,10 +37,7 @@ export default function JobTicket({ t, children }) {
 
   const touched = name.trim() || picked.length || details.trim();
   const message = compose(t, name, picked, details);
-  const whatsapp = touched ? `${WHATSAPP_HREF}?text=${encodeURIComponent(message)}` : WHATSAPP_HREF;
-  const mail = touched
-    ? `mailto:${EMAIL}?subject=${encodeURIComponent(t.subject)}&body=${encodeURIComponent(message)}`
-    : `mailto:${EMAIL}`;
+  const { whatsapp, mail } = sendLinks(message, touched, t.subject);
 
   return (
     <div className="relative">
