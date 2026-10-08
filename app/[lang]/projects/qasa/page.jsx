@@ -1,9 +1,7 @@
 import { createLangPage } from '@/lib/page';
-import QasaEn from '../../_content/qasa.en';
-import QasaAr from '../../_content/qasa.ar';
-import QasaKu from '../../_content/qasa.ku';
+import Qasa from '../../_pages/Qasa';
 
-const { generateMetadata, Page } = createLangPage('projects/qasa', { en: QasaEn, ar: QasaAr, ku: QasaKu });
+const { generateMetadata, Page } = createLangPage('projects/qasa', Qasa);
 
 export { generateMetadata };
 export default Page;

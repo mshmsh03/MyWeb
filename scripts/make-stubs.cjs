@@ -73,20 +73,25 @@ fs.writeFileSync(
 <meta name="robots" content="noindex">
 <meta http-equiv="refresh" content="3; url=${target('en', 'index')}">
 <style>
-  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0d1117;color:#c9d1d9;
-       font:400 15px/1.7 SFMono-Regular,Consolas,'Liberation Mono',Menlo,Courier,monospace;padding:24px}
-  .p{color:#39a37e;font-size:13px;margin-bottom:14px}
-  h1{color:#f0f6fc;font-size:28px;margin:0 0 8px;line-height:1.3}
-  .d{color:#8b949e}
-  a{color:#4fd1a5;text-decoration:none}
-  a:hover{text-decoration:underline}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#1a2a7c;color:#0f1838;
+       font:400 16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;padding:24px}
+  .t{background:#fbfbf7;border-radius:3px;padding:28px 32px;max-width:440px;
+     box-shadow:0 1px 0 rgba(8,13,48,.25),0 18px 34px -16px rgba(5,9,40,.75)}
+  .l{display:flex;justify-content:space-between;align-items:baseline;color:#2540c4;font-size:12px;
+     font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+  .n{color:#d1232a;font-size:22px;font-weight:700;letter-spacing:0}
+  h1{font-size:26px;line-height:1.15;margin:14px 0 8px}
+  p{margin:0;color:#3a4366}
+  a{color:#0f1838;font-weight:600;text-decoration:underline;text-decoration-color:#2540c4;
+    text-decoration-thickness:2px;text-underline-offset:4px}
+  a:hover{color:#2540c4}
 </style>
 </head>
 <body>
-<div>
-  <div class="p">cat $REQUEST_URI</div>
-  <h1>404: no such file or directory</h1>
-  <p class="d">// returning to <a href="${target('en', 'index')}">~</a></p>
+<div class="t">
+  <div class="l"><span>Job ticket</span><span class="n">404</span></div>
+  <h1>No ticket with this number.</h1>
+  <p>This page does not exist. Taking you back to <a href="${target('en', 'index')}">the front of the book</a>.</p>
 </div>
 </body>
 </html>

@@ -1,107 +1,471 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-27T00:00:00Z",
-  "title": "Design System: Mustafa Deari Ahmed — Portfolio",
+  "generatedAt": "2026-10-08T00:00:00Z",
+  "title": "Design System: Mustafa Deari Ahmed",
   "extensions": {
     "colorMeta": {
-      "bg": { "role": "neutral", "displayName": "Void Black", "canonical": "#0d1117", "tonalRamp": ["#050708", "#0a0d11", "#0d1117", "#161b22", "#30363d", "#8b949e", "#c9d1d9", "#f0f6fc"] },
-      "panel": { "role": "neutral", "displayName": "Raised Panel", "canonical": "#161b22", "tonalRamp": ["#08090b", "#101318", "#161b22", "#1e242c", "#30363d", "#8b949e", "#c9d1d9", "#f0f6fc"] },
-      "border": { "role": "neutral", "displayName": "Hairline Border", "canonical": "#30363d", "tonalRamp": ["#0d1117", "#161b22", "#22262c", "#30363d", "#454c56", "#5c6470", "#8b949e", "#c9d1d9"] },
-      "accent": { "role": "primary", "displayName": "Terminal Mint", "canonical": "#4fd1a5", "tonalRamp": ["#0f3327", "#164a37", "#1f6650", "#298568", "#39a37e", "#4fd1a5", "#82e0c1", "#c3f0dd"] },
-      "accent-dim": { "role": "primary", "displayName": "Terminal Mint, Dimmed", "canonical": "#39a37e", "tonalRamp": ["#0b261c", "#123626", "#1a4d38", "#256b4d", "#39a37e", "#4fd1a5", "#82e0c1", "#c3f0dd"] },
-      "amber": { "role": "secondary", "displayName": "Signal Amber", "canonical": "#d4a72c", "tonalRamp": ["#3a3120", "#4d3f1e", "#6b571f", "#93791f", "#b89325", "#d4a72c", "#e3c565", "#f2e0a3"] },
-      "text": { "role": "neutral", "displayName": "Console Text", "canonical": "#c9d1d9", "tonalRamp": ["#0d1117", "#30363d", "#565d66", "#8b949e", "#a8b0b8", "#c9d1d9", "#dde2e7", "#f0f6fc"] },
-      "text-dim": { "role": "neutral", "displayName": "Muted Console Text", "canonical": "#8b949e", "tonalRamp": ["#0d1117", "#282c33", "#454c56", "#5c6470", "#727a85", "#8b949e", "#aab2bb", "#c9d1d9"] },
-      "white": { "role": "neutral", "displayName": "Bright White", "canonical": "#f0f6fc", "tonalRamp": ["#8b949e", "#a8b0b8", "#c9d1d9", "#dde2e7", "#e8edf2", "#f0f6fc", "#f5f9fc", "#ffffff"] }
+      "carbon": {
+        "role": "primary",
+        "displayName": "Carbon",
+        "canonical": "#1a2a7c",
+        "oklch": "oklch(33.2% 0.140 269)",
+        "tonalRamp": [
+          "#030037",
+          "#0e1769",
+          "#25388b",
+          "#435cb2",
+          "#6380da",
+          "#88a6ff",
+          "#bacdff",
+          "#e8eeff"
+        ]
+      },
+      "carbon-deep": {
+        "role": "primary",
+        "displayName": "Carbon, in shadow",
+        "canonical": "#111c5a",
+        "oklch": "oklch(26.4% 0.111 269)",
+        "tonalRamp": [
+          "#030036",
+          "#121e5c",
+          "#2b3c7d",
+          "#4a5fa3",
+          "#6b82c9",
+          "#8ea7f2",
+          "#baccff",
+          "#e8eeff"
+        ]
+      },
+      "form": {
+        "role": "primary",
+        "displayName": "Form Blue",
+        "canonical": "#2540c4",
+        "oklch": "oklch(44.7% 0.206 267)",
+        "tonalRamp": [
+          "#020037",
+          "#0b007d",
+          "#1828ad",
+          "#3152d6",
+          "#5179ff",
+          "#86a7ff",
+          "#b9cdff",
+          "#e7eeff"
+        ]
+      },
+      "canary": {
+        "role": "secondary",
+        "displayName": "Canary",
+        "canonical": "#ffe35c",
+        "oklch": "oklch(91.5% 0.154 97)",
+        "tonalRamp": [
+          "#100b00",
+          "#2e2600",
+          "#4e4200",
+          "#746300",
+          "#9c8600",
+          "#c6aa00",
+          "#e9ce43",
+          "#fff0a8"
+        ]
+      },
+      "pink": {
+        "role": "secondary",
+        "displayName": "Pink",
+        "canonical": "#ffc4d2",
+        "oklch": "oklch(87.7% 0.070 3)",
+        "tonalRamp": [
+          "#1f0008",
+          "#411523",
+          "#60323f",
+          "#85525f",
+          "#aa7582",
+          "#d199a7",
+          "#f6bbc9",
+          "#ffe8ed"
+        ]
+      },
+      "serial": {
+        "role": "tertiary",
+        "displayName": "Numbering-Machine Red",
+        "canonical": "#d1232a",
+        "oklch": "oklch(55.6% 0.207 26)",
+        "tonalRamp": [
+          "#210000",
+          "#500004",
+          "#81000d",
+          "#bc0019",
+          "#e83f3e",
+          "#ff7e75",
+          "#ffbab2",
+          "#ffe9e6"
+        ]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "White Top Copy",
+        "canonical": "#fbfbf7",
+        "oklch": "oklch(98.7% 0.005 106)",
+        "tonalRamp": [
+          "#0b0b09",
+          "#272724",
+          "#43433f",
+          "#636360",
+          "#868683",
+          "#ababa7",
+          "#cececa",
+          "#efefeb"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Blue-Black Ink",
+        "canonical": "#0f1838",
+        "oklch": "oklch(22.1% 0.063 269)",
+        "tonalRamp": [
+          "#030725",
+          "#1a2445",
+          "#344164",
+          "#546288",
+          "#7685ad",
+          "#9aaad4",
+          "#bdcdf8",
+          "#e8eeff"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink, lighter hand",
+        "canonical": "#3a4366",
+        "oklch": "oklch(39.1% 0.061 272)",
+        "tonalRamp": [
+          "#050724",
+          "#1c2444",
+          "#374063",
+          "#576186",
+          "#7984ab",
+          "#9da9d2",
+          "#c0ccf6",
+          "#e9eeff"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Ground Text",
+        "canonical": "#f4f5fb",
+        "oklch": "oklch(97.1% 0.008 279)",
+        "tonalRamp": [
+          "#0a0b0f",
+          "#25262a",
+          "#414247",
+          "#626368",
+          "#85868b",
+          "#a9aab0",
+          "#cccdd3",
+          "#edeef4"
+        ]
+      },
+      "ground-dim": {
+        "role": "neutral",
+        "displayName": "Ground Text, dim",
+        "canonical": "#bcc5f0",
+        "oklch": "oklch(83.1% 0.061 276)",
+        "tonalRamp": [
+          "#060624",
+          "#1e2344",
+          "#393f63",
+          "#596086",
+          "#7c83ab",
+          "#a0a8d2",
+          "#c2cbf6",
+          "#eaeeff"
+        ]
+      },
+      "carbon-line": {
+        "role": "neutral",
+        "displayName": "Ground Rule",
+        "canonical": "#4356b4",
+        "oklch": "oklch(49.0% 0.150 271)",
+        "tonalRamp": [
+          "#040036",
+          "#13116e",
+          "#283590",
+          "#4659b7",
+          "#667ee0",
+          "#8ca5ff",
+          "#bcccff",
+          "#e8eeff"
+        ]
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "The h1 name on the home hero and sub-page section headers." },
-      "title": { "displayName": "Title", "purpose": "Card titles, service titles, and the brand mark — the highest-emphasis line inside a component." },
-      "body": { "displayName": "Body", "purpose": "Default paragraph copy; a compact 13.5px variant is used for card/service descriptions." },
-      "label": { "displayName": "Label", "purpose": "Section titles, nav links, the terminal prompt, footnote, and status-tag pills." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "A header printed on paper: the name across the hero ticket, the product name on the case-study sheet, the closing line on the canary ticket. Archivo expanded, 900."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings and page titles written on the ground. Archivo expanded, 800."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The name on a job ticket; smaller for names in ruled rows and ledger lines."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Everything read, at normal width. Prose caps its measure at about 60ch; 600 marks the value that answers a label."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "The pre-printed field label: condensed capitals in form blue. Never letter-spaced in Arabic or Kurdish."
+      },
+      "serial": {
+        "displayName": "Serial",
+        "purpose": "The ticket number in numbering-machine red. Never smaller than 1.4rem bold."
+      },
+      "rtl-display": {
+        "displayName": "Arabic / Kurdish display",
+        "purpose": "Noto Kufi Arabic for every printed header in Arabic and Kurdish Sorani, with opened leading and no tracking."
+      },
+      "rtl-body": {
+        "displayName": "Arabic / Kurdish text",
+        "purpose": "Noto Sans Arabic for reading text in Arabic and Kurdish Sorani, at line-height 1.85."
+      }
     },
     "shadows": [
-      { "name": "card-hover-lift", "value": "0 12px 28px rgba(0,0,0,.35), 0 0 0 1px rgba(79,209,165,.12)", "purpose": "The only shadow in the system; applied to cards/service tiles on hover alongside a -5px lift." }
+      {
+        "name": "sheet",
+        "value": "0 1px 0 rgba(8, 13, 48, 0.25), 0 18px 34px -16px rgba(5, 9, 40, 0.75)",
+        "purpose": "Every sheet lying on the ground, and a screenshot shown directly on the ground."
+      },
+      {
+        "name": "lift",
+        "value": "0 1px 0 rgba(8, 13, 48, 0.25), 0 28px 44px -18px rgba(5, 9, 40, 0.85)",
+        "purpose": "A linked job ticket while its link is hovered, with a 4px rise over 300ms."
+      },
+      {
+        "name": "ruled-line-focus",
+        "value": "inset 0 -2px 0 #2540c4",
+        "purpose": "The line under a field on the fill-in ticket while the field has focus."
+      }
     ],
     "motion": [
-      { "name": "hover-standard", "value": "ease .15s-.2s", "purpose": "Default transition speed for button/card hover, nav underline, and color transitions." },
-      { "name": "reveal-on-scroll", "value": "opacity .6s ease, transform .6s ease", "purpose": "Fade+translateY(18px→0) entrance for content blocks as they enter the viewport, staggered up to 240ms." },
-      { "name": "typewriter", "value": "40ms per character, staggered 250ms per element", "purpose": "Hero prompt and name type themselves in on page load." },
-      { "name": "cursor-blink", "value": "1s step-end infinite", "purpose": "Blinking block cursor after the hero h1." }
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Entrances: a sheet feeding in and coming to rest."
+      },
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Default easing for hover and focus transitions, and the pen stroke."
+      },
+      {
+        "name": "default-transition-duration",
+        "value": "200ms",
+        "purpose": "Colour and shadow changes on hover and focus."
+      },
+      {
+        "name": "feed",
+        "value": "opacity 0 to 1, translateY 26px to 0, 700ms ease-out-expo, once",
+        "purpose": "A sheet is fed in from below. On load for the first sheet of a page, on first scroll into view for the rest."
+      },
+      {
+        "name": "feed-stagger",
+        "value": "80ms per item, capped at four steps (240ms)",
+        "purpose": "A stack of tickets or a ruled list arriving as a list."
+      },
+      {
+        "name": "fan",
+        "value": "transform to translateY(14px) rotate(-1.1deg), 900ms ease-out-expo, 250ms delay, once",
+        "purpose": "The pink copy sliding out from under the hero ticket to where it rests."
+      },
+      {
+        "name": "pen-stroke",
+        "value": "stroke-dashoffset 30 to 0, 220ms ease-out-quart, second stroke delayed 120ms",
+        "purpose": "The cross drawn in a tick box."
+      },
+      {
+        "name": "lift",
+        "value": "translateY(-4px) with the lift shadow, 300ms",
+        "purpose": "A linked job ticket picked up on hover; the movement is withheld under reduced motion."
+      },
+      {
+        "name": "motion-gate",
+        "value": "html[data-motion=\"on\"]",
+        "purpose": "Set only when JavaScript runs and the visitor has not asked for reduced motion; every animation hangs off it. Nothing loops."
+      }
     ],
     "breakpoints": [
-      { "name": "mobile", "value": "600px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "ruled-list-container",
+        "value": "42rem"
+      }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Ink Button",
       "kind": "button",
-      "refersTo": "button-primary",
-      "description": "Main call-to-action, e.g. \"View Projects\".",
-      "html": "<a class=\"ds-btn-primary\" href=\"#\">View Projects</a>",
-      "css": ".ds-btn-primary { display: inline-block; position: relative; overflow: hidden; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; border: 1px solid #39a37e; color: #4fd1a5; padding: 9px 16px; font-size: 13px; border-radius: 4px; text-decoration: none; transition: all .15s ease, transform .15s ease; } .ds-btn-primary:hover { background: #39a37e; color: #0d1117; transform: translateY(-2px); } .ds-btn-primary:focus-visible { outline: 2px solid #4fd1a5; outline-offset: 2px; }"
+      "refersTo": "button-ink",
+      "description": "The one filled action on paper: send the ticket, fill in a ticket.",
+      "html": "<a class=\"ds-btn-ink\" href=\"#\">Send on WhatsApp <svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8h10M9 4l4 4-4 4\"/></svg></a>",
+      "css": ".ds-btn-ink { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; padding: 8px 20px; border-radius: var(--radius-paper, 3px); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-size: 0.95rem; line-height: 1.25; font-weight: 600; text-decoration: none; transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1), background-color 200ms cubic-bezier(0.25, 1, 0.5, 1), border-color 200ms cubic-bezier(0.25, 1, 0.5, 1); background: var(--color-ink, #0f1838); color: var(--color-sheet, #fbfbf7); } .ds-btn-ink:hover { background: var(--color-form, #2540c4); } .ds-btn-ink:focus-visible { outline: 2px solid var(--color-form, #2540c4); outline-offset: 3px; }"
     },
     {
-      "name": "Ghost Button",
+      "name": "Canary Button",
       "kind": "button",
-      "refersTo": "button-ghost",
-      "description": "Secondary call-to-action, e.g. \"Contact Me\".",
-      "html": "<a class=\"ds-btn-ghost\" href=\"#\">Contact Me</a>",
-      "css": ".ds-btn-ghost { display: inline-block; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; border: 1px solid #30363d; color: #8b949e; padding: 9px 16px; font-size: 13px; border-radius: 4px; text-decoration: none; transition: all .15s ease; } .ds-btn-ghost:hover { border-color: #8b949e; color: #c9d1d9; } .ds-btn-ghost:focus-visible { outline: 2px solid #4fd1a5; outline-offset: 2px; }"
+      "refersTo": "button-canary",
+      "description": "The one filled action on the carbon ground.",
+      "html": "<div class=\"ds-ground\"><a class=\"ds-btn-canary\" href=\"#\">All projects <svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8h10M9 4l4 4-4 4\"/></svg></a></div>",
+      "css": ".ds-ground { background: var(--color-carbon, #1a2a7c); padding: 24px; } .ds-btn-canary { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; padding: 8px 20px; border-radius: var(--radius-paper, 3px); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-size: 0.95rem; line-height: 1.25; font-weight: 600; text-decoration: none; transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1), background-color 200ms cubic-bezier(0.25, 1, 0.5, 1), border-color 200ms cubic-bezier(0.25, 1, 0.5, 1); background: var(--color-canary, #ffe35c); color: var(--color-ink, #0f1838); } .ds-btn-canary:hover { background: var(--color-sheet, #fbfbf7); } .ds-btn-canary:focus-visible { outline: 2px solid var(--color-canary, #ffe35c); outline-offset: 3px; }"
     },
     {
-      "name": "Card",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "Service tile or project card — flat at rest, lifts with a soft mint-tinted shadow on hover.",
-      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Website Development</div><p class=\"ds-card-desc\">Design and development of websites, including multilingual sites.</p></div>",
-      "css": ".ds-card { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 20px; transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; } .ds-card:hover { border-color: #39a37e; transform: translateY(-5px); box-shadow: 0 12px 28px rgba(0,0,0,.35), 0 0 0 1px rgba(79,209,165,.12); } .ds-card-title { color: #f0f6fc; font-size: 15px; font-weight: bold; margin: 0 0 8px 0; } .ds-card-title::before { content: '\\25b8 '; color: #39a37e; } .ds-card-desc { color: #8b949e; margin: 0; font-size: 13.5px; }"
+      "name": "Paper Button",
+      "kind": "button",
+      "refersTo": "button-paper",
+      "description": "The quieter outline beside an ink button on paper.",
+      "html": "<div class=\"ds-paper-canary\"><a class=\"ds-btn-paper\" href=\"#\">Email me</a></div>",
+      "css": ".ds-paper-canary { background: var(--color-canary, #ffe35c); padding: 24px; } .ds-btn-paper { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; padding: 8px 20px; border-radius: var(--radius-paper, 3px); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-size: 0.95rem; line-height: 1.25; font-weight: 600; text-decoration: none; transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1), background-color 200ms cubic-bezier(0.25, 1, 0.5, 1), border-color 200ms cubic-bezier(0.25, 1, 0.5, 1); background: transparent; color: var(--color-ink, #0f1838); border: 1px solid rgba(15, 24, 56, 0.4); } .ds-btn-paper:hover { border-color: var(--color-ink, #0f1838); background: rgba(15, 24, 56, 0.05); } .ds-btn-paper:focus-visible { outline: 2px solid var(--color-form, #2540c4); outline-offset: 3px; }"
     },
     {
-      "name": "Status Tag Pill",
-      "kind": "chip",
-      "refersTo": "tag-pill",
-      "description": "Project status badge (live / shipped / completed / design).",
-      "html": "<span class=\"ds-tag-pill\">live</span>",
-      "css": ".ds-tag-pill { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; color: #d4a72c; font-size: 11px; border: 1px solid #3a3120; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }"
-    },
-    {
-      "name": "Navigation Link",
-      "kind": "nav",
+      "name": "Text Link",
+      "kind": "custom",
       "refersTo": null,
-      "description": "Top nav link with a left-growing underline on hover/active.",
-      "html": "<a class=\"ds-nav-link ds-nav-link--active\" href=\"#\">Home</a>",
-      "css": ".ds-nav-link { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; color: #8b949e; font-size: 13px; position: relative; text-decoration: none; padding-bottom: 2px; transition: color .15s ease; } .ds-nav-link::after { content: ''; position: absolute; left: 0; right: 100%; bottom: -3px; height: 1px; background: #4fd1a5; transition: right .2s ease; } .ds-nav-link:hover, .ds-nav-link--active { color: #4fd1a5; } .ds-nav-link:hover::after, .ds-nav-link--active::after { right: 0; }"
+      "description": "A link in a sentence or on its own line: form-blue underline on paper, canary on the ground.",
+      "html": "<div class=\"ds-link-pair\"><div class=\"ds-link-paper\"><a class=\"ds-link\" href=\"#\"><span class=\"ds-ltr\">www.ellincompany.com</span> <svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 3h7v7M13 3 4.5 11.5\"/></svg></a></div><div class=\"ds-link-ground\"><a class=\"ds-link ds-link--ground\" href=\"#\">All projects <svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8h10M9 4l4 4-4 4\"/></svg></a></div></div>",
+      "css": ".ds-link-pair { display: grid; grid-template-columns: 1fr 1fr; } .ds-link-paper { background: var(--color-sheet, #fbfbf7); color: var(--color-ink, #0f1838); padding: 12px 24px; } .ds-link-ground { background: var(--color-carbon, #1a2a7c); color: var(--color-ground, #f4f5fb); padding: 12px 24px; } .ds-link { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-weight: 600; color: inherit; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--color-form, #2540c4); transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-link:hover { color: var(--color-form, #2540c4); } .ds-link--ground { text-decoration-color: var(--color-canary, #ffe35c); } .ds-link--ground:hover { color: var(--color-canary, #ffe35c); } .ds-link:focus-visible { outline: 2px solid var(--color-form, #2540c4); outline-offset: 3px; } .ds-link--ground:focus-visible { outline-color: var(--color-canary, #ffe35c); } .ds-ltr { direction: ltr; unicode-bidi: isolate; display: inline-block; }"
+    },
+    {
+      "name": "Job Ticket",
+      "kind": "card",
+      "refersTo": "sheet-canary",
+      "description": "One piece of work written up on the stock for its kind: name and number across the top, field rows beneath. Lifts when its link is hovered.",
+      "html": "<div class=\"ds-ground-ticket\"><div class=\"ds-ticket\"><div class=\"ds-ticket-top\"><h3 class=\"ds-ticket-name\">Qasa POS</h3><span class=\"ds-ticket-no\"><span class=\"ds-label\">No.</span><span class=\"ds-serial\">004</span></span></div><dl class=\"ds-fields\"><div class=\"ds-field\"><dt class=\"ds-label\">Job</dt><dd class=\"ds-value\">Sample point-of-sale system</dd></div><div class=\"ds-field\"><dt class=\"ds-label\">Work done</dt><dd class=\"ds-value ds-value--soft\">Sales, stock, shifts and reports in Kurdish, Arabic and English, working without internet.</dd></div></dl><a class=\"ds-ticket-link\" href=\"#\">Read more <svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8h10M9 4l4 4-4 4\"/></svg></a></div></div>",
+      "css": ".ds-ground-ticket { background: var(--color-carbon, #1a2a7c); padding: 28px; } .ds-ticket { position: relative; background: var(--color-canary, #ffe35c); color: var(--color-ink, #0f1838); border-radius: var(--radius-paper, 3px); padding: 28px; box-shadow: 0 1px 0 rgba(8, 13, 48, 0.25), 0 18px 34px -16px rgba(5, 9, 40, 0.75); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); line-height: 1.6; transition: transform 300ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 300ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-ticket:has(a:hover) { box-shadow: 0 1px 0 rgba(8, 13, 48, 0.25), 0 28px 44px -18px rgba(5, 9, 40, 0.85); } @media (prefers-reduced-motion: no-preference) { .ds-ticket:has(a:hover) { transform: translateY(-4px); } } .ds-ticket-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 16px; } .ds-ticket-name { margin: 0; font-variation-settings: \"wdth\" 120; font-size: clamp(1.35rem, 2.2vw, 1.7rem); line-height: 1.15; font-weight: 800; letter-spacing: -0.01em; } .ds-ticket-no { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; } .ds-label { font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-variation-settings: \"wdth\" 70; font-size: 0.78rem; line-height: 1.25; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap; color: var(--color-form, #2540c4); } .ds-serial { font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-variation-settings: \"wdth\" 120; font-size: 1.4rem; line-height: 1; font-weight: 700; color: var(--color-serial, #d1232a); direction: ltr; unicode-bidi: isolate; } .ds-fields { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 20px; border-top: 1px solid rgba(15, 24, 56, 0.25); } .ds-field { grid-column: span 2; display: grid; grid-template-columns: subgrid; align-items: baseline; padding: 10px 0; border-bottom: 1px solid rgba(15, 24, 56, 0.25); } .ds-field dt, .ds-field dd { margin: 0; } .ds-value { font-weight: 600; } .ds-value--soft { font-weight: 400; color: var(--color-ink-soft, #3a4366); } .ds-ticket-link { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; margin-top: 8px; font-weight: 600; color: inherit; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--color-form, #2540c4); transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-ticket-link::after { content: ''; position: absolute; inset: 0; } .ds-ticket-link:hover { color: var(--color-form, #2540c4); } .ds-ticket-link:focus-visible { outline: 2px solid var(--color-form, #2540c4); outline-offset: 3px; }"
+    },
+    {
+      "name": "Ledger Sheet",
+      "kind": "card",
+      "refersTo": "sheet-pink",
+      "description": "Jobs without a screenshot, entered as lines on one sheet of their stock.",
+      "html": "<div class=\"ds-ground-ledger\"><ul class=\"ds-ledger\"><li class=\"ds-ledger-line\"><div><h3 class=\"ds-ledger-name\">Krofi</h3><p class=\"ds-ledger-job\">Rebrand and printed menu</p></div><p class=\"ds-ledger-done\">Logo, colours, Kurdish and English type, product mockups and a printed menu for a sweets kiosk.</p><span class=\"ds-ledger-no\"><span class=\"ds-ledger-label\">No.</span><span class=\"ds-ledger-serial\">006</span></span></li><li class=\"ds-ledger-line\"><div><h3 class=\"ds-ledger-name\">Chrispy</h3><p class=\"ds-ledger-job\">Printed menu</p></div><p class=\"ds-ledger-done\">Four A4 pages in English and Kurdish, with the Kurdish pages laid out as a true right-to-left mirror.</p><span class=\"ds-ledger-no\"><span class=\"ds-ledger-label\">No.</span><span class=\"ds-ledger-serial\">007</span></span></li></ul></div>",
+      "css": ".ds-ground-ledger { background: var(--color-carbon, #1a2a7c); padding: 28px; } .ds-ledger { list-style: none; margin: 0; padding: 4px 28px; background: var(--color-pink, #ffc4d2); color: var(--color-ink, #0f1838); border-radius: var(--radius-paper, 3px); box-shadow: 0 1px 0 rgba(8, 13, 48, 0.25), 0 18px 34px -16px rgba(5, 9, 40, 0.75); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); line-height: 1.6; } .ds-ledger-line { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr) auto; align-items: baseline; gap: 6px 36px; padding: 16px 0; border-bottom: 1px solid rgba(15, 24, 56, 0.25); } .ds-ledger-line:last-child { border-bottom: 0; } .ds-ledger-name { margin: 0; font-variation-settings: \"wdth\" 120; font-size: 1.15rem; line-height: 1.375; font-weight: 800; } .ds-ledger-job { margin: 0; font-weight: 600; } .ds-ledger-done { margin: 0; max-width: 58ch; color: var(--color-ink-soft, #3a4366); } .ds-ledger-no { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; } .ds-ledger-label { font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-variation-settings: \"wdth\" 70; font-size: 0.78rem; line-height: 1.25; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap; color: var(--color-form, #2540c4); } .ds-ledger-serial { font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-variation-settings: \"wdth\" 120; font-size: 1.4rem; line-height: 1; font-weight: 700; color: var(--color-serial, #d1232a); direction: ltr; unicode-bidi: isolate; }"
+    },
+    {
+      "name": "Ticket Field and Tick Box",
+      "kind": "input",
+      "refersTo": "sheet-white",
+      "description": "Fields on the fill-in ticket: no box, the ruled line is the edge and turns form blue on focus. Ticking a box draws the cross in pen.",
+      "html": "<div class=\"ds-form\"><div class=\"ds-perf\"></div><label class=\"ds-row\"><span class=\"ds-form-label\">Customer</span><input class=\"ds-input\" type=\"text\" placeholder=\"Your name or business\"></label><div class=\"ds-row\"><span class=\"ds-form-label\">Job</span><span class=\"ds-ticks\"><label class=\"ds-tick\"><input type=\"checkbox\" checked><span class=\"ds-tick-box\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" aria-hidden=\"true\"><path class=\"ds-pen\" d=\"M5 5 19 19\"/><path class=\"ds-pen\" d=\"M19 5 5 19\"/></svg></span><span>Website</span></label><label class=\"ds-tick\"><input type=\"checkbox\"><span class=\"ds-tick-box\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" aria-hidden=\"true\"><path class=\"ds-pen\" d=\"M5 5 19 19\"/><path class=\"ds-pen\" d=\"M19 5 5 19\"/></svg></span><span>POS system</span></label></span></div></div>",
+      "css": ".ds-form { background-color: var(--color-sheet, #fbfbf7); color: var(--color-ink, #0f1838); border-radius: var(--radius-paper, 3px); padding: 0 36px 28px; box-shadow: 0 1px 0 rgba(8, 13, 48, 0.25), 0 18px 34px -16px rgba(5, 9, 40, 0.75); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 20px; } .ds-perf { grid-column: span 2; height: 32px; margin: 0 -36px; border-bottom: 1px solid rgba(15, 24, 56, 0.3); background-image: radial-gradient(circle at center, var(--color-carbon, #1a2a7c) 0 3px, transparent 3.6px); background-size: 16px 10px; background-repeat: round no-repeat; background-position: 0 9px; } .ds-row { grid-column: span 2; display: grid; grid-template-columns: subgrid; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(15, 24, 56, 0.3); transition: box-shadow 200ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-row:focus-within { border-bottom-color: var(--color-form, #2540c4); box-shadow: inset 0 -2px 0 var(--color-form, #2540c4); } .ds-form-label { font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-variation-settings: \"wdth\" 70; font-size: 0.78rem; line-height: 1.25; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap; color: var(--color-form, #2540c4); } .ds-input { width: 100%; min-width: 0; border: 0; background: transparent; padding: 4px 0; font: inherit; color: var(--color-ink, #0f1838); caret-color: var(--color-form, #2540c4); } .ds-input::placeholder { color: var(--color-ink-soft, #3a4366); opacity: 1; } .ds-input:focus { outline: none; } .ds-ticks { display: flex; flex-wrap: wrap; column-gap: 28px; } .ds-tick { display: inline-flex; min-height: 44px; align-items: center; gap: 10px; cursor: pointer; } .ds-tick input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } .ds-tick-box { display: grid; place-items: center; width: 24px; height: 24px; flex-shrink: 0; border: 2px solid var(--color-form, #2540c4); border-radius: 2px; } .ds-tick-box svg { width: 20px; height: 20px; color: var(--color-ink, #0f1838); } .ds-pen { stroke-dasharray: 30; stroke-dashoffset: 30; transition: stroke-dashoffset 220ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-pen + .ds-pen { transition-delay: 120ms; } .ds-tick input:checked + .ds-tick-box .ds-pen { stroke-dashoffset: 0; } .ds-tick input:focus-visible + .ds-tick-box { outline: 2px solid var(--color-form, #2540c4); outline-offset: 2px; } @media (prefers-reduced-motion: reduce) { .ds-pen { transition: none; } }"
+    },
+    {
+      "name": "Ruled List",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "A short set of parallel things written straight on the ground: a term and a sentence about it between ground rules.",
+      "html": "<dl class=\"ds-ruled\"><div class=\"ds-ruled-row\"><dt>Website Development</dt><dd>Design and development of websites, including multilingual sites supporting Arabic and Kurdish.</dd></div><div class=\"ds-ruled-row\"><dt>Point-of-Sale Systems</dt><dd>A till built around your shop, kiosk or restaurant. Works without internet.</dd></div></dl>",
+      "css": ".ds-ruled { margin: 0; padding: 24px; background: var(--color-carbon, #1a2a7c); color: var(--color-ground, #f4f5fb); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); line-height: 1.6; } .ds-ruled-row { display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); gap: 6px 40px; padding: 20px 0; border-bottom: 1px solid var(--color-carbon-line, #4356b4); } .ds-ruled-row:first-child { border-top: 1px solid var(--color-carbon-line, #4356b4); } .ds-ruled-row dt { font-variation-settings: \"wdth\" 120; font-size: 1.15rem; line-height: 1.375; font-weight: 700; } .ds-ruled-row dd { margin: 0; max-width: 60ch; color: var(--color-ground-dim, #bcc5f0); }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "The name printed across the top of the book, the nav with a canary pen stroke under the current page, and the language switch.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-brand\" href=\"#\">Mustafa Deari Ahmed</a><nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-link--active\" href=\"#\" aria-current=\"page\">Home</a><a class=\"ds-nav-link\" href=\"#\">About</a><a class=\"ds-nav-link\" href=\"#\">Projects</a><a class=\"ds-nav-link\" href=\"#\">Contact</a></nav><div class=\"ds-langs\"><a class=\"ds-lang ds-lang--active\" href=\"#\">en</a><a class=\"ds-lang\" href=\"#\">ar</a><a class=\"ds-lang\" href=\"#\">ku</a></div></header>",
+      "css": ".ds-header { display: flex; flex-wrap: wrap; align-items: center; column-gap: 24px; padding: 0 24px; background: var(--color-carbon-deep, #111c5a); border-bottom: 1px solid var(--color-carbon-line, #4356b4); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); } .ds-brand { font-variation-settings: \"wdth\" 120; padding: 14px 0; font-size: 0.95rem; line-height: 1.25; font-weight: 800; letter-spacing: 0.01em; text-transform: uppercase; color: var(--color-ground, #f4f5fb); text-decoration: none; } .ds-nav { display: flex; flex-wrap: wrap; align-items: center; margin-inline-start: auto; } .ds-nav-link { position: relative; display: inline-block; padding: 12px 8px; font-size: 0.95rem; font-weight: 500; color: var(--color-ground-dim, #bcc5f0); text-decoration: none; transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-nav-link::after { content: ''; position: absolute; left: 8px; right: 8px; bottom: 6px; height: 2px; background: var(--color-canary, #ffe35c); transform: scaleX(0); transform-origin: left; transition: transform 200ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-nav-link:hover, .ds-nav-link--active { color: var(--color-ground, #f4f5fb); } .ds-nav-link:hover::after, .ds-nav-link--active::after { transform: scaleX(1); } .ds-langs { display: flex; align-items: center; font-variation-settings: \"wdth\" 70; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; } .ds-lang { display: inline-block; padding: 12px 6px; color: var(--color-ground-dim, #bcc5f0); text-decoration: none; transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-lang:hover { color: var(--color-ground, #f4f5fb); } .ds-lang--active, .ds-lang--active:hover { color: var(--color-canary, #ffe35c); } .ds-header a:focus-visible { outline: 2px solid var(--color-canary, #ffe35c); outline-offset: 3px; }"
+    },
+    {
+      "name": "Closing Ticket",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The close of a page: a full-width canary sheet with its perforation along the top, one ink button and paper buttons beside it.",
+      "html": "<section class=\"ds-next\"><h2 class=\"ds-next-heading\">The next ticket is yours.</h2><div class=\"ds-next-row\"><a class=\"ds-next-btn ds-next-btn--ink\" href=\"#\">Fill in a ticket <svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8h10M9 4l4 4-4 4\"/></svg></a><a class=\"ds-next-btn\" href=\"#\">WhatsApp</a><a class=\"ds-next-btn\" href=\"#\">Email me</a></div></section>",
+      "css": ".ds-next { padding: 56px 24px; background-color: var(--color-canary, #ffe35c); background-image: radial-gradient(circle at center, var(--color-carbon, #1a2a7c) 0 3px, transparent 3.6px); background-size: 16px 10px; background-repeat: round no-repeat; background-position: 0 9px; color: var(--color-ink, #0f1838); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); } .ds-next-heading { margin: 0 0 28px; font-variation-settings: \"wdth\" 120; font-size: clamp(1.9rem, 5vw, 3.4rem); line-height: 1.05; font-weight: 900; letter-spacing: -0.02em; text-wrap: balance; } .ds-next-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; } .ds-next-btn { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; padding: 8px 20px; border-radius: var(--radius-paper, 3px); font-family: var(--font-sans, Archivo, ui-sans-serif, system-ui, sans-serif); font-size: 0.95rem; line-height: 1.25; font-weight: 600; text-decoration: none; transition: color 200ms cubic-bezier(0.25, 1, 0.5, 1), background-color 200ms cubic-bezier(0.25, 1, 0.5, 1), border-color 200ms cubic-bezier(0.25, 1, 0.5, 1); background: transparent; color: var(--color-ink, #0f1838); border: 1px solid rgba(15, 24, 56, 0.4); } .ds-next-btn:hover { border-color: var(--color-ink, #0f1838); background: rgba(15, 24, 56, 0.05); } .ds-next-btn--ink { background: var(--color-ink, #0f1838); color: var(--color-sheet, #fbfbf7); border-color: transparent; } .ds-next-btn--ink:hover { background: var(--color-form, #2540c4); border-color: transparent; } .ds-next-btn:focus-visible { outline: 2px solid var(--color-form, #2540c4); outline-offset: 3px; }"
     }
   ],
   "narrative": {
-    "northStar": "The Night Build",
-    "overview": "The site reads as a single terminal session left running late at night: a whoami prompt, // comments, a blinking text cursor, monospace type throughout. It is precise and quietly confident — the craft is meant to speak for itself rather than announce itself, so there is no marketing chrome, no gradient hero illustration, no glassmorphism. Yet it is not cold: the near-black background is offset by a warm amber secondary and two slow-drifting blurred color blobs that give the dark canvas ambient glow, like monitor bloom in a dark room, rather than stark cyberpunk starkness. Everything, including headings, is set in the same monospace stack. Hierarchy comes from size, weight, and color, not from switching typefaces — this is deliberate and load-bearing, not an oversight to \"fix\" with a display font.",
+    "northStar": "The Job-Ticket Book",
+    "overview": "The site is drawn as the carbon-copy ticket book a workshop keeps on the counter. The ground is carbon paper. On it lie sheets in the three stocks such a book has: the white top copy, the canary copy, the pink copy. Each sheet carries what a printer would have put on it (labels and tick boxes in form blue, ruled lines to write along, a row of holes where it tears off) and what was then written on it in blue-black ink, with a red number stamped in the corner by a numbering machine.\n\nEvery piece of work, whatever its kind, is written up as the same ticket: a website, a till, a business card. That sameness is the argument: any job is taken on the same way. The paper says what kind of job it was before a word is read. The book ends on a blank ticket made out to the visitor, and filling it in composes the message they send.\n\nColours are named for the material they are, so a rule reads as what it describes. Nothing on the site is a card, a pill, a badge or a panel; it is the ground, a sheet, something printed on the sheet, or something written on it.",
     "keyCharacteristics": [
-      "One font family for the entire system; hierarchy is size/weight/color only.",
-      "Flat surfaces at rest; depth and glow appear only on hover/interaction.",
-      "A single accent (mint) carries all interactive/primary meaning; amber is reserved for status-like content (role title, project tags).",
-      "Ambient, not decorative: background blobs and the scanline overlay create atmosphere without competing with content.",
-      "Motion is purposeful and fully disabled under prefers-reduced-motion (typewriter, cursor blink, blob drift, reveal-on-scroll, hover lifts)."
+      "A carbon-blue ground with paper lying on it; all content that is \"an item\" is on a sheet, all connective text is written on the ground.",
+      "Three paper stocks that code the kind of job: white for websites, canary for software, pink for print.",
+      "Two blues and a red with fixed jobs: form blue is what the printer put there, blue-black ink is what was written, red is the ticket number and nothing else.",
+      "One Latin family in three widths; a kufi and a plain sans for Arabic and Kurdish.",
+      "Rows, not tiles: label and value along a ruled line, in every language.",
+      "Sheets feed in once; nothing loops; all of it is off unless motion is both possible and wanted."
     ],
     "rules": [
-      { "name": "The One Accent Rule", "body": "Terminal Mint is the only color that means \"interactive.\" Signal Amber marks status/metadata and must never double as a link, button, or active-state color — mixing the two collapses the system's only semantic distinction.", "section": "colors" },
-      { "name": "The One Font Rule", "body": "No second typeface is ever introduced for \"elegance\" or contrast. If a new element needs more visual weight, it gets a larger size or Bright White, not a different font.", "section": "typography" },
-      { "name": "The Flat-By-Default Rule", "body": "Nothing casts a shadow at rest. Shadow is exclusively a hover/interaction signal, never a static styling choice — a component that needs to look \"important\" gets a border or Bright White text, not a permanent shadow.", "section": "elevation" }
+      {
+        "name": "The Paper Says the Kind Rule",
+        "body": "A job's stock is decided by its kind and nothing else: website on white, software on canary, print on pink. The mapping lives in one place (STOCK in lib/jobs.js). Wherever the stocks appear as a code, the kind is also written in words, so colour is never the only cue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Printer and the Pen Rule",
+        "body": "Form blue is for what was on the sheet before anyone wrote on it; ink is for what was written. A label is never ink and a value is never form blue. The single crossing is deliberate: the carbon-copy message is written by the visitor but shows in blue, because that is what comes through carbon paper.",
+        "section": "colors"
+      },
+      {
+        "name": "The Red Is the Number Rule",
+        "body": "Red appears only as a ticket number, and only at 1.4rem bold in the wide cut. It measures 5.1:1 on white, 4.1:1 on canary and 3.5:1 on pink, which holds at that size and fails below it. Do not use it for errors, emphasis, or small text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Widths Rule",
+        "body": "Condensed is for what the printer set small, normal is for reading, expanded is for a printed header. Width is the hierarchy tool; do not add a second Latin family, and do not use the wide cut for running text or the condensed cut for sentences.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Tracking in Arabic Rule",
+        "body": "Letter-spacing is never applied to Arabic or Kurdish, positive or negative. It pulls joined script apart. Every tracked style in the build resets to normal under RTL, and any new one must do the same.",
+        "section": "typography"
+      },
+      {
+        "name": "The Latin Stays Latin Rule",
+        "body": "A machine string (a domain, the email address, the phone number) and a name written in Latin on its own material (the owner's name, Qasa POS, a client's name) stays in the Latin face and left-to-right in every language, isolated so the bidi algorithm cannot reorder it inside an Arabic or Kurdish sentence. The owner's name and the motto are never translated or transliterated.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper on the Ground Rule",
+        "body": "Only a sheet casts a shadow, and only onto the ground. A screenshot on paper takes a hairline ink border and no shadow; the same screenshot on the ground takes the sheet shadow and no border.",
+        "section": "elevation"
+      }
     ],
     "dos": [
-      "Do keep the entire system on one monospace font family; introduce new hierarchy through size, weight, or the three neutral text colors.",
-      "Do keep cards and panels flat at rest and reserve shadow for the hover-lift state only.",
-      "Do use Signal Amber strictly for status/metadata (role line, project tags) and never for links, buttons, or other interactive elements.",
-      "Do respect prefers-reduced-motion on every animation (typewriter, cursor blink, blob drift, reveal-on-scroll, hover transforms) — this is already implemented site-wide and must be preserved in any new component.",
-      "Do keep prose at reading width (600–640px) inside the 1080px column — the extra width is for screenshots and two-column rows, not for longer lines."
+      "Do put every piece of work on the stock for its kind (website white, software canary, print pink) and say the kind in words wherever the colour is used as a code.",
+      "Do write facts as label-and-value rows on ruled lines, with labels in the condensed form-blue capitals and values in ink.",
+      "Do give every ticket its number in red at 1.4rem, at the inline end of its top line.",
+      "Do keep domains, the email address, the phone number and Latin names in the Latin face and left-to-right in all three languages.",
+      "Do reset letter-spacing to normal and open the leading for Arabic and Kurdish on every style that tracks or tightens Latin.",
+      "Do gate anything that animates on html[data-motion=\"on\"], run it once, and make sure the page is complete without it.",
+      "Do keep prose to about 60ch inside the 1080px column, and keep every tap target at least 44px tall.",
+      "Do keep English, Arabic and Kurdish in step: the same sheets, rows and order in each."
     ],
     "donts": [
-      "Don't introduce a second (serif/display) typeface for \"polish\" — it breaks the terminal illusion the whole system is built on.",
-      "Don't add gradients, glassmorphism, or drop shadows at rest — the only permitted shadow is the single hover-lift value documented in Elevation & Depth.",
-      "Don't use rounded/pill shapes beyond the documented radii (4px/6px/10px/50%) or introduce heavier, more playful corner rounding.",
-      "Don't invent additional accent colors — Terminal Mint and Signal Amber are the only two, each with a fixed, non-overlapping role."
+      "Don't put a status on a project: no live, shipped, version or in-progress pill, tag or wording anywhere.",
+      "Don't set a kicker or eyebrow above a heading. A form label names a value on its own row; it never sits alone over a heading to introduce it.",
+      "Don't lay work out as a grid of identical tiles. A job with a screenshot is a full-width ticket; jobs without one are lines on a single sheet.",
+      "Don't decorate with icons. The two drawn arrows are the whole set.",
+      "Don't invent imagery. A job gets a picture only when a real screenshot of it exists; no mockups, stock photos, illustrations or placeholders.",
+      "Don't bring back anything from the retired terminal identity: monospace type, prompts, code-comment labels, a typewriter effect, a moving background.",
+      "Don't animate anything on a loop, and don't make an exception to the reduced-motion rule for ambience.",
+      "Don't use red for anything but a ticket number, or set it smaller than 1.4rem bold.",
+      "Don't add a paper stock, a second accent, a gradient, a blur or a glow. Three papers and three inks are the palette.",
+      "Don't round anything past the 3px paper corner, and don't nest a sheet inside a sheet.",
+      "Don't letter-space Arabic or Kurdish, and don't translate or transliterate the owner's name or the motto."
     ]
   }
 }

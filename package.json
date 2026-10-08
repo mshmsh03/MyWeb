@@ -6,14 +6,16 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && node scripts/postbuild.mjs",
-    "start": "serve out"
+    "start": "serve out",
+    "size": "node scripts/js-budget.mjs",
+    "test": "node --test"
   },
   "devDependencies": {
     "serve": "^14.2.6"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.3",
-    "next": "^16.3.1",
+    "next": "^16.4.0",
     "postcss": "^8.5.26",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

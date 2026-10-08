@@ -7,12 +7,12 @@ import { useEffect, useRef, useState } from 'react';
 // only decides *when*, never *what*, so the whole site shares one set of
 // curves and durations.
 //
-// `variant` picks the entrance grammar, and the three are deliberately
-// different so scrolling the page does not replay one identical effect:
-//   register — text and prose blocks rise a little and settle (the default)
-//   wipe     — full-bleed media and feature panels are uncovered by a passing
-//              level line, which suits a photograph better than a rise
-//   fade     — for anything already carried by a background or gradient
+// `variant` names the entrance, and app/globals.css decides what each name
+// does. On this site there are two: a sheet is fed in from below and comes to
+// rest, or something simply fades in.
+//   register — the feed (the default)
+//   wipe     — kept as a name for compatibility; it is the same feed
+//   fade     — for anything that should appear without moving
 //
 // `stagger` marks the element as a list that may arrive as a list: its direct
 // children cascade instead of the container animating as one block. CSS caps
