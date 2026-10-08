@@ -149,6 +149,17 @@
     outline-color: var(--color-form);
   }
 
+  /* Without JavaScript the exhibits are drawn in their opening state with
+     their controls disabled. html[data-motion] is set by the inline script
+     whenever script runs, so its absence means none does: only then are the
+     disabled controls dimmed, so they do not look usable. With script, the
+     static drawing looks exactly like the working one it is about to become. */
+  html:not([data-motion]) :is(button, input, select, textarea):disabled,
+  html:not([data-motion]) :disabled + span {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
   /* Arabic and Kurdish switch family and take looser leading: joined script
      with marks above and below needs the room. */
   [dir="rtl"] {

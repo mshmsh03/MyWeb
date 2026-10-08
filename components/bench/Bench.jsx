@@ -33,7 +33,7 @@ export default function Bench({ lang, t }) {
           <li key={id}>
             <a href={`#${id}`} className="plot" data-device={id}>
               <span className="dev" aria-hidden="true">
-                <span className={`dev-pose ${kind}`}>
+                <span className={`dev-pose dev-${kind}`}>
                   <Device lang={lang} />
                 </span>
               </span>

@@ -53,10 +53,18 @@ export default function BenchStage({ className, children }) {
 
     const onClick = (e) => {
       const link = e.target.closest('a[data-device]');
-      if (!link || !document.startViewTransition || !effectsOn()) return;
+      if (!link) return;
       const id = link.dataset.device;
       const exhibit = document.getElementById(id);
       if (!exhibit) return;
+      const heading = () => exhibit.querySelector('h2')?.focus({ preventScroll: true });
+
+      // No transition: the link jumps there as a link does, and focus follows
+      // to the section's heading once it has.
+      if (!document.startViewTransition || !effectsOn()) {
+        requestAnimationFrame(heading);
+        return;
+      }
       e.preventDefault();
 
       // The device's screen and the exhibit's frame take turns carrying the
@@ -66,16 +74,22 @@ export default function BenchStage({ className, children }) {
       const screens = link.querySelectorAll('[data-screen]');
       const from = screens[document.dir === 'rtl' ? screens.length - 1 : 0];
       const to = exhibit.querySelector('[data-frame]');
+      // While the morph runs the page is marked, so the exhibit waits to
+      // swap in its working version until the morph has landed (useIsland).
+      const root = document.documentElement;
       from.style.viewTransitionName = 'exhibit';
+      root.dataset.morphing = '1';
       const vt = document.startViewTransition(() => {
         from.style.viewTransitionName = '';
         if (to) to.style.viewTransitionName = 'exhibit';
         exhibit.scrollIntoView({ behavior: 'instant', block: 'start' });
         history.pushState(null, '', `#${id}`);
-        exhibit.querySelector('h2')?.focus({ preventScroll: true });
+        heading();
       });
       vt.finished.finally(() => {
         if (to) to.style.viewTransitionName = '';
+        delete root.dataset.morphing;
+        window.dispatchEvent(new Event('morphend'));
       });
     };
 

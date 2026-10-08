@@ -118,8 +118,8 @@
 
 /* ---------- Laptop ---------- */
 
-.laptop .base { --w: 320px; --h: 12px; --d: 214px; }
-.laptop .base .tp {
+.dev-laptop .base { --w: 320px; --h: 12px; --d: 214px; }
+.dev-laptop .base .tp {
   /* The keyboard and the trackpad pressed into the deck. */
   background:
     linear-gradient(#232b2d, #232b2d) 50% 168px / 112px 34px no-repeat,
@@ -127,8 +127,8 @@
     repeating-linear-gradient(0deg, transparent 0 3px, #12181a 3px 19.5px) 26px 26px / 268px 98px no-repeat,
     #2b3436;
 }
-.laptop .lid { --w: 320px; --h: 206px; --d: 7px; --y: 12px; --z: -103px; --r: rotateX(13deg); }
-.laptop .lid .ft {
+.dev-laptop .lid { --w: 320px; --h: 206px; --d: 7px; --y: 12px; --z: -103px; --r: rotateX(13deg); }
+.dev-laptop .lid .ft {
   padding: 10px 10px 13px;
   background: #101516;
 }
@@ -173,37 +173,37 @@
 
 /* ---------- Till ---------- */
 
-.till .drawer { --w: 250px; --h: 50px; --d: 186px; }
-.till .drawer .ft {
+.dev-till .drawer { --w: 250px; --h: 50px; --d: 186px; }
+.dev-till .drawer .ft {
   /* The drawer front: a seam, and a lock. */
   background:
     radial-gradient(circle, #5d6a67 0 2.5px, transparent 3px) 50% 22px / 8px 8px no-repeat,
     linear-gradient(#0f1415, #0f1415) 0 12px / 100% 1px no-repeat,
     #181f20;
 }
-.till .plate { --w: 104px; --h: 6px; --d: 76px; --x: -30px; --z: -30px; --y: 50px; }
-.till .neck { --w: 30px; --h: 40px; --d: 22px; --x: -30px; --z: -42px; --y: 56px; }
-.till .display { --w: 226px; --h: 146px; --d: 12px; --x: -30px; --z: -36px; --y: 84px; --r: rotateX(11deg); }
-.till .display .ft {
+.dev-till .plate { --w: 104px; --h: 6px; --d: 76px; --x: -30px; --z: -30px; --y: 50px; }
+.dev-till .neck { --w: 30px; --h: 40px; --d: 22px; --x: -30px; --z: -42px; --y: 56px; }
+.dev-till .display { --w: 226px; --h: 146px; --d: 12px; --x: -30px; --z: -36px; --y: 84px; --r: rotateX(11deg); }
+.dev-till .display .ft {
   padding: 8px;
   background: #101516;
 }
-.till .display .screen img {
+.dev-till .display .screen img {
   height: 100%;
   object-fit: cover;
   object-position: 0 0;
 }
-.till .printer { --w: 70px; --h: 54px; --d: 92px; --x: 86px; --z: 38px; --y: 50px; }
-.till .printer .tp {
+.dev-till .printer { --w: 70px; --h: 54px; --d: 92px; --x: 86px; --z: 38px; --y: 50px; }
+.dev-till .printer .tp {
   /* The paper slot. */
   background: linear-gradient(#0c1011, #0c1011) 50% 20px / 46px 3px no-repeat, #2b3436;
 }
-.till .printer .ft {
+.dev-till .printer .ft {
   background: radial-gradient(circle, var(--color-signal) 0 2px, transparent 2.5px) 12px 12px / 6px 6px no-repeat, #181f20;
 }
 /* The end of a receipt standing out of the slot, torn on a saw edge. */
-.till .paper { --w: 44px; --h: 46px; --d: 0px; --x: 86px; --z: 26px; --y: 104px; --r: rotateX(-14deg); }
-.till .paper .ft {
+.dev-till .paper { --w: 44px; --h: 46px; --d: 0px; --x: 86px; --z: 26px; --y: 104px; --r: rotateX(-14deg); }
+.dev-till .paper .ft {
   backface-visibility: visible;
   background:
     repeating-linear-gradient(#c9d0cc 0 1px, transparent 1px 7px) 7px 14px / 30px 26px no-repeat,
@@ -213,8 +213,8 @@
 
 /* ---------- Computer ---------- */
 
-.tower .case { --w: 118px; --h: 236px; --d: 236px; }
-.tower .case .ft {
+.dev-tower .case { --w: 118px; --h: 236px; --d: 236px; }
+.dev-tower .case .ft {
   /* The front: a power button and a vent. */
   background:
     radial-gradient(circle, #3a4547 0 6px, #0f1415 6.5px 7.5px, transparent 8px) 50% 22px / 20px 20px no-repeat,
@@ -223,12 +223,12 @@
 }
 /* The side panel is glass, so the parts inside show through it. The same
    panel is drawn on both sides, and the one facing away is never painted. */
-.tower .case .lt,
-.tower .case .rt {
+.dev-tower .case .lt,
+.dev-tower .case .rt {
   padding: 10px;
   background: #101516;
 }
-.tower .case .rt .inside {
+.dev-tower .case .rt .inside {
   transform: scaleX(-1);
 }
 .inside {
@@ -293,7 +293,7 @@
   border-radius: 2px;
   background: #3a4547;
 }
-.tower .glass {
+.dev-tower .glass {
   position: absolute;
   inset: 0;
   display: block;
