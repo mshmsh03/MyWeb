@@ -10,9 +10,10 @@ import { compose, sendLinks } from '@/lib/request';
 // and changes with every keystroke. Send hands it to their own WhatsApp (or
 // mail app). The site sends and keeps nothing itself.
 //
-// An exhibit can open it with a need already chosen, two ways: a link to
-// #request carrying data-need="pos", or ?need=pos in the page address (for a
-// link from another page).
+// An exhibit can open it with a need already chosen, and a line already
+// written, two ways: a link to #request carrying data-need="pos" (and
+// data-detail), or ?need=pos&detail=… in the page address, for a link from
+// another page. requestLinkProps() in lib/request.js writes either.
 //
 // Without JavaScript the fields are plain fields and the send links open an
 // empty chat or an empty email.
@@ -27,13 +28,15 @@ export default function RequestBuilder({ t, r }) {
   const needs = Object.keys(t.jobs);
 
   useEffect(() => {
-    const add = (need) => {
+    const open = (need, detail) => {
       if (needs.includes(need)) setPicked((now) => (now.includes(need) ? now : [...now, need]));
+      if (detail) setDetails(detail);
     };
-    add(new URLSearchParams(window.location.search).get('need'));
+    const query = new URLSearchParams(window.location.search);
+    open(query.get('need'), query.get('detail'));
     const onClick = (e) => {
       const link = e.target.closest?.('a[data-need]');
-      if (link) add(link.dataset.need);
+      if (link) open(link.dataset.need, link.dataset.detail);
     };
     document.addEventListener('click', onClick);
     return () => document.removeEventListener('click', onClick);

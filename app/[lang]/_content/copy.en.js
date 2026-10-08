@@ -44,6 +44,9 @@ export default {
 
   // The request builder. Its choices, field hints and message wording are
   // the ticket's, above.
+  // The site viewer (the laptop's exhibit).
+  viewer: {},
+
   request: {
     title: 'Start a request',
     lead: 'Choose what you need and your message is written as you go. The site sends nothing itself: the message opens in your own WhatsApp or email.',
@@ -52,6 +55,9 @@ export default {
     blank: 'Your message appears here as you write it.',
     subject: 'Request from your website',
   },
+
+  // The teardown (the computer's exhibit).
+  teardown: {},
 
   home: {
     jobs: 'Past jobs',

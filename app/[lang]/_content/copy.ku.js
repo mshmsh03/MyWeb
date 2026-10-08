@@ -41,6 +41,9 @@ export default {
     see: 'کارەکان ببینە',
   },
 
+  // The site viewer (the laptop's exhibit).
+  viewer: {},
+
   request: {
     title: 'داواکارییەک بنووسە',
     lead: 'ئەوەی پێویستتە هەڵیبژێرە و نامەکەت لەگەڵ نووسینەکەت دەنووسرێت. ماڵپەڕەکە خۆی هیچ نانێرێت: نامەکە لە واتساپ یان ئیمەیلی خۆتدا دەکرێتەوە.',
@@ -49,6 +52,9 @@ export default {
     blank: 'نامەکەت لێرە دەردەکەوێت کاتێک دەینووسیت.',
     subject: 'داواکاری لە ماڵپەڕەکەتەوە',
   },
+
+  // The teardown (the computer's exhibit).
+  teardown: {},
 
   home: {
     jobs: 'کارە پێشووەکان',

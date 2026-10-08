@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build && node scripts/postbuild.mjs",
     "start": "serve out",
-    "size": "node scripts/js-budget.mjs"
+    "size": "node scripts/js-budget.mjs",
+    "test": "node --test"
   },
   "devDependencies": {
     "serve": "^14.2.6"

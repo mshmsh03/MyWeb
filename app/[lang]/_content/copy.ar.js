@@ -40,6 +40,9 @@ export default {
     see: 'شاهد الأعمال',
   },
 
+  // The site viewer (the laptop's exhibit).
+  viewer: {},
+
   request: {
     title: 'ابدأ طلبك',
     lead: 'اختر ما تحتاجه وتُكتب رسالتك أثناء ذلك. الموقع لا يرسل شيئًا بنفسه: تُفتح الرسالة في واتساب أو بريدك أنت.',
@@ -48,6 +51,9 @@ export default {
     blank: 'تظهر رسالتك هنا وأنت تكتبها.',
     subject: 'طلب من موقعك',
   },
+
+  // The teardown (the computer's exhibit).
+  teardown: {},
 
   home: {
     jobs: 'أعمال سابقة',
