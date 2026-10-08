@@ -1,9 +1,7 @@
 import { createLangPage } from '@/lib/page';
-import ProjectsEn from '../_content/projects.en';
-import ProjectsAr from '../_content/projects.ar';
-import ProjectsKu from '../_content/projects.ku';
+import Projects from '../_pages/Projects';
 
-const { generateMetadata, Page } = createLangPage('projects', { en: ProjectsEn, ar: ProjectsAr, ku: ProjectsKu });
+const { generateMetadata, Page } = createLangPage('projects', Projects);
 
 export { generateMetadata };
 export default Page;

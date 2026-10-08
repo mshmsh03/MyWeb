@@ -8,7 +8,7 @@ web
 
 ## Users
 
-Primary visitors are freelance/business clients (individuals or local businesses who need a website built, a point-of-sale system set up, or hardware diagnosed/repaired) and collaborators/peers (other students, developers, or engineers considering working on projects together). Both groups arrive to evaluate Mustafa's real, completed work and decide whether to reach out.
+Primary visitors are freelance/business clients (individuals or local businesses who need a website built, a point-of-sale system set up, or hardware diagnosed/repaired) and employers deciding whether to offer him a job or an internship. The owner weights the two equally (2026-10-08). Both arrive to evaluate Mustafa's real, completed work and decide whether to reach out.
 
 ## Product Purpose
 
@@ -30,7 +30,7 @@ The owner's standing content decisions (2026-10-08 and earlier) — do not desig
 
 ## Brand Commitments
 
-Name: Mustafa Deari Ahmed. Existing visual identity uses a code/terminal motif (e.g. "whoami" prompt, `/* comment */`-style annotations, monospace touches) and the tagline "built by hand, deployed with intent." No binding language, tone, or visual constraint beyond this was established — multilingual (Arabic/Kurdish) support is real past client work, not a requirement for the portfolio site itself.
+Name: Mustafa Deari Ahmed, written in Latin in every language. Motto, kept from the first site: "Built by hand, deployed with intent." The owner retired the terminal/code identity on 2026-10-08 and asked for a fresh look that is not a template, not technical, and not plain, with no moving background; the site is now drawn as a job-ticket book (see DESIGN.md). The primary action on every page is to send him a ticket on WhatsApp. The site itself is in English, Arabic and Kurdish Sorani, and all three are kept in step.
 
 ## Evidence on Hand
 

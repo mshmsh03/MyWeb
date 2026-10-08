@@ -1,342 +1,231 @@
 import Link from 'next/link';
-import { asset } from '@/lib/site-data';
+import { EMAIL, PHONE_HREF, SHOTS, WHATSAPP_HREF, asset, pagePath } from '@/lib/site-data';
+import { STOCK, serial } from '@/lib/jobs';
 import Reveal from './Reveal';
 
-// The site's vocabulary, one component per class from the pre-Next stylesheet
-// (.section-title, .service-card, .card, .btn, .contact-list, …), so the files
-// in app/[lang]/_content/ hold copy and nothing else.
+// The site's vocabulary. Everything a page is made of is one of the things a
+// job-ticket book has: the ground the book lies on, a sheet of paper, the
+// labels the printer put on it, the rules to write along, the number stamped
+// in its corner. The files in app/[lang]/_pages/ arrange these and nothing
+// else; the words come from app/[lang]/_content/.
 
-export function Section({ id, className = '', children }) {
-  return (
-    <section id={id} className={`py-11 sm:py-16 ${className}`}>
-      <div className="wrap">{children}</div>
-    </section>
-  );
-}
-
-// Both of the site's labels — the section headings and the subpage header —
-// are introduced the way a comment introduces a block of code. The `//` is
-// decoration, so it is generated rather than typed into the copy, and it stays
-// in the mono face in Arabic and Kurdish where the label beside it does not.
-// The tracking is for Latin capitals only: letter-spacing pulls joined Arabic
-// script apart, so the RTL languages set the label at its natural spacing.
-function CommentLabel({ as: Tag = 'div', className = '', children }) {
-  return (
-    <Tag className={`text-xs font-normal tracking-[.12em] text-fg-dim uppercase rtl:tracking-normal ${className}`}>
-      <span aria-hidden="true" className="mono text-accent-dim">
-        //{' '}
-      </span>
-      {children}
-    </Tag>
-  );
-}
-
-export function SectionTitle({ children }) {
-  return (
-    <CommentLabel as="h2" className="mb-6">
-      {children}
-    </CommentLabel>
-  );
-}
-
-// The subpage header. Deliberately just the section label — the page's real
-// title is the browser tab; repeating it as a display <h1> would be the same
-// words twice on a page this short. It takes the body leading rather than the
-// tighter one text-xs implies, so a wrapped Arabic heading stays readable.
-export function PageHeader({ children }) {
-  return (
-    <section className="pt-11 pb-2 sm:pt-16">
-      <div className="wrap">
-        <CommentLabel as="h1" className="m-fade leading-[1.7]">
-          {children}
-        </CommentLabel>
-      </div>
-    </section>
-  );
-}
-
-// The sentence that opens a page. The column is wide enough for screenshots
-// now, so prose caps its own measure instead of running the full width.
-export function Lead({ children }) {
-  return <p className="m-0 max-w-[640px]">{children}</p>;
-}
-
-// The hero is the one place with two columns of text: who he is, and a few
-// facts beside it. The facts drop under the name when there is no room.
-export function Hero({ aside, children }) {
-  return (
-    <div className="flex flex-wrap items-end gap-x-14 gap-y-10">
-      <div className="min-w-0 flex-[1_1_520px]">{children}</div>
-      {aside}
-    </div>
-  );
-}
-
-// A few facts set like the output of a status command. The keys are machine
-// strings — mono and LTR in every language, the same way the About page's
-// /* notes */ are — and only the values are translated.
-export function StatusPanel({ children }) {
-  return (
-    <div className="m-fade w-full max-w-[420px] min-w-0 flex-[1_1_340px] rounded-md border border-line bg-panel px-5.5 py-5">
-      <div className="mono mb-3.5 text-[13px] text-accent-dim">status</div>
-      <dl className="m-0 flex flex-col gap-2.5 text-[13.5px]">{children}</dl>
-    </div>
-  );
-}
-
-export function StatusRow({ label, children }) {
-  return (
-    <div className="flex gap-3.5">
-      <dt className="ltr-fixed w-[82px] shrink-0 text-fg-dim rtl:text-right">{label}</dt>
-      <dd className="m-0">{children}</dd>
-    </div>
-  );
-}
-
-export function Prompt({ children }) {
-  return <div className="mono mb-3.5 min-h-[1em] text-[13px] text-accent-dim">{children}</div>;
-}
-
-export function Role({ children }) {
-  return <div className="mb-5 text-base text-amber">{children}</div>;
-}
-
-export function Tagline({ children }) {
-  return <p className="mb-7 max-w-[600px]">{children}</p>;
-}
-
-export function ButtonRow({ className = '', children }) {
-  return <div className={`flex flex-wrap gap-3 ${className}`}>{children}</div>;
-}
+// ---------- Links and marks ----------
 
 // One anchor for every destination. mailto:, tel:, and off-site links have
 // nothing for the client router to do; everything else goes through next/link
 // so it picks up the basePath.
-function Anchor({ href, className, children }) {
-  if (/^(mailto:|tel:|https?:)/.test(href)) {
+export function Anchor({ href, className, children, ...rest }) {
+  if (/^(mailto:|tel:|https?:|#)/.test(href)) {
     return (
-      <a href={href} className={className} {...(/^https?:/.test(href) ? { target: '_blank', rel: 'noopener' } : {})}>
+      <a
+        href={href}
+        className={className}
+        {...(/^https?:/.test(href) ? { target: '_blank', rel: 'noopener' } : {})}
+        {...rest}
+      >
         {children}
       </a>
     );
   }
   return (
-    <Link href={href} className={className}>
+    <Link href={href} className={className} {...rest}>
       {children}
     </Link>
   );
 }
 
-// Directional glyphs point the way the script is read, so they are mirrored
-// under rtl: rather than left pointing back at the margin.
-function Arrow() {
+// The site's two icons, drawn at one weight. They point the way the script is
+// read, so both are mirrored under RTL.
+const ICONS = {
+  arrow: 'M3 8h10M9 4l4 4-4 4',
+  out: 'M6 3h7v7M13 3 4.5 11.5',
+};
+
+export function Icon({ name, className = '' }) {
   return (
-    <span aria-hidden="true" className="inline-block rtl:-scale-x-100">
-      →
+    <svg
+      viewBox="0 0 16 16"
+      width="16"
+      height="16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={`inline-block shrink-0 rtl:-scale-x-100 ${className}`}
+    >
+      <path d={ICONS[name]} />
+    </svg>
+  );
+}
+
+// `ink` and `canary` are the one filled action on paper and on the ground;
+// `paper` is the quieter outline beside an ink button.
+const BUTTON_TONES = {
+  ink: 'bg-ink text-sheet hover:bg-form',
+  canary: 'bg-canary text-ink hover:bg-sheet',
+  paper: 'border border-ink/40 text-ink hover:border-ink hover:bg-ink/5',
+};
+
+export function Button({ href, tone = 'ink', children, ...rest }) {
+  return (
+    <Anchor
+      href={href}
+      className={`inline-flex min-h-11 items-center gap-2 rounded-paper px-5 py-2 text-[0.95rem] leading-tight font-semibold transition-colors ${BUTTON_TONES[tone]}`}
+      {...rest}
+    >
+      {children}
+    </Anchor>
+  );
+}
+
+export function ButtonRow({ className = '', children }) {
+  return <div className={`flex flex-wrap items-center gap-3 ${className}`}>{children}</div>;
+}
+
+// A link inside a sentence or on its own line: underlined in the printer's
+// blue on paper, in canary on the ground.
+export function TextLink({ href, ground = false, className = '', children }) {
+  return (
+    <Anchor
+      href={href}
+      className={`inline-flex min-h-11 items-center gap-1.5 font-semibold underline decoration-2 underline-offset-4 transition-colors ${
+        ground ? 'decoration-canary hover:text-canary' : 'decoration-form hover:text-form'
+      } ${className}`}
+    >
+      {children}
+    </Anchor>
+  );
+}
+
+// ---------- The ground ----------
+
+export function Band({ id, className = '', children }) {
+  return (
+    <section id={id} className={`py-12 sm:py-16 ${className}`}>
+      <div className="wrap">{children}</div>
+    </section>
+  );
+}
+
+// Headings on the ground are set like the header printed across the top of a
+// ticket book: the wide cut of the face, heavy. Arabic and Kurdish take the
+// kufi through .display and need more leading than Latin capitals do.
+export function PageTitle({ children }) {
+  return (
+    <h1 className="display wd-wide m-fade mb-5 text-[clamp(2rem,5vw,3.25rem)] leading-[1.05] font-extrabold tracking-[-0.015em] rtl:leading-[1.4] rtl:tracking-normal">
+      {children}
+    </h1>
+  );
+}
+
+export function Heading({ children }) {
+  return (
+    <h2 className="display wd-wide mb-7 text-[clamp(1.75rem,3.8vw,2.75rem)] leading-[1.08] font-extrabold tracking-[-0.015em] rtl:leading-[1.45] rtl:tracking-normal">
+      {children}
+    </h2>
+  );
+}
+
+export function SubHeading({ children }) {
+  return (
+    <h2 className="display wd-wide mb-5 text-xl leading-tight font-bold rtl:leading-[1.5]">{children}</h2>
+  );
+}
+
+export function Lead({ className = '', children }) {
+  return <p className={`m-0 max-w-[60ch] text-[1.05rem] text-ground-dim ${className}`}>{children}</p>;
+}
+
+// A ruled list written straight on the ground: a name on one side, a sentence
+// about it on the other. Used where the content is a short set of parallel
+// things and a row of identical cards would say nothing more. The two sides
+// sit side by side only when the list itself is wide enough — it is a
+// container, so the same list stacks in a narrow column on a wide screen.
+export function RuledList({ children }) {
+  return (
+    <Reveal as="dl" stagger className="@container m-0 border-t border-carbon-line">
+      {children}
+    </Reveal>
+  );
+}
+
+export function RuledRow({ term, children }) {
+  return (
+    <div className="grid gap-x-10 gap-y-1.5 border-b border-carbon-line py-5 @2xl:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
+      <dt className="display wd-wide text-[1.15rem] leading-snug font-bold rtl:leading-[1.6]">{term}</dt>
+      <dd className="m-0 max-w-[60ch] text-ground-dim">{children}</dd>
+    </div>
+  );
+}
+
+// ---------- Paper ----------
+
+const STOCKS = { sheet: 'bg-sheet', canary: 'bg-canary', pink: 'bg-pink' };
+
+// A sheet of paper lying on the ground. `perforated` gives it the row of
+// punched holes it was torn along. Everything on a sheet is written in ink,
+// and .on-paper switches the focus ring to match.
+export function Sheet({ stock = 'sheet', perforated = false, className = '', children }) {
+  return (
+    <div
+      className={`on-paper relative rounded-paper text-ink shadow-sheet ${STOCKS[stock]} ${
+        perforated ? 'perforated pt-8' : ''
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+// What the printer put on the sheet: small condensed capitals in form blue.
+// Arabic and Kurdish have no capitals and must not be letter-spaced — tracking
+// pulls joined script apart — so they are set a little larger instead.
+export function FieldLabel({ as: Tag = 'span', id, className = '', children }) {
+  return (
+    <Tag
+      id={id}
+      className={`wd-cond text-[0.78rem] leading-tight font-semibold tracking-[0.09em] whitespace-nowrap text-form uppercase rtl:text-[0.82rem] rtl:tracking-normal ${className}`}
+    >
+      {children}
+    </Tag>
+  );
+}
+
+// The ticket number, the way a numbering machine leaves it: red, and never
+// small — the red only reads on the coloured stocks at this size.
+export function Serial({ no, label }) {
+  return (
+    <span className="inline-flex items-baseline gap-2 whitespace-nowrap">
+      <FieldLabel>{label}</FieldLabel>
+      <span className="ltr-fixed wd-wide text-[1.4rem] leading-none font-bold text-serial">{serial(no)}</span>
     </span>
   );
 }
 
-// A bordered, not filled, button — the accent is spent on the outline and the
-// text, so a row of them stays quiet until hovered. `ghost` is the secondary
-// pairing: the same shape in the neutral rule colour.
-const BUTTON_TONES = {
-  accent: 'border-accent-dim text-accent hover:bg-accent-dim hover:text-bg motion-safe:hover:-translate-y-0.5',
-  ghost: 'border-line text-fg-dim hover:border-fg-dim hover:text-fg motion-safe:hover:-translate-y-0.5',
-};
-
-export function Button({ href, tone = 'accent', children }) {
+// Label/value rows written along ruled lines. The labels share one column
+// whatever their length, so the values line up down the sheet in any language.
+export function Fields({ className = '', children }) {
   return (
-    <Anchor
-      href={href}
-      className={`inline-block rounded border px-4 py-2.5 text-[13px] transition hover:no-underline ${BUTTON_TONES[tone]}`}
-    >
+    <dl className={`m-0 grid grid-cols-[max-content_minmax(0,1fr)] gap-x-5 border-t border-ink/25 ${className}`}>
       {children}
-    </Anchor>
+    </dl>
   );
 }
 
-// The one surface in the system: a panel a step lighter than the page, flat at
-// rest, that answers a hover with the accent border and the lift.
-const CARD =
-  'rounded-md border border-line bg-panel transition-[border-color,transform,box-shadow] duration-200 hover:border-accent-dim motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lift';
-
-export function ServicesGrid({ children }) {
+export function Field({ label, children }) {
   return (
-    <Reveal as="div" stagger className="mb-8 grid gap-4.5 sm:grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
-      {children}
-    </Reveal>
-  );
-}
-
-// The ▸ marker is generated rather than typed, so it stays a bullet the copy
-// does not have to carry, and it moves to the reading start on its own when the
-// layout flips to RTL.
-export function ServiceCard({ title, children }) {
-  return (
-    <div className={`${CARD} p-5`}>
-      <div className="mb-2 font-bold text-bright">
-        <span aria-hidden="true" className="mono inline-block text-accent-dim rtl:-scale-x-100">
-          ▸
-        </span>{' '}
-        {title}
-      </div>
-      <p className="m-0 text-[13.5px] text-fg-dim">{children}</p>
+    <div className="col-span-2 grid grid-cols-subgrid items-baseline border-b border-ink/25 py-2.5">
+      <dt>
+        <FieldLabel>{label}</FieldLabel>
+      </dt>
+      <dd className="m-0 min-w-0">{children}</dd>
     </div>
   );
 }
 
-export function CtaRow({ text, children }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3.5 pt-2">
-      <p className="m-0">{text}</p>
-      {children}
-    </div>
-  );
-}
-
-export function AboutList({ children }) {
-  return (
-    <Reveal as="div" stagger className="mb-8 grid gap-4.5">
-      {children}
-    </Reveal>
-  );
-}
-
-// The C-style annotation stays in the mono face and stays LTR even in Arabic
-// and Kurdish: it is a code comment, and reordering `/* why */` by the bidi
-// algorithm would turn it into `*/ why /*`.
-export function AboutItem({ note, children }) {
-  return (
-    <p className="m-0 max-w-[640px]">
-      <span className="ltr-fixed text-fg-dim">/* {note} */</span>{' '}
-      {children}
-    </p>
-  );
-}
-
-export function Card({ className = '', children }) {
-  return <div className={`${CARD} p-5.5 ${className}`}>{children}</div>;
-}
-
-export function SiteGrid({ children }) {
-  return (
-    <Reveal as="div" stagger className="grid gap-4.5 sm:grid-cols-2">
-      {children}
-    </Reveal>
-  );
-}
-
-// Work that can be shown is shown. The whole card is the link, so the picture,
-// the name and the address are one target rather than three. `domain` is a
-// machine string and stays mono and LTR; `more` is a sentence and is translated.
-// `wide` lays the card on its side across both columns, for a piece of work
-// that has the row to itself.
-export function SiteCard({ href, shot, alt, title, domain, more, wide = false, children }) {
-  return (
-    <Anchor
-      href={href}
-      className={`${CARD} flex flex-col overflow-hidden text-fg hover:no-underline ${wide ? 'sm:col-span-2 sm:flex-row sm:items-center' : ''}`}
-    >
-      <img
-        src={asset(shot.src)}
-        width={shot.width}
-        height={shot.height}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        className={`block h-auto w-full border-b border-line ${wide ? 'sm:w-[56%] sm:shrink-0 sm:border-e sm:border-b-0' : ''}`}
-      />
-      <span className="flex flex-col gap-2 p-5.5">
-        <span className="text-base font-bold text-bright">{title}</span>
-        <span className="text-[13.5px] text-fg-dim">{children}</span>
-        <span className="text-[12.5px] text-accent">
-          <Arrow /> {domain ? <span className="ltr-fixed">{domain}</span> : more}
-        </span>
-      </span>
-    </Anchor>
-  );
-}
-
-// A heading and what sits under it. The Projects page is three of these in one
-// section, so they are spaced by the group rather than by section padding.
-export function WorkGroup({ title, children }) {
-  return (
-    <div className="mt-14">
-      <SectionTitle>{title}</SectionTitle>
-      <div className="flex flex-col gap-4.5">{children}</div>
-    </div>
-  );
-}
-
-// Work without a picture: a ruled list where every entry has the same shape, a
-// name and one line about it, the way a directory listing does.
-export function WorkList({ children }) {
-  return (
-    <Reveal as="ul" stagger className="m-0 list-none border-t border-line p-0">
-      {children}
-    </Reveal>
-  );
-}
-
-export function WorkRow({ title, href, more, children }) {
-  const body = (
-    <>
-      <span className="block font-bold text-bright">{title}</span>
-      <span className="block max-w-[640px] text-[13.5px] text-fg-dim">{children}</span>
-    </>
-  );
-  return (
-    <li className="border-b border-line">
-      {href ? (
-        <Anchor
-          href={href}
-          className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-1 py-4.5 text-fg hover:no-underline"
-        >
-          <span className="min-w-0 flex-[1_1_420px]">{body}</span>
-          <span className="text-[12.5px] text-accent">
-            <Arrow /> {more}
-          </span>
-        </Anchor>
-      ) : (
-        <div className="px-1 py-4.5">{body}</div>
-      )}
-    </li>
-  );
-}
-
-// Where a nested page sits, printed the way a shell prints a working
-// directory. A machine string, so it stays mono and LTR in every language; the
-// parent segment is the way back.
-export function PathCrumb({ href, parent, leaf }) {
-  return (
-    <div className="m-fade mb-5">
-      <span className="ltr-fixed text-[13px] text-fg-dim">
-        <Link href={href} className="inline-block py-2">
-          ~/{parent}
-        </Link>
-        /{leaf}
-      </span>
-    </div>
-  );
-}
-
-// Label/value pairs under a rule, for the handful of facts that describe a
-// piece of work at a glance.
-export function FactList({ children }) {
-  return <dl className="my-8 grid gap-x-6 border-y border-line sm:grid-cols-2 lg:grid-cols-4">{children}</dl>;
-}
-
-export function Fact({ label, children }) {
-  return (
-    <div className="py-4">
-      <dt className="text-xs tracking-[.12em] text-fg-dim uppercase rtl:tracking-normal">{label}</dt>
-      <dd className="m-0 mt-1 text-bright">{children}</dd>
-    </div>
-  );
-}
-
-export function Shot({ shot, alt, caption }) {
+export function Shot({ shot, alt, caption, ground = false }) {
   return (
     <figure className="m-0">
       <img
@@ -346,16 +235,18 @@ export function Shot({ shot, alt, caption }) {
         alt={alt}
         loading="lazy"
         decoding="async"
-        className="block h-auto w-full rounded-md border border-line"
+        className={`block h-auto w-full rounded-paper ${ground ? 'shadow-sheet' : 'border border-ink/20'}`}
       />
-      {caption ? <figcaption className="mt-2.5 text-[12.5px] text-fg-dim">{caption}</figcaption> : null}
+      {caption ? (
+        <figcaption className={`mt-2.5 text-[0.85rem] ${ground ? 'text-ground-dim' : 'text-ink-soft'}`}>
+          {caption}
+        </figcaption>
+      ) : null}
     </figure>
   );
 }
 
-// A picture and the words about it, side by side while there is room. `top`
-// aligns the two at their first line, for when the words are a list longer
-// than the picture is tall.
+// A picture and the words about it, side by side while there is room.
 export function Split({ media, top = false, children }) {
   return (
     <Reveal as="div" className={`flex flex-wrap gap-x-12 gap-y-7 ${top ? 'items-start' : 'items-center'}`}>
@@ -365,42 +256,139 @@ export function Split({ media, top = false, children }) {
   );
 }
 
-export function Note({ title, children }) {
+// ---------- Tickets ----------
+
+export function TicketStack({ children }) {
   return (
-    <>
-      <p className="m-0 mb-3 text-lg leading-snug font-bold text-bright">{title}</p>
-      <p className="m-0 max-w-[420px] text-fg-dim">{children}</p>
-    </>
+    <Reveal as="div" stagger className="grid gap-6">
+      {children}
+    </Reveal>
   );
 }
 
-// What something contains, one named part per row.
-export function SpecList({ children }) {
-  return <dl className="m-0 border-t border-line">{children}</dl>;
+// A client or product name. Names written in Latin on their own material stay
+// in the Latin face, and LTR, inside an Arabic or Kurdish heading.
+function Name({ children }) {
+  return /^[ -~]+$/.test(children) ? <span className="ltr-fixed">{children}</span> : children;
 }
 
-export function SpecRow({ term, children }) {
+// One piece of work with something to show, written up as a ticket: the name,
+// the job and what was done on one half, the screenshot on the other. Every
+// job on the site is written up the same way — a website, a till, a business
+// card — which is the point: whatever the job, it is taken on the same way.
+//
+// `job` is the entry from lib/jobs.js and `t` is the page's copy. The link's
+// hit area is stretched over the whole sheet, so the ticket is one target
+// rather than several.
+export function JobCard({ job, t, lang }) {
+  const c = t.jobs[job.id];
+  const shot = SHOTS[job.shots?.[lang] ?? job.shot];
+  const href = job.href ?? (job.page ? pagePath(lang, job.page) : null);
+
   return (
-    <div className="flex flex-wrap gap-x-4.5 gap-y-0.5 border-b border-line py-3">
-      <dt className="w-24 shrink-0 font-bold text-bright">{term}</dt>
-      <dd className="m-0 min-w-0 flex-[1_1_240px] text-[13.5px] text-fg-dim">{children}</dd>
-    </div>
+    <Sheet
+      stock={STOCK[job.kind]}
+      className={`p-5 sm:p-7 ${
+        href
+          ? 'transition-[transform,box-shadow] duration-300 has-[a:hover]:shadow-lift motion-safe:has-[a:hover]:-translate-y-1'
+          : ''
+      }`}
+    >
+      {/* The name and the number run across the whole sheet, above both
+          halves, so the number sits in the sheet's corner on every ticket. */}
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h3 className="display wd-wide m-0 text-[clamp(1.35rem,2.2vw,1.7rem)] leading-[1.15] font-extrabold tracking-[-0.01em] rtl:leading-[1.5] rtl:tracking-normal">
+          <Name>{c.name}</Name>
+        </h3>
+        <Serial no={job.no} label={t.no} />
+      </div>
+      <div className="grid items-start gap-x-9 gap-y-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)]">
+        <div>
+          <Fields>
+            <Field label={t.fields.job}>
+              <span className="font-semibold">{c.job}</span>
+            </Field>
+            <Field label={t.fields.done}>
+              <span className="text-ink-soft">{c.done}</span>
+            </Field>
+          </Fields>
+          {href ? (
+            <TextLink href={href} className="mt-2 after:absolute after:inset-0">
+              {job.domain ? <span className="ltr-fixed">{job.domain}</span> : t.more}
+              <Icon name={job.domain ? 'out' : 'arrow'} />
+            </TextLink>
+          ) : null}
+        </div>
+        <Shot shot={shot} alt={c.alt} />
+      </div>
+    </Sheet>
   );
 }
 
-// key/value rows under a rule — the closest thing the site has to a table.
-export function ContactList({ children }) {
-  return <ul className="mt-0 border-t border-line pt-5">{children}</ul>;
+// Work with no picture yet, entered as lines on one sheet the way a ledger
+// page lists them: who it was for and what the job was, what was done, and
+// the ticket number. One sheet, however many lines — a grid of small tickets
+// that say nothing a line does not would only take more room.
+export function JobRows({ jobs, t, stock }) {
+  return (
+    <Reveal as="div">
+      <Sheet stock={stock} className="px-5 py-1 sm:px-7">
+        <ul className="m-0 list-none p-0">
+          {jobs.map((job) => {
+            const c = t.jobs[job.id];
+            return (
+              <li
+                key={job.id}
+                className="grid gap-x-9 gap-y-1.5 border-b border-ink/25 py-4 last:border-b-0 md:grid-cols-[minmax(0,17rem)_minmax(0,1fr)_auto] md:items-baseline"
+              >
+                <div>
+                  <h3 className="display wd-wide m-0 text-[1.15rem] leading-snug font-extrabold rtl:leading-[1.6]">
+                    <Name>{c.name}</Name>
+                  </h3>
+                  <p className="m-0 font-semibold">{c.job}</p>
+                </div>
+                <p className="m-0 max-w-[58ch] text-ink-soft">{c.done}</p>
+                <div className="order-first justify-self-end md:order-none">
+                  <Serial no={job.no} label={t.no} />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </Sheet>
+    </Reveal>
+  );
 }
 
-export function ContactRow({ label, href, children }) {
+// The close of every page: the next ticket in the book is the visitor's. It is
+// the one place a stock is used at full size — a canary sheet the width of the
+// page, with its row of holes along the top where it tears off. `href` is
+// where the ticket itself is: the top of the home page, or the contact page
+// from anywhere else.
+export function NextTicket({ t, href }) {
   return (
-    <li className="mb-2 last:mb-0">
-      <span className="inline-block min-w-[90px] text-fg-dim">{label}</span>{' '}
-      <a href={href} className="ltr-fixed" {...(/^https?:/.test(href) ? { target: '_blank', rel: 'noopener' } : {})}>
-        {children}
-      </a>
-    </li>
+    <section className="on-paper perforated mt-8 bg-canary pt-14 pb-14 text-ink sm:pt-16 sm:pb-16">
+      <div className="wrap">
+        <h2 className="display wd-wide m-0 mb-7 text-[clamp(1.9rem,5vw,3.4rem)] leading-[1.05] font-black tracking-[-0.02em] rtl:leading-[1.4] rtl:tracking-normal">
+          {t.next.heading}
+        </h2>
+        <ButtonRow>
+          <Button href={href}>
+            {t.next.start}
+            <Icon name="arrow" />
+          </Button>
+          <Button href={WHATSAPP_HREF} tone="paper">
+            {t.next.whatsapp}
+          </Button>
+          <Button href={`mailto:${EMAIL}`} tone="paper">
+            {t.next.email}
+          </Button>
+          <Button href={PHONE_HREF} tone="paper">
+            {t.next.call}
+          </Button>
+        </ButtonRow>
+      </div>
+    </section>
   );
 }
 

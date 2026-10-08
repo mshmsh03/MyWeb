@@ -21,8 +21,8 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '/MyWeb';
 
 and Next puts that prefix on every link, every chunk URL, and the router's own
 history entries. The handful of URLs Next does **not** rewrite — the favicon and
-the background script — go through `asset()` in `lib/site-data.js`, which reads
-the same value.
+the screenshots under `assets/work/` — go through `asset()` in
+`lib/site-data.js`, which reads the same value.
 
 **Pointing a custom domain here later** is three steps, not a refactor:
 
@@ -48,7 +48,7 @@ verbatim by the export:
 | `.nojekyll` | Without it, Pages runs Jekyll, and Jekyll ignores every directory starting with `_` — including `_next`. The site would load with no CSS or JS. |
 | `index.html`, `about.html`, `projects.html`, `contact.html` | Redirect stubs for the pre-Next flat URLs. `index.html` also answers `/MyWeb/`. |
 | `robots.txt`, `sitemap.xml` | Regenerate with `node scripts/make-stubs.cjs public`. |
-| `assets/` | The favicon and `flow-bg.js`, the background canvas script. |
+| `assets/` | The favicon, and `work/`: the screenshots shown on the tickets. |
 
 `scripts/postbuild.mjs` then replaces `out/404.html`. Next writes its own
 unstyled 404 there from the framework's not-found route, and a file in `public/`

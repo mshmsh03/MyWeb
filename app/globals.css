@@ -1,41 +1,44 @@
 @import "tailwindcss";
 
-/* ---------- Terminal palette ----------
-   The GitHub-dark family the site has always used, named for what each colour
-   does rather than what it is: `line` is every rule and border, `dim` is
-   secondary text, `accent` is the single green that marks anything live or
-   interactive, `amber` is reserved for status (the role line, project tags).
-   Two accents, never three. */
+/* ---------- The job-ticket book ----------
+   The site is drawn as the carbon-copy ticket book a workshop keeps: a deep
+   carbon-paper ground, and on it sheets of paper in the three stocks such a
+   book has — the white top copy, the canary copy, the pink copy. Colours are
+   named for the material they are, so a rule reads as what it describes. */
 @theme {
-    --color-bg: #0d1117;
-    --color-panel: #161b22;
-    --color-line: #30363d;
-    --color-accent: #4fd1a5;
-    --color-accent-dim: #39a37e;
-    --color-amber: #d4a72c;
-    --color-fg: #c9d1d9;
-    --color-fg-dim: #8b949e;
-    --color-bright: #f0f6fc;
-    --shadow-lift: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(79, 209, 165, 0.12);
+    --color-carbon: #1a2a7c;       /* the ground: carbon paper */
+    --color-carbon-deep: #111c5a;  /* the same paper in shadow: footer, header */
+    --color-carbon-line: #4356b4;  /* rules drawn on the ground */
+    --color-ground: #f4f5fb;       /* text on the ground */
+    --color-ground-dim: #bcc5f0;   /* secondary text on the ground */
 
-    /* The identity is a terminal, so the Latin face is the system monospace
-       stack — no webfont, nothing to download, and it renders as whatever
-       "code" looks like on the reader's own machine. */
-    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    --color-sheet: #fbfbf7;        /* white top copy */
+    --color-canary: #ffe35c;       /* yellow copy */
+    --color-pink: #ffc4d2;         /* pink copy */
 
-    /* One radius scale off a 6px card corner. Cards and buttons take -md; the
-       rest of the scale is here so anything added later stays in step. */
-    --radius-sm: 0.225rem;
-    --radius-md: 0.3rem;
-    --radius-lg: 0.375rem;
-    --radius-xl: 0.525rem;
+    --color-ink: #0f1838;          /* blue-black ink: everything written */
+    --color-ink-soft: #3a4366;     /* the same ink, lighter hand */
+    --color-form: #2540c4;         /* what the printer put on the sheet */
+    --color-serial: #d1232a;       /* the numbering machine */
+
+    /* A sheet lying on the ground, and the same sheet picked up. */
+    --shadow-sheet: 0 1px 0 rgba(8, 13, 48, 0.25), 0 18px 34px -16px rgba(5, 9, 40, 0.75);
+    --shadow-lift: 0 1px 0 rgba(8, 13, 48, 0.25), 0 28px 44px -18px rgba(5, 9, 40, 0.85);
+
+    /* The fonts are loaded and named in app/[lang]/layout.jsx. One Latin
+       family in three widths does all the work a printed form asks of type;
+       Arabic and Kurdish get a kufi for the printed headers and a plain
+       naskh-proportioned sans for reading. */
+    --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    --font-rtl: var(--font-arabic), 'Segoe UI', Tahoma, sans-serif;
+    --font-rtl-display: var(--font-kufi), var(--font-arabic), 'Segoe UI', Tahoma, sans-serif;
+
+    --radius-paper: 3px;
 }
 
 /* ---------- Motion tokens ----------
-   Shared with the sibling sites: one easing family, exponential deceleration.
-   `static` keeps these emitted so the raw CSS in the motion layer below can
-   reference them by var(). Overriding Tailwind's two transition defaults
-   re-times every transition-* utility on the site at once. */
+   One easing family, exponential deceleration. `static` keeps these emitted so
+   the raw CSS in the motion layer below can reference them by var(). */
 @theme static {
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
@@ -43,21 +46,22 @@
     --default-transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-:root {
-    /* Arabic and Kurdish Sorani have no equivalent system monospace, and
-       forcing one produces fallback glyphs with broken joining. Noto Sans
-       Arabic covers both scripts, including the Kurdish-specific letters
-       (ڕ ڵ ۆ ێ) that many Arabic faces omit. Not a Tailwind namespace, so it
-       lives here rather than in @theme. */
-    --font-rtl: 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+/* The three widths of the Latin face, set through the variable axis so they
+   do not depend on how the font file declares its stretch range. */
+@utility wd-cond {
+    font-variation-settings: "wdth" 70;
+}
+@utility wd-wide {
+    font-variation-settings: "wdth" 120;
 }
 
 @layer base {
   * {
-    @apply border-line outline-accent/50;
+    @apply border-ink/20;
   }
   html {
-    @apply font-mono;
+    @apply bg-carbon font-sans text-ground;
+    scrollbar-color: var(--color-carbon-line) var(--color-carbon-deep);
   }
   @media (prefers-reduced-motion: no-preference) {
     html {
@@ -65,101 +69,94 @@
     }
   }
   body {
-    @apply bg-bg text-fg;
-    font-size: 15px;
-    line-height: 1.7;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-variant-numeric: tabular-nums;
   }
+  /* A highlighter over the sheet, not the browser's blue. */
   ::selection {
-    background: var(--color-accent-dim);
-    color: var(--color-bg);
+    background: var(--color-canary);
+    color: var(--color-ink);
   }
   a {
-    @apply text-accent;
+    color: inherit;
     text-decoration: none;
   }
-  a:hover {
-    text-decoration: underline;
+  h1, h2, h3 {
+    text-wrap: balance;
   }
-  h1 {
-    @apply text-bright;
-    margin: 0 0 8px;
-    font-size: clamp(28px, 5vw, 44px);
-    line-height: 1.3;
+  input, textarea {
+    caret-color: var(--color-form);
+  }
+  /* One focus ring for the whole site: canary on the ground, and the printed
+     form blue where the thing in focus sits on paper. */
+  :focus-visible {
+    outline: 2px solid var(--color-canary);
+    outline-offset: 3px;
+  }
+  .on-paper :focus-visible,
+  .on-paper:focus-visible {
+    outline-color: var(--color-form);
   }
 
-  /* RTL: the mono stack has no Arabic, so both RTL languages switch to Noto
-     Sans Arabic and get slightly looser leading — a proportional face at the
-     mono size reads tight. Code fragments keep the mono face on purpose (see
-     .mono below); that contrast is the point, not an oversight. */
+  /* RTL: Archivo has no Arabic, so both RTL languages switch family, and take
+     slightly looser leading — joined script with marks above and below needs
+     the room. Width settings are a Latin-face axis and are reset. */
   [dir="rtl"] {
     font-family: var(--font-rtl);
-    line-height: 1.9;
+    line-height: 1.85;
   }
-  [dir="rtl"] h1 {
-    font-family: var(--font-rtl);
-    line-height: 1.5;
+  [dir="rtl"] .display {
+    font-family: var(--font-rtl-display);
   }
 }
 
 @layer components {
-  /* Wide enough to show a screenshot beside another. Prose does not use the
-     full width: paragraphs cap their own measure (see Lead, Tagline, AboutItem
-     in components/sections.jsx). */
+  /* Wide enough to lay a ticket's fields beside its screenshot. Prose does not
+     use the full width: paragraphs cap their own measure. */
   .wrap {
-    @apply mx-auto max-w-[1080px] px-6;
+    @apply mx-auto max-w-[1080px] px-5 sm:px-6;
   }
-  /* Anything that is literally code or a machine string — the wordmark, the
-     shell prompt, the C-style annotations in the About copy, an email address
-     — stays in the mono face, and .ltr-fixed additionally keeps it LTR so the
-     bidi algorithm cannot reorder it inside an Arabic or Kurdish paragraph. */
-  .mono {
-    font-family: var(--font-mono);
-  }
+  /* A machine string — a domain, an email address, a phone number, a product
+     name — stays in the Latin face and stays LTR, so the bidi algorithm cannot
+     reorder it inside an Arabic or Kurdish sentence. */
   .ltr-fixed {
     unicode-bidi: isolate;
     direction: ltr;
     display: inline-block;
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
   }
-}
-
-/* The CRT scanline wash. One fixed, non-interactive layer over everything;
-   at 0.8% white on a 2px pitch it is felt rather than seen. */
-.scanlines::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.008) 0px,
-    rgba(255, 255, 255, 0.008) 1px,
-    transparent 1px,
-    transparent 2px
-  );
+  /* The row of holes a sheet is torn along. They are punched, not printed:
+     each one shows the ground through the paper. */
+  .perforated {
+    background-image: radial-gradient(circle at center, var(--color-carbon) 0 3px, transparent 3.6px);
+    background-size: 16px 10px;
+    /* `round` spaces the holes to fit the sheet exactly, so none is cut in
+       half at the edge whatever the sheet's width. */
+    background-repeat: round no-repeat;
+    background-position: 0 9px;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MOTION
 
-   Same machinery as the sibling sites — html[data-motion="on"], set before
-   first paint only when JS runs AND the visitor has not asked for reduced
-   motion, with components/Reveal.jsx deciding *when* and this layer deciding
-   *what*. No JS, stalled hydration, and prefers-reduced-motion all resolve to
-   the same safe state: the page fully rendered, with no animation.
+   html[data-motion="on"] is set before first paint only when JS runs AND the
+   visitor has not asked for reduced motion. components/Reveal.jsx decides
+   *when* something enters; this layer decides *what* it does. No JS, stalled
+   hydration, and prefers-reduced-motion all resolve to the same safe state:
+   the page fully rendered, with no animation.
 
-   The grammar is this site's own, though: a terminal does not slide things
-   around, it prints them. So the vocabulary is a caret that blinks, text that
-   types, and blocks that come up from below as if scrolled into the buffer.
+   The grammar is paper: a sheet is fed in from below and comes to rest. It
+   happens once per sheet, and nothing on the site loops.
 
    Two vars tune everything below, inheritable so a parent can set them:
      --m-delay  when it starts
      --m-dur    how long it runs
    ═══════════════════════════════════════════════════════════════════════════ */
 
-@keyframes m-register {
-  from { opacity: 0; transform: translateY(18px); }
+@keyframes m-feed {
+  from { opacity: 0; transform: translateY(26px); }
   to   { opacity: 1; transform: none; }
 }
 
@@ -168,33 +165,44 @@
   to   { opacity: 1; }
 }
 
-/* The caret at the end of the typed line. */
-@keyframes m-blink {
-  50% { opacity: 0; }
-}
-
-/* The @ in the wordmark, breathing like a connection indicator. */
-@keyframes m-pulse {
-  0%, 100% { opacity: 1; text-shadow: 0 0 0 rgba(79, 209, 165, 0); }
-  50%      { opacity: 0.7; text-shadow: 0 0 8px rgba(79, 209, 165, 0.8); }
+/* The copies under the top sheet slide out to where they rest. */
+@keyframes m-fan {
+  from { transform: none; }
+  to   { transform: var(--fan); }
 }
 
 @layer components {
-  [data-motion='on'] .m-register,
+  [data-motion='on'] .m-feed,
   [data-motion='on'] .m-fade {
     animation-delay: var(--m-delay, 0ms);
-    animation-duration: var(--m-dur, 600ms);
-    animation-timing-function: var(--ease-out-quart);
+    animation-duration: var(--m-dur, 700ms);
+    animation-timing-function: var(--ease-out-expo);
     animation-fill-mode: both;
   }
-  [data-motion='on'] .m-register { animation-name: m-register; }
-  [data-motion='on'] .m-fade     { animation-name: m-fade; }
+  [data-motion='on'] .m-feed { animation-name: m-feed; }
+  [data-motion='on'] .m-fade { animation-name: m-fade; }
 
-  [data-motion='on'] .m-caret {
-    animation: m-blink 1s step-end infinite;
+  .copy-under {
+    transform: var(--fan);
   }
-  [data-motion='on'] .m-pulse {
-    animation: m-pulse 2.4s ease-in-out infinite;
+  [data-motion='on'] .copy-under {
+    animation: m-fan 900ms var(--ease-out-expo) both;
+    animation-delay: var(--m-delay, 250ms);
+  }
+
+  /* The cross in a tick box is drawn the way a pen draws it. */
+  .pen-stroke {
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+  }
+  input:checked + .tick-box .pen-stroke {
+    stroke-dashoffset: 0;
+  }
+  [data-motion='on'] .pen-stroke {
+    transition: stroke-dashoffset 220ms var(--ease-out-quart);
+  }
+  [data-motion='on'] .pen-stroke + .pen-stroke {
+    transition-delay: 120ms;
   }
 
   /* ---------- Scroll reveals ---------- */
@@ -205,21 +213,20 @@
 
   [data-motion='on'] [data-reveal='in'] {
     animation-delay: var(--m-delay, 0ms);
-    animation-duration: var(--m-dur, 600ms);
-    animation-timing-function: var(--ease-out-quart);
+    animation-duration: var(--m-dur, 700ms);
+    animation-timing-function: var(--ease-out-expo);
     animation-fill-mode: both;
   }
-  [data-motion='on'] [data-reveal='in'][data-variant='register'] { animation-name: m-register; }
+  [data-motion='on'] [data-reveal='in'][data-variant='register'] { animation-name: m-feed; }
   [data-motion='on'] [data-reveal='in'][data-variant='fade']     { animation-name: m-fade; }
-  /* `wipe` exists in the shared Reveal API but has no terminal equivalent, so
-     it resolves to the same rise rather than to nothing. */
-  [data-motion='on'] [data-reveal='in'][data-variant='wipe']     { animation-name: m-register; }
+  /* `wipe` exists in the shared Reveal API; here it is the same feed. */
+  [data-motion='on'] [data-reveal='in'][data-variant='wipe']     { animation-name: m-feed; }
 
-  /* A stack of cards is a list, so it may arrive as one. Capped at four steps:
-     past that every remaining sibling shares the last delay, so a long list
-     still finishes in 240ms rather than dripping. */
+  /* A stack of tickets is a list, so it may arrive as one. Capped at four
+     steps: past that every remaining sibling shares the last delay, so a long
+     list still finishes promptly rather than dripping. */
   [data-motion='on'] [data-reveal-group='in'] > * {
-    animation: m-register var(--m-dur, 600ms) var(--ease-out-quart) both;
+    animation: m-feed var(--m-dur, 700ms) var(--ease-out-expo) both;
     animation-delay: calc(var(--m-delay, 0ms) + 240ms);
   }
   [data-motion='on'] [data-reveal-group='in'] > *:nth-child(1) { animation-delay: calc(var(--m-delay, 0ms) + 0ms); }

@@ -1,15 +1,45 @@
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
+import { Archivo, Noto_Kufi_Arabic, Noto_Sans_Arabic } from 'next/font/google';
 import { LANGS, SITE, asset } from '@/lib/site-data';
 import { BASE } from '@/lib/metadata';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MotionRoot from '@/components/MotionRoot';
-import FlowBackground from '@/components/FlowBackground';
 import '../globals.css';
 
+// next/font fetches these at build time and ships them from the site's own
+// files, so no visitor's browser ever calls a font host.
+//
+// One Latin family does everything a printed form asks of type: `wdth` is its
+// width axis, and the labels, the text and the headers are the same face set
+// condensed, normal and expanded.
+const archivo = Archivo({
+  subsets: ['latin'],
+  axes: ['wdth'],
+  variable: '--font-archivo',
+  display: 'swap',
+});
+
+// Arabic and Kurdish Sorani: a kufi for the printed headers, a plain sans for
+// reading. Both carry the Kurdish letters (ڕ ڵ ۆ ێ ە) that many Arabic faces
+// omit. Not preloaded — the English pages never draw a glyph from either, and
+// a preload would make every visitor download them anyway.
+const kufi = Noto_Kufi_Arabic({
+  subsets: ['arabic'],
+  variable: '--font-kufi',
+  display: 'swap',
+  preload: false,
+});
+const arabic = Noto_Sans_Arabic({
+  subsets: ['arabic'],
+  variable: '--font-arabic',
+  display: 'swap',
+  preload: false,
+});
+
 export const viewport = {
-  themeColor: '#0d1117',
+  themeColor: '#1a2a7c',
 };
 
 export const metadata = {
@@ -19,10 +49,9 @@ export const metadata = {
   icons: { icon: [{ url: asset('/assets/favicon.svg'), type: 'image/svg+xml' }] },
 };
 
-// Arms motion before the first paint, so the typewriter and the scroll reveals
-// never show their finished state for a frame and then start over. It has to
-// run inline and blocking: a deferred script would paint first and cause
-// exactly that flash.
+// Arms motion before the first paint, so a sheet never shows its resting state
+// for a frame and then starts over. It has to run inline and blocking: a
+// deferred script would paint first and cause exactly that flash.
 //
 // Delivered through next/script at beforeInteractive rather than as a bare
 // <script> tag. A raw script element inside a component is server-rendered but
@@ -55,34 +84,25 @@ export default async function LangLayout({ children, params }) {
   const t = SITE[lang];
 
   return (
-    <html lang={t.hreflang} dir={t.dir}>
+    // The inline script above sets data-motion on this element before React
+    // hydrates, which is the one attribute the server could not have known.
+    <html
+      lang={t.hreflang}
+      dir={t.dir}
+      className={`${archivo.variable} ${kufi.variable} ${arabic.variable}`}
+      suppressHydrationWarning
+    >
       <head>
-        {t.dir === 'rtl' ? (
-          <>
-            {/* Only the RTL documents pull a webfont: the Latin identity is the
-                system monospace stack, but neither Arabic nor Kurdish Sorani
-                has a system mono to fall back to. */}
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-            <link
-              rel="stylesheet"
-              href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap"
-            />
-          </>
-        ) : null}
         <Script id="arm-motion" strategy="beforeInteractive">
           {ARM_MOTION}
         </Script>
       </head>
-      {/* .scanlines paints the CRT wash over everything via a fixed ::after. */}
-      <body className="scanlines">
+      <body>
         <MotionRoot />
         {/* Header and footer sit in the layout, not in the pages, so the router
-            swaps only the page body between routes — and the background canvas
-            keeps drifting across a navigation instead of restarting. */}
+            swaps only the page body between routes. */}
         <Header lang={lang} />
-        <FlowBackground />
-        <main className="relative z-1 block">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
