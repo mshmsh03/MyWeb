@@ -23,7 +23,7 @@ function jsonLd(lang) {
       name: 'Tishk International University',
       address: { '@type': 'PostalAddress', addressLocality: 'Erbil', addressCountry: 'IQ' },
     },
-    knowsAbout: ['Web development', 'Hardware maintenance and repair', 'Local network setup'],
+    knowsAbout: ['Web development', 'Point-of-sale software', 'Hardware maintenance and repair'],
     inLanguage: SITE[lang].hreflang,
     mainEntityOfPage: url,
   };

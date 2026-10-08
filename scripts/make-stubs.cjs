@@ -20,6 +20,9 @@ const LANGS = [
   { seg: 'ku', hreflang: 'ckb' },
 ];
 const PAGES = ['index', 'about', 'projects', 'contact'];
+// Routes added after the move to Next never had a flat .html URL, so they need
+// no redirect stub — but they do belong in the sitemap.
+const SITEMAP_PAGES = [...PAGES, 'projects/qasa'];
 
 const url = (seg, page) => (page === 'index' ? `${BASE}/${seg}/` : `${BASE}/${seg}/${page}/`);
 const target = (seg, page) =>
@@ -95,7 +98,7 @@ fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitem
 const today = new Date().toISOString().slice(0, 10);
 const entries = [];
 for (const { seg } of LANGS) {
-  for (const page of PAGES) {
+  for (const page of SITEMAP_PAGES) {
     const alts = LANGS.map(
       (l) => `    <xhtml:link rel="alternate" hreflang="${l.hreflang}" href="${url(l.seg, page)}"/>`,
     ).join('\n');

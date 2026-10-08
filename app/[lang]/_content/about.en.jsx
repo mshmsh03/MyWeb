@@ -22,13 +22,14 @@ export default function AboutEn() {
             Computer Engineering student at Tishk International University, Erbil.
           </AboutItem>
           <AboutItem note="what I do">
-            Experienced in both software and hardware: website development and deployment, hardware diagnostics
-            and repair (including part replacement), and local network setup for shared office devices.
+            Experienced in both software and hardware: website development and deployment, point-of-sale systems,
+            and hardware diagnostics and repair (including part replacement).
           </AboutItem>
           <AboutItem note="why">
             Motivated by understanding systems end-to-end — from website code to hardware internals — and by
             solving practical, real-world problems.
           </AboutItem>
+          <AboutItem note="languages">English, Arabic and Kurdish.</AboutItem>
         </AboutList>
         <CtaRow text="Interested in working together? Get in touch.">
           <Button href={pagePath(LANG, 'contact')}>Contact Me</Button>

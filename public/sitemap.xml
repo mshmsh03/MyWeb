@@ -7,7 +7,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -17,7 +17,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/about/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/about/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/about/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -27,7 +27,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/projects/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/projects/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/projects/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -37,7 +37,17 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/contact/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/contact/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/contact/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mshmsh03.github.io/MyWeb/en/projects/qasa/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mshmsh03.github.io/MyWeb/en/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/projects/qasa/"/>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -47,7 +57,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -57,7 +67,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/about/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/about/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/about/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -67,7 +77,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/projects/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/projects/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/projects/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -77,7 +87,17 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/contact/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/contact/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/contact/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mshmsh03.github.io/MyWeb/ar/projects/qasa/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mshmsh03.github.io/MyWeb/en/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/projects/qasa/"/>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -87,7 +107,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -97,7 +117,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/about/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/about/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/about/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -107,7 +127,7 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/projects/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/projects/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/projects/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -117,7 +137,17 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/contact/"/>
     <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/contact/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/contact/"/>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mshmsh03.github.io/MyWeb/ku/projects/qasa/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://mshmsh03.github.io/MyWeb/en/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://mshmsh03.github.io/MyWeb/ar/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="ckb" href="https://mshmsh03.github.io/MyWeb/ku/projects/qasa/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://mshmsh03.github.io/MyWeb/en/projects/qasa/"/>
+    <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -38,7 +38,8 @@ jobs:
         run: |
           set -euo pipefail
           for f in out/en/index.html out/ar/index.html out/ku/index.html \
-                   out/en/projects/index.html out/index.html out/404.html out/.nojekyll; do
+                   out/en/projects/index.html out/en/projects/qasa/index.html \
+                   out/index.html out/404.html out/.nojekyll; do
             [ -f "$f" ] || { echo "missing $f"; exit 1; }
           done
           echo "export looks complete"

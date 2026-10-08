@@ -102,8 +102,11 @@
 }
 
 @layer components {
+  /* Wide enough to show a screenshot beside another. Prose does not use the
+     full width: paragraphs cap their own measure (see Lead, Tagline, AboutItem
+     in components/sections.jsx). */
   .wrap {
-    @apply mx-auto max-w-[820px] px-6;
+    @apply mx-auto max-w-[1080px] px-6;
   }
   /* Anything that is literally code or a machine string — the wordmark, the
      shell prompt, the C-style annotations in the About copy, an email address
