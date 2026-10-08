@@ -1,32 +1,27 @@
-import { Tower } from '@/components/bench/devices';
-import { requestLinkProps } from '@/lib/request';
+import '@/components/bench/bench.css';
+import './teardown.css';
+import TeardownIsland from './TeardownIsland';
+import TeardownView from './TeardownView';
+import { OPEN_AT_REST, OPEN_STEPS } from './parts';
 
-// The teardown (the computer's exhibit). Placeholder until it is built: the
-// computer from the bench, larger.
+// The teardown (the computer's exhibit): a desktop computer drawn in layers
+// that the visitor opens and takes apart. Each part says what it does and how
+// it usually fails; a symptom lights up the parts usually behind it; and the
+// symptom goes into the request, already written.
 //
-// `data-frame` marks the element the computer's glass grows into when the
-// computer is chosen on the bench.
+// The server draws it part-way open, with every part labelled and every
+// control disabled. That is the version a visitor without JavaScript keeps,
+// and what the working one (TeardownLive, loaded by TeardownIsland as it
+// nears the screen) replaces, the same size and in the same place.
+//
+// The drawing is made of the bench's boxes (bench.css); what is its own is in
+// teardown.css.
 export default function Teardown({ t, requestHref = '#request' }) {
+  // Only the words the teardown uses cross to the browser.
+  const copy = { ...t.teardown, join: t.ticket.message.join };
   return (
-    <div>
-      <div
-        data-frame
-        className="bench-solo relative mx-auto w-full max-w-[420px] [--floor:24px] [--plot-h:330px] [--s:0.92] [--turn:38deg] sm:[--plot-h:400px] sm:[--s:1.12]"
-      >
-        <div className="plot">
-          <span className="dev" aria-hidden="true">
-            <span className="dev-pose tower">
-              <Tower />
-            </span>
-          </span>
-        </div>
-      </div>
-      <a
-        {...requestLinkProps(requestHref, 'repair')}
-        className="mt-7 inline-flex min-h-12 items-center rounded-part border border-chalk-dim/60 px-5 font-semibold text-chalk transition-colors hover:border-chalk"
-      >
-        {t.bench.start}
-      </a>
-    </div>
+    <TeardownIsland copy={copy} requestHref={requestHref}>
+      <TeardownView copy={copy} requestHref={requestHref} open={Math.round(OPEN_AT_REST * OPEN_STEPS)} />
+    </TeardownIsland>
   );
 }

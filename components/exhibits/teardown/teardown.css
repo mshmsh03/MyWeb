@@ -1,0 +1,602 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE TEARDOWN
+
+   The computer from the bench, larger, and open: the same boxes (bench.css),
+   a case open on the side that faces the reader, and five parts that slide
+   out of it along the axis through that side as --open goes from 0 to 1.
+
+   Coordinates are the bench's: x to the right, y down, z toward the viewer,
+   and a box's --y is its height above the floor. In the computer's own frame
+   the open side is +x and the front is +z. The case is 200 wide, 420 tall and
+   420 deep; on a side face the front of the case is on the left.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.td {
+  --dir: 1;
+}
+[dir='rtl'] .td {
+  --dir: -1;
+}
+
+/* The drawing. Its size steps with the width of the column it stands in
+   (the frame's wrapper is the container), and is fixed from there, so
+   nothing beside or below it moves while the parts do. The computer is
+   turned more than on the bench, so the reader looks in through the open
+   side rather than at the front.
+
+   Measured at scale 1, the drawing reaches 445px above the floor and 103px
+   below it, 260px behind the origin and 350px ahead of it with every part
+   out; a flag adds up to 126px ahead, and stands 55px above its pin. Each
+   step is the largest scale that keeps all of that, fully open, 16px inside
+   a stage --stage-h tall, and --ox centres it. */
+.td-frame-wrap {
+  container-type: inline-size;
+}
+.td-frame {
+  --pitch: -12deg;
+  --turn: -52deg;
+  --s: 0.34;
+  --ox: calc(50cqi - 45px * var(--s));
+  --floor: 51px;
+  --stage-h: 252px;
+  position: relative;
+  height: var(--stage-h);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+@container (min-width: 280px) {
+  .td-frame { --s: 0.4; --floor: 57px; --stage-h: 281px; }
+}
+@container (min-width: 320px) {
+  .td-frame { --s: 0.47; --floor: 64px; --stage-h: 315px; }
+}
+@container (min-width: 400px) {
+  .td-frame { --s: 0.6; --floor: 78px; --stage-h: 378px; }
+}
+/* From here the flags carry the parts' names. */
+@container (min-width: 520px) {
+  .td-frame { --ox: calc(50cqi - 42.5px * var(--s) - 63px); }
+}
+@container (min-width: 560px) {
+  .td-frame { --s: 0.66; --floor: 84px; --stage-h: 407px; }
+}
+@container (min-width: 660px) {
+  .td-frame { --s: 0.83; --floor: 101px; --stage-h: 489px; }
+}
+@container (min-width: 760px) {
+  .td-frame { --s: 0.92; --floor: 111px; --stage-h: 536px; }
+}
+/* Beside the controls, the drawing takes the full height of their column
+   and stands in the middle of it, so nothing is left hanging below it. That
+   column never changes height, so neither does the drawing. */
+@media (min-width: 1280px) {
+  .td-frame-wrap {
+    align-self: stretch;
+  }
+  .td-frame {
+    height: 100%;
+    min-height: var(--stage-h);
+  }
+}
+
+/* Right-to-left mirrors the finished picture, so the computer turns the
+   other way and its parts come out toward the reading direction. */
+.td-mirror {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(var(--dir));
+}
+.td-stage {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: var(--stage-h);
+  margin-top: calc(var(--stage-h) / -2);
+  perspective: 1500px;
+  perspective-origin: 50% 25%;
+}
+.td-dev {
+  position: absolute;
+  left: var(--ox);
+  bottom: var(--floor);
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: scale(var(--s));
+}
+.td-pose,
+.td-part,
+.td-panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-style: preserve-3d;
+}
+.td-pose {
+  transform: rotateX(var(--pitch)) rotateY(var(--turn));
+}
+
+/* ---------- The case ---------- */
+
+.td .td-case { --w: 200px; --h: 420px; --d: 420px; }
+.td .td-case > .ft {
+  /* The front: a power button, a port, and a vent. */
+  background:
+    radial-gradient(circle, #3a4547 0 7px, #0f1415 7.5px 9px, transparent 9.5px) 50% 24px / 24px 24px no-repeat,
+    linear-gradient(#0f1415, #0f1415) 50% 58px / 34px 4px no-repeat,
+    repeating-linear-gradient(#101516 0 2px, transparent 2px 8px) 50% 92px / 148px 296px no-repeat,
+    #181f20;
+}
+.td .td-case > .tp {
+  /* The top, with a vent over the back half. */
+  background: repeating-linear-gradient(90deg, #1f2729 0 2px, transparent 2px 7px) 50% 18% / 148px 150px no-repeat, #2b3436;
+}
+
+/* The walls seen through the opening: the tray the board is screwed to, the
+   floor, and the back. They are the inside of the case, so darker. */
+.td .td-tray { --w: 0px; --h: 416px; --d: 416px; --x: -98px; --y: 2px; }
+.td .td-tray > .rt {
+  /* Holes for the cables, just in front of the board. */
+  background:
+    linear-gradient(#050909, #050909) 132px 70px / 12px 44px no-repeat,
+    linear-gradient(#050909, #050909) 132px 184px / 12px 44px no-repeat,
+    #0b1011;
+}
+.td .td-floor { --w: 196px; --h: 0px; --d: 416px; --y: 2px; }
+.td .td-floor > .tp { background: #0d1213; }
+.td .td-rear { --w: 196px; --h: 416px; --d: 0px; --z: -208px; --y: 2px; }
+.td .td-rear > .ft {
+  /* The covers of the expansion slots. */
+  background: repeating-linear-gradient(#0b1011 0 3px, transparent 3px 16px) 50% 190px / 120px 96px no-repeat, #0e1314;
+}
+
+/* The glass side panel. It lifts off and slides back past the case, and
+   fades as it goes, so it never stands between the reader and the parts. */
+.td .td-glass { --w: 0px; --h: 420px; --d: 420px; --x: 100px; }
+.td .td-glass > .rt {
+  background:
+    linear-gradient(115deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.02) 38%, transparent 70%, rgb(255 255 255 / 0.06)),
+    rgb(16 21 22 / 0.4);
+  box-shadow: inset 0 0 0 10px #101516;
+  opacity: max(0, 1 - 1.5 * var(--open));
+}
+.td-panel {
+  pointer-events: none;
+  transform: translate3d(calc(var(--open) * 30px), calc(var(--open) * -24px), calc(var(--open) * -420px));
+}
+
+/* ---------- The parts ----------
+   Each slides out by --open times its --out: the parts that sit on others
+   go furthest, so the layers come apart in the order they are built up. */
+
+.td-part {
+  transform: translateX(calc(var(--open) * var(--out)));
+}
+.td-part[data-part='board'] { --out: 50px; }
+.td-part[data-part='psu'] { --out: 150px; }
+.td-part[data-part='storage'] { --out: 190px; }
+.td-part[data-part='memory'] { --out: 250px; }
+.td-part[data-part='cooler'] { --out: 330px; }
+
+/* The motherboard, standing off the tray. */
+.td .td-board { --w: 6px; --h: 300px; --d: 250px; --x: -90px; --y: 106px; --z: -74px; }
+.td .td-board > .f { background: #1d4a3b; }
+.td .td-board > .rt { background: var(--color-mat-line); }
+.td-pcb {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.td-pcb > span {
+  position: absolute;
+  display: block;
+  border-radius: 1px;
+  background: #14191a;
+}
+.td-pcb .io { right: 4px; top: 8px; width: 30px; height: 96px; background: #1b2224; }
+.td-pcb .vrm {
+  background: repeating-linear-gradient(90deg, #3a4547 0 3px, #1b2224 3px 6px);
+}
+.td-pcb .vrm-top { left: 112px; top: 14px; width: 92px; height: 20px; }
+.td-pcb .vrm-side { left: 186px; top: 44px; width: 20px; height: 84px; background-image: repeating-linear-gradient(#3a4547 0 3px, #1b2224 3px 6px); }
+.td-pcb .socket {
+  left: 122px;
+  top: 52px;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(#232b2d, #232b2d) 50% 50% / 38px 38px no-repeat, #8c9893;
+}
+/* Four memory slots; the two sticks stand in the second and fourth. */
+.td-pcb .slots {
+  left: 69px;
+  top: 24px;
+  width: 26px;
+  height: 138px;
+  background: repeating-linear-gradient(90deg, #14191a 0 4px, transparent 4px 7px);
+}
+.td-pcb .atx { left: 6px; top: 96px; width: 12px; height: 56px; }
+.td-pcb .pcie { left: 36px; width: 176px; height: 7px; }
+.td-pcb .pcie-1 { top: 176px; }
+.td-pcb .pcie-2 { top: 238px; }
+.td-pcb .m2 { left: 62px; top: 202px; width: 120px; height: 14px; background: #3a4547; }
+.td-pcb .chipset {
+  left: 24px;
+  top: 254px;
+  width: 44px;
+  height: 36px;
+  background: repeating-linear-gradient(#3a4547 0 3px, #2b3436 3px 6px);
+}
+
+/* The processor's cooler: a block of fins under a fan, on the socket. */
+.td .td-cooler { --w: 64px; --h: 110px; --d: 110px; --x: -55px; --y: 271px; --z: -99px; }
+.td .td-cooler > .ft { background: repeating-linear-gradient(#8c9893 0 2px, #2b3436 2px 5px); }
+.td .td-cooler > .tp { background: #8c9893; }
+.td .td-cooler > .rt { background: #1b2224; }
+.td-fan {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #3a4547 0 14px, #14191a 14.5px 16px, transparent 16.5px),
+    repeating-conic-gradient(#232b2d 0 22deg, #3a4547 22deg 36deg);
+  box-shadow: 0 0 0 3px #14191a;
+}
+
+/* Two sticks of memory standing in their slots. */
+.td .td-ram { --w: 34px; --h: 132px; --d: 5px; --x: -70px; --y: 248px; }
+.td .td-ram-1 { --z: -27px; }
+.td .td-ram-2 { --z: -41px; }
+.td .td-ram > .ft {
+  background: linear-gradient(#8c9893, #8c9893) 50% 50% / 16px 64px no-repeat, #232b2d;
+}
+.td .td-ram > .rt,
+.td .td-ram > .tp { background: #4a5753; }
+
+/* A drive, screwed flat to the tray below the board. */
+.td .td-drive { --w: 26px; --h: 98px; --d: 147px; --x: -83px; --y: 6px; --z: 50px; }
+.td .td-drive > .f { background: #4a5753; }
+.td .td-drive > .rt { background: #9aa5a0; }
+.td-platter {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 62% 50%, #4a5753 0 6px, transparent 6.5px),
+    radial-gradient(circle at 62% 50%, transparent 0 38px, #6f7a76 38.5px 40px, transparent 40.5px),
+    linear-gradient(#6f7a76, #6f7a76) 12px 12px / 28px 16px no-repeat;
+}
+
+/* The power supply, in the bottom at the back. */
+.td .td-psu { --w: 150px; --h: 86px; --d: 160px; --x: -21px; --y: 4px; --z: -119px; }
+.td .td-psu > .tp {
+  background: repeating-radial-gradient(circle closest-side, #14191a 0 2px, #2b3436 2px 8px) 50% 50% / 124px 124px no-repeat, #2b3436;
+}
+.td-sticker {
+  position: absolute;
+  inset: 16px 22px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(transparent 0 8px, #2b3436 8px 10px) 10px 10px / 70px 30px no-repeat, #4a5753;
+}
+
+/* ---------- Pointing at and lighting up parts ---------- */
+
+.td-part .f::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.td[data-live] .td-part {
+  cursor: pointer;
+}
+.td[data-live] .td-part:hover .f::after {
+  background: rgb(243 246 242 / 0.12);
+}
+/* Usually responsible for the chosen symptom: washed in ruler yellow and
+   outlined, so it reads by shape as well as by colour. */
+.td .td-part[data-suspect] .f::after {
+  background: rgb(242 210 75 / 0.34);
+  box-shadow: inset 0 0 0 2px var(--color-ruler);
+}
+.td .td-part[data-chosen] .f::after {
+  box-shadow: inset 0 0 0 3px var(--color-signal);
+}
+[data-motion='on'] .td-part .f::after {
+  transition:
+    background-color 200ms var(--ease-out-quart),
+    box-shadow 200ms var(--ease-out-quart);
+}
+
+/* ---------- The numbers ----------
+   Each part's number is pinned to it like the item numbers on an assembly
+   drawing. The pin turns back to face the reader whatever the computer's
+   turn, keeps its size whatever the drawing's scale, and reads the right way
+   round inside the mirrored drawing. */
+.td-pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform: translate3d(var(--ax), calc(-1 * var(--ay)), var(--az)) rotateY(calc(-1 * var(--turn)))
+    rotateX(calc(-1 * var(--pitch))) scale(calc(1 / var(--s))) scaleX(var(--dir));
+}
+/* The leader line and the dot where it touches the part. */
+.td-pin::before {
+  content: '';
+  position: absolute;
+  left: -0.75px;
+  width: 1.5px;
+  height: 22px;
+  background: var(--color-chalk);
+}
+.td-pin[data-place='up']::before { bottom: 0; }
+.td-pin[data-place='down']::before { top: 0; }
+.td-pin::after {
+  content: '';
+  position: absolute;
+  left: -3.5px;
+  top: -3.5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-chalk);
+  box-shadow: 0 0 0 1.5px var(--color-graphite);
+}
+
+.td-flag {
+  position: absolute;
+  inset-inline-start: -15px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-graphite);
+  color: var(--color-chalk);
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.td-flag:disabled { cursor: default; }
+/* Every flag is at least 44px to a finger, however small it is drawn. */
+.td-flag::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+}
+.td-pin[data-place='up'] .td-flag { bottom: 22px; }
+.td-pin[data-place='down'] .td-flag { top: 22px; }
+.td-pin[data-run='start'] .td-flag {
+  inset-inline: auto -15px;
+  flex-direction: row-reverse;
+}
+.td-name { padding-inline: 0 12px; }
+.td-pin[data-run='start'] .td-name { padding-inline: 12px 0; }
+/* In a small drawing only the numbers: the names are in the list. */
+@container (max-width: 519px) {
+  .td-name { display: none; }
+}
+
+.td-num {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variation-settings: 'wdth' 80;
+}
+.td .td-part[data-chosen] .td-flag {
+  background: var(--color-signal);
+  color: var(--color-graphite);
+}
+.td .td-part[data-suspect] .td-num {
+  border-color: var(--color-ruler);
+  background: var(--color-ruler);
+  color: var(--color-graphite);
+}
+/* The mark beside a part that is usually responsible: an exclamation in a
+   ruler-yellow disc on the number's corner. */
+.td-mark,
+.td .td-part[data-suspect] .td-num::after {
+  content: '!';
+  position: absolute;
+  top: -6px;
+  inset-inline-end: -7px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-ruler);
+  color: var(--color-graphite);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 0 0 2px var(--color-mat);
+}
+.td .td-part[data-suspect] .td-num { position: relative; }
+
+/* ---------- The controls ---------- */
+
+/* A part in the list. Chosen is a signal-orange fill under graphite; usually
+   responsible is a ruler-yellow edge and the mark on its number. */
+.td-chip[aria-pressed='true'] {
+  border-color: var(--color-signal);
+  background: var(--color-signal);
+  color: var(--color-graphite);
+  font-weight: 600;
+}
+.td-chip[data-suspect] {
+  border-color: var(--color-ruler);
+  box-shadow: inset 0 0 0 1px var(--color-ruler);
+}
+.td-chip[data-suspect] .td-num {
+  border-color: var(--color-ruler);
+  background: var(--color-ruler);
+  color: var(--color-graphite);
+}
+.td-chip,
+.td-btn {
+  cursor: pointer;
+}
+.td-chip:disabled,
+.td-btn:disabled {
+  cursor: default;
+}
+.td-chip:not(:disabled):hover,
+.td-btn:not(:disabled):hover {
+  border-color: var(--color-chalk);
+}
+.td-chip[aria-pressed='true']:not(:disabled):hover {
+  border-color: var(--color-signal);
+  background: #ff8a5c;
+}
+
+/* A symptom. Chosen is the same fill, with its dot filled in. */
+.td-choice {
+  cursor: pointer;
+}
+.td-choice:has(input:disabled) {
+  cursor: default;
+}
+.td-choice input:checked + span {
+  border-color: var(--color-signal);
+  background: var(--color-signal);
+  color: var(--color-graphite);
+  font-weight: 600;
+}
+.td-choice input:focus-visible + span {
+  outline: 2px solid var(--color-ruler);
+  outline-offset: 3px;
+}
+.td-choice input:not(:disabled):not(:checked) + span:hover {
+  border-color: var(--color-chalk);
+}
+.td-dot {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+.td-choice input:checked + span .td-dot {
+  background: radial-gradient(circle, currentColor 0 3px, transparent 3.5px);
+}
+.td-clear:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.td-clear:not(:disabled):hover {
+  text-decoration-color: var(--color-chalk);
+}
+
+/* The line that names the parts usually responsible. Two lines tall
+   whatever it says, so choosing a symptom never pushes the request down. */
+.td-suspects {
+  min-height: 3.2em;
+}
+[dir='rtl'] .td-suspects {
+  min-height: 3.7em;
+}
+
+/* The part's signs of failing, each marked with a tick in ruler yellow. */
+.td-signs li {
+  position: relative;
+  margin-top: 6px;
+  padding-inline-start: 24px;
+}
+.td-signs li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 2px;
+  top: 0.8em;
+  width: 12px;
+  height: 2px;
+  background: var(--color-ruler);
+}
+[dir='rtl'] .td-signs li::before {
+  top: 0.92em;
+}
+
+/* The part's text, one version per part and one for none. In one column
+   only the version in use is laid out. Beside the drawing every version
+   sits in the same cell, so the cell is as tall as the longest and the
+   column never changes height; only the one in use is shown. */
+@media (max-width: 1279px) {
+  .td-layer[data-shown='false'] {
+    display: none;
+  }
+}
+@media (min-width: 1280px) {
+  .td-stack {
+    display: grid;
+  }
+  .td-layer {
+    grid-area: 1 / 1;
+  }
+  .td-layer[data-shown='false'] {
+    visibility: hidden;
+  }
+}
+
+/* How far open: a ruler, with ticks every tenth and the opened length drawn
+   along it in ruler yellow, and a chalk slide on it. */
+.td-range {
+  --fill-at: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 44px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+[dir='rtl'] .td-range {
+  --fill-at: 100%;
+}
+.td-range:disabled {
+  cursor: default;
+}
+.td-range::-webkit-slider-runnable-track {
+  height: 14px;
+  background:
+    linear-gradient(var(--color-ruler), var(--color-ruler)) var(--fill-at) 100% / var(--fill) 3px no-repeat,
+    linear-gradient(var(--color-mat-line), var(--color-mat-line)) 100% 100% / 1px 100% no-repeat,
+    repeating-linear-gradient(to right, var(--color-mat-line) 0 1px, transparent 1px 10%) 0 100% / 100% 8px no-repeat,
+    linear-gradient(var(--color-mat-line), var(--color-mat-line)) 0 100% / 100% 1px no-repeat;
+}
+.td-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 34px;
+  margin-top: -10px;
+  border-radius: 4px;
+  background: linear-gradient(var(--color-graphite), var(--color-graphite)) 50% 50% / 2px 14px no-repeat, var(--color-chalk);
+}
+.td-range::-moz-range-track {
+  height: 14px;
+  background:
+    linear-gradient(var(--color-mat-line), var(--color-mat-line)) 100% 100% / 1px 100% no-repeat,
+    repeating-linear-gradient(to right, var(--color-mat-line) 0 1px, transparent 1px 10%) 0 100% / 100% 8px no-repeat,
+    linear-gradient(var(--color-mat-line), var(--color-mat-line)) 0 100% / 100% 1px no-repeat;
+}
+.td-range::-moz-range-progress {
+  height: 3px;
+  margin-top: 11px;
+  background: var(--color-ruler);
+}
+.td-range::-moz-range-thumb {
+  width: 20px;
+  height: 34px;
+  border: 0;
+  border-radius: 4px;
+  background: linear-gradient(var(--color-graphite), var(--color-graphite)) 50% 50% / 2px 14px no-repeat, var(--color-chalk);
+}

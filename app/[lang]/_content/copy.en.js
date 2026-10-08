@@ -86,7 +86,82 @@ export default {
   },
 
   // The teardown (the computer's exhibit).
-  teardown: {},
+  teardown: {
+    open: 'Open the computer',
+    close: 'Close',
+    openAll: 'Open',
+    // What a screen reader says for the slider's position.
+    at: { closed: 'Closed', part: 'Part-way open', open: 'Open' },
+    parts: 'Parts',
+    part: {
+      cooler: {
+        name: 'Cooler and fan',
+        does: 'Carries heat away from the processor, so it can keep working at full speed.',
+        signs: [
+          'A fan that is loud, rattles or does not spin',
+          'The computer gets hot and slows down',
+          'It switches itself off when it is working hard',
+        ],
+      },
+      memory: {
+        name: 'Memory',
+        does: 'Holds the programs and files that are open, so the processor can reach them quickly.',
+        signs: [
+          'Freezes or error screens at random',
+          'Beeps at start-up and nothing on the screen',
+          'Programs that close by themselves',
+        ],
+      },
+      storage: {
+        name: 'Storage',
+        does: 'Keeps the system, your programs and your files while the computer is off.',
+        signs: [
+          'Slow to start and slow to open files',
+          'Files that will not open or go missing',
+          'Clicking sounds, or the system will not load',
+        ],
+      },
+      psu: {
+        name: 'Power supply',
+        does: 'Turns the power from the wall into the steady power every other part runs on.',
+        signs: [
+          'Will not turn on, or turns off by itself',
+          'Restarts when it is working hard',
+          'A burning smell or a buzzing sound',
+        ],
+      },
+      board: {
+        name: 'Motherboard',
+        does: 'Connects every other part to the processor, so they can work together.',
+        signs: [
+          'Will not turn on, even with a working power supply',
+          'Nothing on the screen and no beeps',
+          'Ports or slots that stop working',
+        ],
+      },
+    },
+    signs: 'Usual signs it is failing',
+    symptoms: 'What is wrong with it?',
+    symptom: {
+      power: 'Will not turn on',
+      slow: 'Very slow',
+      hot: 'Hot or noisy',
+      screen: 'Nothing on the screen',
+    },
+    // The symptom as the visitor would say it, written into the request.
+    report: {
+      power: 'My computer will not turn on.',
+      slow: 'My computer is very slow.',
+      hot: 'My computer is hot or noisy.',
+      screen: 'My computer shows nothing on the screen.',
+    },
+    hint: 'Each one lights up the parts usually responsible.',
+    suspects: 'Usually responsible:',
+    likely: 'often the cause',
+    clear: 'Clear',
+    repairs: 'I take on diagnosis, part replacement and maintenance.',
+    send: 'Send this to Mustafa',
+  },
 
   home: {
     jobs: 'Past jobs',
