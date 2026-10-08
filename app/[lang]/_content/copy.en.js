@@ -42,11 +42,40 @@ export default {
     see: 'See the work',
   },
 
+  // The site viewer (the laptop's exhibit).
+  viewer: {
+    sites: 'Client sites',
+    language: 'Language',
+    languages: { en: 'English', ar: 'Arabic', ku: 'Kurdish' },
+    size: 'Size',
+    sizes: { desktop: 'Desktop', phone: 'Phone' },
+    visit: 'Visit the site',
+    newTab: '(opens in a new tab)',
+    // Added to a site's alt text for the screenshot on show.
+    shot: {
+      en: ', in English',
+      ar: ', in Arabic, laid out right to left',
+      ku: ', in Kurdish, laid out right to left',
+      phone: ', on a phone screen',
+    },
+    // Each mark repeats one fact `jobs` already states about the site.
+    marks: {
+      ellin: {
+        work: 'Design, build, deployment and hosting',
+        languages: 'In English, Arabic and Kurdish',
+        client: 'For a construction contractor',
+      },
+      bv: {
+        hosting: 'Moved to new hosting with every old link still working',
+        languages: 'Company website in three languages',
+        client: 'Rebuilt for an industrial supply and engineering firm',
+      },
+    },
+    ask: 'Want a site like this?',
+  },
+
   // The request builder. Its choices, field hints and message wording are
   // the ticket's, above.
-  // The site viewer (the laptop's exhibit).
-  viewer: {},
-
   request: {
     title: 'Start a request',
     lead: 'Choose what you need and your message is written as you go. The site sends nothing itself: the message opens in your own WhatsApp or email.',

@@ -1,0 +1,393 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE SITE VIEWER
+
+   The laptop's screen, grown into a browser window: two client sites in
+   tabs, each shown as a screenshot of its real page in the language and at
+   the size the visitor picks. The window is a device, so it is graphite and
+   casts the one soft shadow; the address bar and the page are light, like
+   every screen on the bench.
+
+   The window is a size container: its tabs, its address and the tips on
+   the marks fit themselves to the window rather than to the page, because
+   the same window is a desktop and a phone.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vw-frame {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-inline: auto;
+  padding: 0 6px 6px;
+  border-radius: 10px;
+  background: var(--color-graphite);
+  box-shadow: 0 22px 36px -14px rgb(3 18 13 / 0.75);
+}
+/* A phone is narrower than a 390px screen here, so the whole of it fits a
+   desktop window's height and the column of a phone. Padding is not
+   animated: the resize measures the window before and after, and a padding
+   still on its way would put the end of that animation a few pixels off. */
+.vw-frame[data-size='phone'] {
+  width: min(100%, 320px);
+  padding: 4px 10px 14px;
+  border-radius: 30px;
+}
+
+/* The window's top: three dots and the tabs. */
+.vw-strip {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  min-width: 0;
+  padding: 6px 6px 0;
+}
+.vw-dots {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+  align-self: center;
+  padding-inline-start: 4px;
+}
+.vw-dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3a4547;
+}
+.vw-tabs {
+  display: flex;
+  min-width: 0;
+  gap: 4px;
+}
+.vw-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  background: none;
+  color: var(--color-chalk-dim);
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.vw-tab:enabled:hover {
+  background: #232b2d;
+  color: var(--color-chalk);
+}
+/* Without scripts the other tab cannot open, and looks it. */
+.vw-tab:disabled:not([aria-selected='true']) {
+  opacity: 0.6;
+  cursor: default;
+}
+/* The open tab is the light tab joined to the page below it, drawn heavier,
+   with a signal edge along its top. */
+.vw-tab[aria-selected='true'] {
+  background: #e6ebe7;
+  color: var(--color-graphite);
+  font-weight: 650;
+}
+.vw-tab[aria-selected='true']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 10px;
+  height: 3px;
+  border-radius: 0 0 2px 2px;
+  background: var(--color-signal);
+}
+/* The ring is drawn inside a tab, so it is not cut by the bar below; on the
+   light tab it is graphite. */
+.vw-tab:focus-visible {
+  outline-offset: -5px;
+}
+.vw-tab[aria-selected='true']:focus-visible {
+  outline-color: var(--color-graphite);
+}
+
+/* The address bar. The whole field is the link to the live site. */
+.vw-bar {
+  display: flex;
+  padding: 5px 6px;
+  border-radius: 6px 6px 0 0;
+  background: #e6ebe7;
+}
+.vw-address {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 44px;
+  padding-inline: 14px 12px;
+  border-radius: 999px;
+  background: var(--color-screen);
+  color: var(--color-graphite);
+  font-size: 0.92rem;
+}
+.vw-address:hover {
+  background: #fff;
+}
+.vw-url {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vw-scheme {
+  color: var(--color-graphite-soft);
+}
+.vw-go {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  margin-inline-start: auto;
+  font-weight: 600;
+}
+.vw-visit {
+  text-decoration: underline;
+  text-decoration-color: rgb(20 25 26 / 0.4);
+  text-underline-offset: 4px;
+}
+.vw-address:hover .vw-visit {
+  text-decoration-color: currentColor;
+}
+
+/* The page. Its box keeps the screenshot's proportions; while the window is
+   being resized it fills whatever height the window has, and the
+   screenshot covers it from the top, the way a page sits in a window. */
+.vw-screen {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  aspect-ratio: var(--ar);
+  overflow: hidden;
+  border-radius: 0 0 4px 4px;
+  background: var(--color-screen);
+}
+.vw-frame[data-size='phone'] .vw-screen {
+  border-radius: 0 0 20px 20px;
+}
+.vw-shot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+/* A narrow window drops what it can do without: the window dots, the scheme
+   in front of the address and the word beside its arrow. */
+@container (max-width: 560px) {
+  .vw-dots,
+  .vw-scheme,
+  .vw-visit {
+    display: none;
+  }
+  .vw-tab {
+    padding-inline: 12px;
+    font-size: 0.86rem;
+  }
+  .vw-address {
+    padding-inline: 12px 10px;
+    font-size: 0.86rem;
+  }
+  /* Smaller dots cover less of a smaller picture; what is pressed is still
+     the 44px button around them. */
+  .vw-mark .vw-dot {
+    width: 21px;
+    height: 21px;
+    font-size: 0.72rem;
+  }
+}
+.vw-frame[data-size='phone'] .vw-strip {
+  padding-inline: 10px;
+}
+
+/* ---------- Marks ----------
+   Placed in the screenshot's own coordinates, so `left` and `top` are
+   physical: an Arabic page's language switch is on the left of its picture
+   whatever the direction of this page. The button never leaves the picture,
+   so all of its 44px can be pressed. */
+.vw-mark {
+  position: absolute;
+  left: clamp(22px, var(--x), 100% - 22px);
+  top: clamp(22px, var(--y), 100% - 22px);
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.vw-mark:disabled {
+  cursor: default;
+}
+/* Ruler yellow with a graphite rim: the yellow carries on a dark page, the
+   rim on a light one. */
+.vw-dot {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-ruler);
+  box-shadow: 0 0 0 2px var(--color-graphite);
+  color: var(--color-graphite);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.vw-mark:focus-visible {
+  outline: none;
+}
+.vw-mark:focus-visible .vw-dot {
+  box-shadow:
+    0 0 0 2px var(--color-graphite),
+    0 0 0 4px var(--color-screen),
+    0 0 0 6px var(--color-graphite);
+}
+.vw-mark[data-open] .vw-dot {
+  scale: 1.12;
+}
+
+/* The line beside a mark: below it, or above it near the bottom of the
+   picture; centred on it, or running inward from it near either side. It
+   stays in the accessibility tree while hidden, as part of the button's
+   name. */
+.vw-tip {
+  --tx: -50%;
+  position: absolute;
+  top: calc(50% + 19px);
+  left: 50%;
+  width: max-content;
+  max-width: min(17rem, 64cqi);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--color-graphite);
+  color: var(--color-chalk);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: start;
+  pointer-events: none;
+  opacity: 0;
+  translate: var(--tx) -4px;
+}
+[dir='rtl'] .vw-tip {
+  line-height: 1.7;
+}
+.vw-mark[data-h='l'] .vw-tip {
+  --tx: 0;
+  left: 4px;
+}
+.vw-mark[data-h='r'] .vw-tip {
+  --tx: 0;
+  left: auto;
+  right: 4px;
+}
+.vw-mark[data-v='u'] .vw-tip {
+  top: auto;
+  bottom: calc(50% + 19px);
+}
+.vw-mark[data-open],
+.vw-mark:focus-visible {
+  z-index: 2;
+}
+.vw-mark[data-open] .vw-tip,
+.vw-mark:focus-visible .vw-tip {
+  opacity: 1;
+  translate: var(--tx) 0;
+}
+@media (hover: hover) {
+  .vw-mark:enabled:hover {
+    z-index: 2;
+  }
+  .vw-mark:enabled:hover .vw-tip {
+    opacity: 1;
+    translate: var(--tx) 0;
+  }
+}
+
+/* While the window changes size the picture is cropped, so the marks would
+   point at the wrong places: they wait until it has settled. */
+.vw-frame[data-resizing] .vw-mark {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* The list under the window: the line of an open mark is brought up. */
+.vw-line {
+  color: var(--color-chalk-dim);
+}
+.vw-line[data-on] {
+  color: var(--color-chalk);
+}
+
+/* ---------- Motion ----------
+   All of it hangs off data-motion; with Effects off or reduced motion the
+   same changes happen at once. */
+[data-motion='on'] .vw-ease {
+  transition:
+    color 200ms var(--ease-out-quart),
+    background-color 200ms var(--ease-out-quart),
+    border-color 200ms var(--ease-out-quart);
+}
+[data-motion='on'] .vw-frame {
+  transition: border-radius 420ms var(--ease-out-expo);
+}
+[data-motion='on'] .vw-mark {
+  transition: opacity 220ms var(--ease-out-quart);
+}
+[data-motion='on'] .vw-dot {
+  transition: scale 200ms var(--ease-set-down);
+}
+[data-motion='on'] .vw-tip {
+  transition:
+    opacity 160ms var(--ease-out-quart),
+    translate 220ms var(--ease-out-expo);
+}
+
+/* A new screenshot comes in over the one it replaces once it has loaded.
+   Another language is wiped in from its own reading start, so the mirror
+   shows as it happens; another site fades in. */
+.vw-shot[data-fade]:not([data-ready]) {
+  opacity: 0;
+}
+[data-motion='on'] .vw-shot[data-ready][data-fade='ltr'] {
+  animation: vw-from-left 420ms var(--ease-out-quart) both;
+}
+[data-motion='on'] .vw-shot[data-ready][data-fade='rtl'] {
+  animation: vw-from-right 420ms var(--ease-out-quart) both;
+}
+[data-motion='on'] .vw-shot[data-ready][data-fade='site'] {
+  animation: vw-in 260ms var(--ease-out-quart) both;
+}
+@keyframes vw-from-left {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}
+@keyframes vw-from-right {
+  from { clip-path: inset(0 0 0 100%); }
+  to { clip-path: inset(0); }
+}
+@keyframes vw-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
