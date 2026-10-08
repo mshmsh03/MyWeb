@@ -95,7 +95,7 @@
       "Do keep cards and panels flat at rest and reserve shadow for the hover-lift state only.",
       "Do use Signal Amber strictly for status/metadata (role line, project tags) and never for links, buttons, or other interactive elements.",
       "Do respect prefers-reduced-motion on every animation (typewriter, cursor blink, blob drift, reveal-on-scroll, hover transforms) — this is already implemented site-wide and must be preserved in any new component.",
-      "Do keep the content column narrow (820px max-width) — this is a reading-width personal site, not a wide marketing layout."
+      "Do keep prose at reading width (600–640px) inside the 1080px column — the extra width is for screenshots and two-column rows, not for longer lines."
     ],
     "donts": [
       "Don't introduce a second (serif/display) typeface for \"polish\" — it breaks the terminal illusion the whole system is built on.",

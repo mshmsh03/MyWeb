@@ -166,7 +166,7 @@ cannot render gets a face that can, and nothing else does.
 
 ## Layout
 
-A single centered content column (`max-width: 820px`, `24px` horizontal padding) — this is a narrow, reading-width layout, not a wide marketing grid. Sections stack vertically, each with generous vertical rhythm (`64px` top/bottom padding, tightening to `44px` under 600px) and a hairline bottom border, except the last section on a page. The services and project cards use a responsive auto-fit grid (`minmax(220px, 1fr)`) that collapses to a single column on narrow viewports. Internal spacing runs on an approximate 8/12/18/24px scale (tight component gaps → grid gaps → section-level padding).
+A single centered content column (`max-width: 1080px`, `24px` horizontal padding). It was `820px` until 2026-10-08, when the owner agreed to widen it so two screenshots can sit side by side. Prose does not use the full width: paragraphs cap their own measure at `600–640px`. Sections stack vertically, each with generous vertical rhythm (`64px` top/bottom padding, tightening to `44px` under 600px) and a hairline bottom border, except the last section on a page. The services and project cards use a responsive auto-fit grid (`minmax(220px, 1fr)`) that collapses to a single column on narrow viewports. Internal spacing runs on an approximate 8/12/18/24px scale (tight component gaps → grid gaps → section-level padding).
 
 ## Elevation & Depth
 
@@ -212,7 +212,7 @@ The hero's `whoami` line and the blinking block cursor after the h1 are the syst
 - **Do** keep cards and panels flat at rest and reserve shadow for the hover-lift state only.
 - **Do** use `Signal Amber` strictly for status/metadata (role line, project tags) and never for links, buttons, or other interactive elements.
 - **Do** respect `prefers-reduced-motion` on every animation (typewriter, cursor blink, reveal-on-scroll, hover transforms) — implemented site-wide and must be preserved in any new component. The ambient background is the one documented exception; do not extend it to anything else.
-- **Do** keep the content column narrow (`820px` max-width) — this is a reading-width personal site, not a wide marketing layout.
+- **Do** keep prose at reading width (`600–640px`) inside the `1080px` column — the extra width is for screenshots and two-column rows, not for longer lines.
 
 ### Don't:
 - **Don't** introduce a second (serif/display) typeface for "polish" — it breaks the terminal illusion the whole system is built on.
@@ -226,7 +226,8 @@ The hero's `whoami` line and the blinking block cursor after the h1 are the syst
 | Colour, type, motion tokens; base element styles; scanline overlay | `app/globals.css` |
 | Section/card/button/list vocabulary | `components/sections.jsx` |
 | Header, Footer, Typewriter, FlowBackground | `components/*.jsx` |
-| Nav labels, contact details, page titles | `lib/site-data.js` |
+| Nav labels, contact details, page titles, screenshot sizes (`SHOTS`) | `lib/site-data.js` |
+| Screenshots of work | `public/assets/work/` |
 | Page content, one file per page per language | `app/[lang]/_content/` |
 | Deployment, basePath, URLs | `DEPLOY.md` |
 
@@ -259,3 +260,19 @@ agree.
 color blobs" described in the Overview above were replaced by the particle flow
 field in `public/assets/flow-bg.js` (2026-07-27). The ambient-glow intent is the
 same; the mechanism is not.
+
+## Changes agreed with the owner, 2026-10-08
+
+**Projects carry no status.** The Status Tag Pill described under Components is retired: no `live` / `shipped` / version / in-progress pills or wording anywhere on the site. Signal Amber is now used only for role lines (the hero's, and the line under a case-study title). Do not bring status back as a "nice touch".
+
+**Work is shown, not only listed.** The site has imagery for the first time: screenshots of real work, flat, with a hairline border and no shadow at rest. Two patterns carry all work:
+- `SiteCard` — a screenshot card that is one link (a client site, or a case study). `wide` lays it on its side across both columns.
+- `WorkList` / `WorkRow` — a ruled list for work without a picture: a name and one line about it.
+
+**Other vocabulary added in `components/sections.jsx`:** `Hero` + `StatusPanel` / `StatusRow` (the facts beside the name; keys stay English, mono and LTR like the About page's `/* notes */`), `WorkGroup`, `Lead`, `PathCrumb` (a shell-style path back from a nested page), `FactList` / `Fact`, `Shot`, `Split`, `Note`, `SpecList` / `SpecRow`.
+
+**Nested pages exist.** `/[lang]/projects/qasa/` is a case study with a real display `<h1>` (the product name, mono and LTR in every language). The label-only `PageHeader` remains the rule for the four top-level pages.
+
+**RTL labels are not letter-spaced.** The `0.12em` tracking on `//` labels applies to Latin capitals only; it pulls joined Arabic script apart, so Arabic and Kurdish labels use natural spacing.
+
+**Header links are padded** to roughly 38px tall so they can be tapped on a phone; the header's own padding shrank to keep its height.
