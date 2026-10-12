@@ -5,6 +5,10 @@ import { NAME, PHONE_DISPLAY, PHONE_HREF } from '@/lib/site-data';
 import { compose, sendLinks } from '@/lib/request';
 import { BAND } from '@/components/sections';
 
+// The fields are screens laid on the mat. On the dark bench they stand out by
+// themselves; on the light one they take an edge in the mat's quieter ink.
+const FIELD_EDGE = 'in-data-[lamp=on]:shadow-[inset_0_0_0_1px_var(--color-chalk-dim)]';
+
 // The request builder, on every page that asks for work. The visitor says
 // what they need, and may add a line and their name; the message is drawn as
 // a chat bubble on a phone lying beside the form, exactly as it will be sent,
@@ -104,7 +108,7 @@ export default function RequestBuilder({ t, r }) {
                 autoComplete="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-2 block min-h-12 w-full rounded-part border-0 bg-screen px-3.5 text-graphite [unicode-bidi:plaintext]"
+                className={`mt-2 block min-h-12 w-full rounded-part border-0 bg-screen px-3.5 text-graphite [unicode-bidi:plaintext] ${FIELD_EDGE}`}
               />
             </label>
             <label className="block sm:col-span-2">
@@ -116,19 +120,19 @@ export default function RequestBuilder({ t, r }) {
                 value={details}
                 onChange={(e) => setDetails(e.target.value)}
                 placeholder={t.detailsHint}
-                className="mt-2 block min-h-12 w-full resize-y rounded-part border-0 bg-screen px-3.5 py-3 text-graphite [unicode-bidi:plaintext] placeholder:text-graphite-soft"
+                className={`mt-2 block min-h-12 w-full resize-y rounded-part border-0 bg-screen px-3.5 py-3 text-graphite [unicode-bidi:plaintext] ${FIELD_EDGE} placeholder:text-graphite-soft`}
               />
             </label>
           </div>
         </div>
 
         {/* The phone the message will be sent from, lying on the mat. */}
-        <div className="mx-auto w-full max-w-[384px] rounded-[34px] bg-graphite p-2.5 shadow-[0_22px_36px_-14px_rgb(3_18_13/0.75)] lg:mt-2">
+        <div className="mx-auto w-full max-w-[384px] rounded-[34px] bg-graphite p-2.5 shadow-(--shadow-device) lg:mt-2">
           <div className="on-screen overflow-hidden rounded-[26px] bg-screen text-graphite">
             <div className="flex items-center gap-3 border-b border-graphite/10 bg-[#ebf0ec] px-4 py-3">
               <span
                 aria-hidden="true"
-                className="ltr-fixed grid size-10 shrink-0 place-items-center rounded-full bg-mat font-bold text-chalk"
+                className="ltr-fixed grid size-10 shrink-0 place-items-center rounded-full bg-[#0f3d30] font-bold text-silk"
               >
                 M
               </span>

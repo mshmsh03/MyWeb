@@ -3,16 +3,24 @@
 /* ---------- The Bench ----------
    The site is a self-healing cutting mat seen from above, the kind used both
    for trimming print and for repairing electronics. Its printed grid is the
-   page's layout grid, and the devices on it are switched on and work. */
+   page's layout grid, and the devices on it are switched on and work.
+
+   The first five colours are the mat and what is printed on it, and change
+   when the lamp is switched on (the light bench, below). The rest belong to
+   the devices, which look the same under either light. */
 @theme {
     --color-mat: #0f3d30;          /* the ground of every page */
     --color-mat-line: #2c6a55;     /* the printed grid, ruler ticks, hairlines; never text */
-    --color-chalk: #f3f6f2;        /* headings and text on the mat; light parts of devices */
+    --color-chalk: #f3f6f2;        /* headings and text on the mat */
     --color-chalk-dim: #b5ccc2;    /* secondary text on the mat */
+    --color-ruler: #f2d24b;        /* measurement marks on the mat, the focus ring */
     --color-graphite: #14191a;     /* device bodies; text on light surfaces */
     --color-graphite-soft: #4a5753; /* secondary text on a screen (7:1 on screen) */
+    --color-silk: #f3f6f2;         /* lettering printed on a device body */
+    --color-silk-dim: #b5ccc2;     /* quieter lettering on a device body */
+    --color-pcb: #2c6a55;          /* circuit boards */
+    --color-marker: #f2d24b;       /* a highlight, as a fill under graphite text */
     --color-signal: #ff6a2b;       /* the one action colour, as a fill under graphite text */
-    --color-ruler: #f2d24b;        /* measurement marks, highlights, the focus ring */
     --color-screen: #f7f8f5;       /* the ground of every screen inside a device */
     --color-bubble: #dcebe3;       /* a message the visitor is about to send */
 
@@ -36,6 +44,41 @@
     --ease-set-down: cubic-bezier(0.34, 1.4, 0.64, 1);
     --default-transition-duration: 200ms;
     --default-transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ---------- The light bench ----------
+   The lamp switch in the header lights the bench: the mat turns pale, what is
+   printed on it takes the dark mat's green, and the ruler marks a deep amber,
+   since yellow would vanish on a pale mat. On the mat: text 10.2:1,
+   secondary text 5.6:1, ruler marks and the focus ring 5.0:1; the grid
+   keeps the dark bench's 1.9:1. The inline script in app/[lang]/layout.jsx
+   sets data-lamp before the first paint. */
+:root {
+  /* The shadow a device casts on the mat: a colour and a strength, so the
+     same shadows soften on the pale mat. */
+  --drop: 3 18 13;
+  --drop-k: 1;
+  --shadow-device: 0 22px 36px -14px rgb(var(--drop) / calc(0.75 * var(--drop-k)));
+}
+html[data-lamp='on'] {
+  --color-mat: #e6ede7;
+  --color-mat-line: #93b3a3;
+  --color-chalk: #0f3d30;
+  --color-chalk-dim: #3d6455;
+  --color-ruler: #8a5a00;
+  --drop: 22 46 36;
+  --drop-k: 0.55;
+}
+/* The pool of light the lamp throws on the mat, from just above the top of
+   the screen. It stays put while the page scrolls under it, as a lamp
+   would, and lies under everything on the mat. */
+html[data-lamp='on'] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 80% 65% at 50% -10%, rgb(255 251 236 / 0.85), rgb(255 251 236 / 0.3) 50%, transparent 80%);
 }
 
 /* The widths of the Latin face, set through the variable axis so they do not
@@ -140,8 +183,8 @@
     background-image:
       linear-gradient(to right, var(--color-mat-line) 1px, transparent 1px),
       linear-gradient(to bottom, var(--color-mat-line) 1px, transparent 1px),
-      linear-gradient(to right, rgb(44 106 85 / 0.42) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(44 106 85 / 0.42) 1px, transparent 1px);
+      linear-gradient(to right, color-mix(in srgb, var(--color-mat-line) 42%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--color-mat-line) 42%, transparent) 1px, transparent 1px);
     background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
     /* Percentages here place the tile, not its edge: these offsets put a heavy
        line, and so a light one, through the centre of the page. */
@@ -164,7 +207,7 @@
     font-variant-numeric: tabular-nums;
   }
   ::selection {
-    background: var(--color-ruler);
+    background: var(--color-marker);
     color: var(--color-graphite);
   }
   a {
@@ -174,7 +217,7 @@
   h1, h2, h3 {
     text-wrap: balance;
   }
-  /* One focus ring: ruler yellow on the mat, graphite on a light screen. */
+  /* One focus ring: the ruler's colour on the mat, graphite on a light screen. */
   :focus-visible {
     outline: 2px solid var(--color-ruler);
     outline-offset: 3px;
@@ -274,6 +317,19 @@ html[data-vt='mirror']::view-transition-old(root) {
 }
 html[data-vt='mirror']::view-transition-new(root) {
   animation: mirror-in 260ms var(--ease-out-expo) 180ms both;
+}
+
+/* ---------- Switching the lamp ----------
+   The whole page is one picture while the lamp changes: the lit one grows out
+   of the switch over the dark one, or shrinks back into it, drawn by
+   LampSwitch. Nothing fades. */
+html[data-vt^='lamp']::view-transition-old(root),
+html[data-vt^='lamp']::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html[data-vt='lamp-off']::view-transition-old(root) {
+  z-index: 1;
 }
 
 /* The pictures a transition draws are laid out from their left edge in every

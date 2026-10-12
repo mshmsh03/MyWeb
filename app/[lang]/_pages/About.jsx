@@ -39,7 +39,7 @@ export default function About({ lang, t }) {
       <Band rule={false} className="sm:!pt-18 !pb-12 sm:!pb-24">
         <PageTitle>{t.about.title}</PageTitle>
 
-        <div className="relative mt-10 grid max-w-[1008px] gap-5 rounded-[14px] bg-graphite p-5 shadow-[0_26px_40px_-16px_rgb(3_18_13/0.8)] sm:mt-14 sm:gap-6 sm:p-6 md:grid-cols-[minmax(0,1fr)_168px]">
+        <div className="relative mt-10 grid max-w-[1008px] gap-5 rounded-[14px] bg-graphite p-5 shadow-[0_26px_40px_-16px_rgb(var(--drop)/calc(0.8*var(--drop-k)))] sm:mt-14 sm:gap-6 sm:p-6 md:grid-cols-[minmax(0,1fr)_168px]">
           {/* Screw heads in the panel's corners. */}
           <span aria-hidden="true" className="about-screws pointer-events-none absolute inset-[3px] sm:inset-3" />
 

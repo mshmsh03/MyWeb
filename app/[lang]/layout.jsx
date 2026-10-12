@@ -85,6 +85,14 @@ if(!on)return;
 setTimeout(function(){if(d.dataset.hydrated!=='1')d.dataset.motion='off';},3000);
 }catch(e){}})();`;
 
+// Lights the bench before the first paint if the visitor switched the lamp on
+// (LampSwitch remembers it), so a page never shows the dark bench for a frame
+// first; and gives the browser's bar the pale mat's colour. Inline and
+// blocking for the same reason as the script above. The theme-color tag comes
+// earlier in the head, so it is already there to change.
+const LIGHT_LAMP = `try{if(localStorage.getItem('lamp')==='on'){document.documentElement.dataset.lamp='on';
+var m=document.querySelector('meta[name="theme-color"]');if(m)m.content='#e6ede7';}}catch(e){}`;
+
 export function generateStaticParams() {
   return LANGS.map((lang) => ({ lang }));
 }
@@ -100,8 +108,8 @@ export default async function LangLayout({ children, params }) {
   const t = SITE[lang];
 
   return (
-    // The inline script above sets data-motion on this element before React
-    // hydrates, which is the one attribute the server could not have known.
+    // The inline scripts above set data-motion and data-lamp on this element
+    // before React hydrates: the attributes the server could not have known.
     //
     // data-scroll-behavior tells the router that scrolling is smooth when
     // motion is on, so it jumps to the top of a new page instead of gliding.
@@ -114,6 +122,7 @@ export default async function LangLayout({ children, params }) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: ARM_MOTION }} />
+        <script dangerouslySetInnerHTML={{ __html: LIGHT_LAMP }} />
         {/* One manifest per language, written by scripts/offline.mjs after
             the build, so the installed app opens in the language it was
             installed from. A development server has none to serve. */}
@@ -127,7 +136,7 @@ export default async function LangLayout({ children, params }) {
         {/* The first stop for the keyboard: past the header to the page. */}
         <a
           href="#main"
-          className="sr-only z-[60] rounded-part bg-ruler px-4 py-3 font-semibold text-graphite focus:not-sr-only focus:fixed focus:start-3 focus:top-3"
+          className="sr-only z-[60] rounded-part bg-marker px-4 py-3 font-semibold text-graphite focus:not-sr-only focus:fixed focus:start-3 focus:top-3"
         >
           {t.skip}
         </a>

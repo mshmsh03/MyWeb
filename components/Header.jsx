@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BASE_PATH, LANGS, NAME, PAGES, SITE, pagePath } from '@/lib/site-data';
 import EffectsSwitch from './EffectsSwitch';
+import LampSwitch from './LampSwitch';
 
 // The header lives in the layout, not in each page, so client-side navigation
 // leaves it mounted — it reads the route from the URL rather than taking it as
@@ -70,7 +71,9 @@ export default function Header({ lang }) {
           })}
         </nav>
 
-        <div className="-mx-1.5 flex w-full items-center justify-between md:w-auto md:gap-4">
+        {/* On the narrowest phones (320px) the two switches take a row of
+            their own. */}
+        <div className="-mx-1.5 flex w-full flex-wrap items-center justify-between md:w-auto md:gap-4">
           {/* Each option links to the same page in that language, which is
               what makes all three indexable. They are plain links, so the
               switch is a full page load: the page turns over like a mirror
@@ -100,7 +103,10 @@ export default function Header({ lang }) {
               </a>
             ))}
           </div>
-          <EffectsSwitch label={t.effects} />
+          <div className="flex items-center">
+            <LampSwitch label={t.lamp} />
+            <EffectsSwitch label={t.effects} />
+          </div>
         </div>
       </div>
     </header>

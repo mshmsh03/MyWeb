@@ -190,7 +190,7 @@ export function RuledRow({ term, children }) {
 
 // ---------- Devices on the mat ----------
 
-const DEVICE_SHADOW = 'shadow-[0_22px_36px_-14px_rgb(3_18_13/0.75)]';
+const DEVICE_SHADOW = 'shadow-(--shadow-device)';
 
 // The attributes of a screenshot's <img>. `copies` are [file, width] pairs of
 // the same picture, offered with the original for the browser to choose from

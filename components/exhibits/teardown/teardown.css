@@ -176,7 +176,7 @@
 /* The motherboard, standing off the tray. */
 .td .td-board { --w: 6px; --h: 300px; --d: 250px; --x: -90px; --y: 106px; --z: -74px; }
 .td .td-board > .f { background: #1d4a3b; }
-.td .td-board > .rt { background: var(--color-mat-line); }
+.td .td-board > .rt { background: var(--color-pcb); }
 .td-pcb {
   position: relative;
   display: block;
@@ -285,13 +285,13 @@
   cursor: pointer;
 }
 .td[data-live] .td-part:hover .f::after {
-  background: rgb(243 246 242 / 0.12);
+  background: color-mix(in srgb, var(--color-silk) 12%, transparent);
 }
 /* Usually responsible for the chosen symptom: washed in ruler yellow and
    outlined, so it reads by shape as well as by colour. */
 .td .td-part[data-suspect] .f::after {
-  background: rgb(242 210 75 / 0.34);
-  box-shadow: inset 0 0 0 2px var(--color-ruler);
+  background: color-mix(in srgb, var(--color-marker) 34%, transparent);
+  box-shadow: inset 0 0 0 2px var(--color-marker);
 }
 .td .td-part[data-chosen] .f::after {
   box-shadow: inset 0 0 0 3px var(--color-signal);
@@ -323,7 +323,7 @@
   left: -0.75px;
   width: 1.5px;
   height: 22px;
-  background: var(--color-chalk);
+  background: var(--color-silk);
 }
 .td-pin[data-place='up']::before { bottom: 0; }
 .td-pin[data-place='down']::before { top: 0; }
@@ -335,7 +335,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--color-chalk);
+  background: var(--color-silk);
   box-shadow: 0 0 0 1.5px var(--color-graphite);
 }
 
@@ -347,7 +347,7 @@
   gap: 7px;
   border-radius: 999px;
   background: var(--color-graphite);
-  color: var(--color-chalk);
+  color: var(--color-silk);
   white-space: nowrap;
   cursor: default;
 }
@@ -434,8 +434,8 @@
   color: var(--color-graphite);
 }
 .td .td-part[data-suspect] .td-num {
-  border-color: var(--color-ruler);
-  background: var(--color-ruler);
+  border-color: var(--color-marker);
+  background: var(--color-marker);
   color: var(--color-graphite);
 }
 /* The mark beside a part that is usually responsible: an exclamation in a
@@ -451,7 +451,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--color-ruler);
+  background: var(--color-marker);
   color: var(--color-graphite);
   font-size: 11px;
   font-weight: 800;
@@ -486,8 +486,8 @@
   box-shadow: inset 0 0 0 1px var(--color-ruler);
 }
 .td-chip[data-suspect] .td-num {
-  border-color: var(--color-ruler);
-  background: var(--color-ruler);
+  border-color: var(--color-marker);
+  background: var(--color-marker);
   color: var(--color-graphite);
 }
 .td-chip,
@@ -667,6 +667,14 @@
   border: 0;
   border-radius: 4px;
   background: linear-gradient(var(--color-graphite), var(--color-graphite)) 50% 50% / 2px 14px no-repeat, var(--color-chalk);
+}
+/* The handle is drawn in the mat's ink, so on the light bench it turns dark
+   and its grip line pale. */
+html[data-lamp='on'] .td-range::-webkit-slider-thumb {
+  background: linear-gradient(var(--color-mat), var(--color-mat)) 50% 50% / 2px 14px no-repeat, var(--color-chalk);
+}
+html[data-lamp='on'] .td-range::-moz-range-thumb {
+  background: linear-gradient(var(--color-mat), var(--color-mat)) 50% 50% / 2px 14px no-repeat, var(--color-chalk);
 }
 
 /* A wide but short screen (a 1366×768 or 1280×800 laptop): the two-column

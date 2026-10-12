@@ -113,7 +113,12 @@
   height: var(--sd);
   transform-origin: 0 0;
   transform: translate3d(calc(var(--sw) / -2), 0, calc(var(--sd) / -2)) rotateX(90deg);
-  background: radial-gradient(closest-side, rgb(3 18 13 / 0.62), rgb(3 18 13 / 0.32) 55%, transparent);
+  background: radial-gradient(
+    closest-side,
+    rgb(var(--drop) / calc(0.62 * var(--drop-k))),
+    rgb(var(--drop) / calc(0.32 * var(--drop-k))) 55%,
+    transparent
+  );
 }
 
 /* ---------- Laptop ---------- */
@@ -247,7 +252,7 @@
 /* The motherboard, and on it the cooler, the memory and the graphics card;
    the power supply and a drive below. Positions are in the panel's own
    frame: the front of the case is on the right. */
-.inside .board { inset: 8px 8px 74px 34px; border-radius: 2px; background: var(--color-mat-line); }
+.inside .board { inset: 8px 8px 74px 34px; border-radius: 2px; background: var(--color-pcb); }
 .inside .cooler {
   top: 34px;
   right: 46px;

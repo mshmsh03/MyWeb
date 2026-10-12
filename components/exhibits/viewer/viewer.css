@@ -21,7 +21,7 @@
   padding: 0 6px 6px;
   border-radius: 10px;
   background: var(--color-graphite);
-  box-shadow: 0 22px 36px -14px rgb(3 18 13 / 0.75);
+  box-shadow: var(--shadow-device);
 }
 /* A phone is narrower than a 390px screen here, so the whole of it fits a
    desktop window's height and the column of a phone. Padding is not
@@ -69,7 +69,7 @@
   border: 0;
   border-radius: 8px 8px 0 0;
   background: none;
-  color: var(--color-chalk-dim);
+  color: var(--color-silk-dim);
   font: inherit;
   font-size: 0.94rem;
   font-weight: 500;
@@ -79,7 +79,7 @@
 @media (hover: hover) {
   .vw-tab:enabled:not([aria-selected='true']):hover {
     background: #232b2d;
-    color: var(--color-chalk);
+    color: var(--color-silk);
   }
 }
 /* Without scripts the other tab cannot open, and looks it. */
@@ -312,7 +312,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: var(--color-ruler);
+  background: var(--color-marker);
   box-shadow: 0 0 0 2px var(--color-graphite);
   color: var(--color-graphite);
   font-family: var(--font-sans);
@@ -354,7 +354,7 @@
   padding: 6px 10px;
   border-radius: 6px;
   background: var(--color-graphite);
-  color: var(--color-chalk);
+  color: var(--color-silk);
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.4;
