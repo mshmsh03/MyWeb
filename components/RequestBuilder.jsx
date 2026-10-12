@@ -53,7 +53,7 @@ export default function RequestBuilder({ t, r }) {
 
   return (
     <section id="request" aria-labelledby={`${id}-title`} className={BAND}>
-      <div className="wrap grid items-start gap-x-12 gap-y-10 lg:grid-cols-[minmax(0,1fr)_384px]">
+      <div className="wrap grid grid-cols-[minmax(0,1fr)] items-start gap-x-12 gap-y-10 lg:grid-cols-[minmax(0,1fr)_384px]">
         <div>
           <h2
             id={`${id}-title`}
