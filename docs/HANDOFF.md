@@ -137,3 +137,42 @@ checks the JavaScript limit; it deploys only from `main`.
 - Latin words inside Arabic and Kurdish sentences ("Qasa", "Excel", "(POS)")
   are drawn by the Arabic face; setting them in Archivo caused layout shift,
   so it was backed out.
+
+## Notes on `feature/transitions` (unfinished)
+
+What works (checked only in Chromium, English, 1440px, motion on):
+- Projects → Qasa by "Read more": the device screen grows into the till.
+  Focus lands on the h1. No console errors.
+- `components/PageMorph.jsx` wraps one end of the pair. Leaving: a click
+  listener catches router-handled links; the Navigation API `navigate` event
+  (traverse) catches Back and Forward. Arriving: it starts the view transition
+  on first render and suspends with `use()` until the old page is captured. It
+  sets `data-morphing` and fires `morphend`, so the till's island waits.
+  `DeviceScreen` has a `frame` prop for `data-frame`.
+- Ruler mark: a 3×16px ruler-yellow bar on `.ruler-edge`, driven by
+  `animation-timeline: scroll(root block)`, from the right in right-to-left,
+  only from 768px (below that the header scrolls away) and only where
+  scroll-driven animations are supported. No JavaScript.
+
+Not done:
+1. Going back to Projects does not morph. Next scrolls Projects to the top,
+   so the card is off screen. Planned fix: on arrival at the Projects end,
+   scroll the card into view instantly, then name it. Focus its "Read more"
+   link rather than the h1, and wrap the whole article so the link is inside
+   PageMorph. Then check whether the browser's scroll restoration jumps the
+   page afterwards. If it does, restore the scroll position manually.
+2. Back and Forward rely on the Navigation API. Without it, Back is a plain
+   navigation; that fallback is untested.
+3. In `PageMorph.jsx`, fix the comment above the leaving effect, which should
+   name the `navigate` event, and review the 10-second timeout that clears a
+   stale `leaving` flag.
+4. Not yet checked:
+   - 390px; Arabic and Kurdish, including the ruler direction in right-to-left;
+   - reduced motion and Effects off;
+   - the till's live swap during the transition, and layout shift;
+   - Firefox and Safari;
+   - the 24px grid check (there is a new wrapper div on both pages);
+   - whether to hide the ruler mark on pages too short to scroll.
+5. No new user-visible strings.
+
+The home page JavaScript is unchanged by this branch.
