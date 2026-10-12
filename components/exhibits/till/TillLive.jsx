@@ -22,20 +22,23 @@ export default function TillLive({ lang, requestHref }) {
     } else if (action.type === 'newSale') {
       refocus.current = { tiles: true };
     }
-    dispatch(action);
+    dispatch({ ...action, at: performance.now() });
   }, []);
 
   useEffect(() => {
     const want = refocus.current;
     if (!want) return;
     refocus.current = null;
-    // A 'less' that left the line in place left focus where it was.
-    if (document.activeElement && document.activeElement !== document.body) return;
     const el = root.current;
+    // The new sale starts at the products. This does not wait to see focus
+    // leave Charge, now disabled: not every browser lets go of it. A New sale
+    // that was ignored (SETTLE_MS) leaves the paid sale and focus as they were.
     if (want.tiles) {
-      el.querySelector('.till-tile:not(:disabled)')?.focus();
+      if (sale.phase === 'order') el.querySelector('.till-tile:not(:disabled)')?.focus();
       return;
     }
+    // A 'less' that left the line in place left focus where it was.
+    if (document.activeElement && document.activeElement !== document.body) return;
     // The line that moved into the removed one's place, or the one above.
     const lines = el.querySelectorAll('[data-line]');
     const next = lines[Math.min(want.index, lines.length - 1)];

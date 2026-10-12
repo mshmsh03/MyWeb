@@ -18,6 +18,15 @@ import { TILL_LANGS, WORDS, around, countItems, fillText } from './words';
 // sign stays in front of its number inside a Kurdish line.
 const Num = ({ className = '', children }) => <span className={`till-num ${className}`}>{children}</span>;
 
+// A dinar figure and its unit, kept together: in an Arabic or Kurdish line
+// the unit must sit beside its own figure, not beside a dollar amount the
+// bidi algorithm happens to place next to it.
+const Dinars = ({ amount, t }) => (
+  <span className="whitespace-nowrap">
+    <Num>{formatAmount(amount)}</Num> {t.iqd}
+  </span>
+);
+
 const Row = ({ label, className, children }) => (
   <div className={className}>
     <dt>{label}</dt>
@@ -110,11 +119,7 @@ function Line({ line, t, act, fresh }) {
 function Receipt({ sale, requestHref }) {
   const t = WORDS[sale.lang];
   const usd = sale.currency === 'usd';
-  const iqd = (n) => (
-    <span className="whitespace-nowrap">
-      <Num>{formatAmount(n)}</Num> {t.iqd}
-    </span>
-  );
+  const iqd = (n) => <Dinars amount={n} t={t} />;
   return (
     <section className="till-paper on-screen" lang={t.lang} dir={t.dir} aria-labelledby="till-receipt-title">
       <p className="till-paper-brand">
@@ -150,7 +155,7 @@ function Receipt({ sale, requestHref }) {
         </Row>
       </dl>
       <dl className="till-paper-sums">
-        <Row label={t.cash}>{usd ? <Num>${sale.given}</Num> : iqd(sale.given)}</Row>
+        <Row label={t.cash}>{usd ? <Num>${formatAmount(sale.given)}</Num> : iqd(sale.given)}</Row>
         {usd && (
           <Row label={<Num>$1 = {formatAmount(RATE)}</Num>}>{iqd(sale.value)}</Row>
         )}
@@ -161,7 +166,7 @@ function Receipt({ sale, requestHref }) {
       <p className="till-paper-note">
         {t.sampleSale}
         <br />
-        {t.rate}: <Num>$1 = {formatAmount(RATE)}</Num> {t.iqd}
+        {t.rate}: <Num>$1</Num> = {iqd(RATE)}
       </p>
       <a {...requestLinkProps(requestHref, 'pos')} className="till-paper-ask">
         {t.ask}
@@ -183,6 +188,11 @@ function announce(sale, view, t) {
     removed: () => `${fillText(t.said.removed, { name })} ${total}`,
     total: () => total,
     printed: () => `${t.said.printed} ${t.change} ${formatAmount(said.change)} ${t.iqd}.`,
+    pay: () => {
+      if (said.unreadable) return `${t.notAmount}.`;
+      if (said.ok) return `${t.change} ${formatAmount(said.change)} ${t.iqd}.`;
+      return `${fillText(t.short, { amount: `${formatAmount(said.short)} ${t.iqd}` })}.`;
+    },
   }[said.kind]();
   return said.n % 2 ? `${text} ` : text;
 }
@@ -200,9 +210,13 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
   const [sampleBefore, sampleAfter] = around(t.sample, 'qasa');
   const [shortBefore, shortAfter] = around(t.short, 'amount');
   const [pctBefore, pctAfter] = around(t.discount, 'pct');
+  // Charge cannot take this sale yet: nothing on it, or not enough handed
+  // over. The static till's Charge is disabled too, but it is drawn ready, as
+  // the working till's is for the opening sale.
+  const held = open && !view.canCharge;
 
   return (
-    <div ref={rootRef} className="till" lang={t.lang} dir={t.dir} data-phase={sale.phase}>
+    <div ref={rootRef} className="till-app" lang={t.lang} dir={t.dir} data-phase={sale.phase}>
       <div className="till-rig">
         <div className="till-device">
           <div data-frame className="till-screen on-screen">
@@ -311,7 +325,7 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
                   <p className="till-usd">
                     <Num>≈ {formatDollars(view.dollars)}</Num>
                     <span className="till-rate">
-                      {t.rate}: <Num>$1 = {formatAmount(RATE)}</Num> {t.iqd}
+                      {t.rate}: <Num>$1</Num> = <Dinars amount={RATE} t={t} />
                     </span>
                   </p>
                 </div>
@@ -350,6 +364,7 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
                 <fieldset className="till-choice">
                   <legend className="till-label">{t.received}</legend>
                   <div className="till-tenders">
+                    {!view.tenders.length && <p className="till-tenders-hint">{t.noTenders}</p>}
                     {view.tenders.map((amount, i) => {
                       const value = i === 0 ? 'first' : amount;
                       return (
@@ -366,7 +381,7 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
                           />
                           <span>
                             {i === 0 && !usd && <small>{t.exact}</small>}
-                            <Num>{usd ? `$${amount}` : formatAmount(amount)}</Num>
+                            <Num>{usd ? `$${formatAmount(amount)}` : formatAmount(amount)}</Num>
                           </span>
                         </label>
                       );
@@ -381,7 +396,11 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
                       enterKeyHint="done"
                       dir="ltr"
                       value={sale.other}
+                      aria-invalid={view.unreadable || undefined}
+                      aria-describedby="till-change"
                       onChange={ordering ? (e) => act({ type: 'other', text: e.target.value }) : undefined}
+                      onBlur={ordering ? () => act({ type: 'otherDone' }) : undefined}
+                      onKeyDown={ordering ? (e) => e.key === 'Enter' && act({ type: 'otherDone' }) : undefined}
                       readOnly={!ordering}
                       disabled={!ordering}
                       className="till-num"
@@ -395,8 +414,10 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
                   button for that action, so it keeps focus when a sale is
                   charged and it turns into the start of the next. */}
               <div className="till-go">
-                <div className="till-change">
-                  {empty ? null : view.pay.ok ? (
+                <div className="till-change" id="till-change">
+                  {empty ? null : view.unreadable ? (
+                    <p data-short="">{t.notAmount}</p>
+                  ) : view.pay.ok ? (
                     <p className="till-change-row">
                       <span>{t.change}</span>{' '}
                       <span>
@@ -411,19 +432,18 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
                       {shortAfter}
                     </p>
                   )}
-                  {usd && !empty && (
+                  {usd && !empty && !view.unreadable && (
                     <p className="till-rate">
-                      <Num>
-                        ${view.given} = {formatAmount(view.pay.value)}
-                      </Num>{' '}
-                      {t.iqd}. {t.inDinars}
+                      <Num>${formatAmount(view.given)}</Num> = <Dinars amount={view.pay.value} t={t} />. {t.inDinars}
                     </p>
                   )}
                 </div>
                 <button
                   type="button"
                   className="till-charge"
-                  disabled={!act || (open && !view.canCharge)}
+                  disabled={!act || held}
+                  data-held={held || undefined}
+                  aria-describedby="till-change"
                   onClick={any({ type: open ? 'charge' : 'newSale' })}
                 >
                   <span>{open ? t.charge : t.newSale}</span>

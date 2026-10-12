@@ -11,12 +11,13 @@
    page's direction.
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.till {
+.till-app {
   --dir: 1;
   --till-ground: #e6ebe7; /* behind the keys, like Qasa's grey */
   --till-key: var(--color-screen); /* a key or a tile */
   --till-paper: #fdfdf9; /* receipt paper, a shade warmer than the screen */
-  --till-edge: #c3ccc7; /* hairlines on the screen */
+  --till-edge: #c3ccc7; /* hairlines on the screen and the paper */
+  --till-key-edge: #7a8580; /* the edge of a key: 3.2:1 on the ground, 3.6 on a key */
   --till-hot: var(--color-ruler);
   --till-cold: var(--color-mat-line);
   --till-sweets: var(--color-graphite-soft);
@@ -24,14 +25,14 @@
 }
 /* An English till on an Arabic page must not inherit the page's Arabic face
    and leading, nor a Kurdish till on an English page the reverse. */
-.till[dir='ltr'] {
+.till-app[dir='ltr'] {
   font-family: var(--font-sans);
   line-height: 1.45;
 }
-.till[dir='rtl'] {
+.till-app[dir='rtl'] {
   --dir: -1;
   font-family: var(--font-rtl);
-  line-height: 1.7;
+  line-height: 1.85;
 }
 
 /* Money: IBM Plex Mono, the face Qasa prints prices in, the same digits in
@@ -56,7 +57,7 @@
   font-variation-settings: 'wdth' 70;
   color: var(--color-graphite-soft);
 }
-.till[dir='rtl'] .till-label {
+.till-app[dir='rtl'] .till-label {
   font-size: 0.8125rem;
   letter-spacing: normal;
 }
@@ -146,7 +147,7 @@
   min-width: 44px;
   min-height: 44px;
   padding-inline: 12px;
-  border: 1px solid var(--till-edge);
+  border: 1px solid var(--till-key-edge);
   border-radius: 999px;
   background: var(--till-key);
   white-space: nowrap;
@@ -155,8 +156,12 @@
 .till-option > :disabled + span {
   cursor: default;
 }
-.till-option > :enabled + span:hover {
-  background: #fff;
+/* Hover tints only where there is a pointer that hovers: on a touch screen a
+   tapped key would otherwise keep the tint after the tap. */
+@media (hover: hover) {
+  .till-option > :enabled + span:hover {
+    background: #fff;
+  }
 }
 /* Chosen: a signal-orange key with a graphite ring, so the state never rests
    on the orange alone (under 3:1 against the screen). */
@@ -172,6 +177,17 @@
 }
 .till-langs .till-option > span {
   padding-inline: 10px;
+}
+/* Each language is named in itself, in its own script's face, whatever the
+   till's direction. Except the Arabic face on an English page: it is a 166KB
+   download that page otherwise never makes, too much for two words, so there
+   they keep the system's Arabic face until the till itself turns Arabic or
+   Kurdish. */
+.till-langs [lang='en'] {
+  font-family: var(--font-sans);
+}
+html[dir='rtl'] .till-langs :is([lang='ar'], [lang='ckb']) {
+  font-family: var(--font-rtl);
 }
 
 /* ---------- The screen's layout ----------
@@ -226,13 +242,13 @@
   background: var(--bar);
   box-shadow: inset 0 0 0 1px rgb(20 25 26 / 0.25);
 }
-[data-cat='hot'] {
+.till-app [data-cat='hot'] {
   --bar: var(--till-hot);
 }
-[data-cat='cold'] {
+.till-app [data-cat='cold'] {
   --bar: var(--till-cold);
 }
-[data-cat='sweets'] {
+.till-app [data-cat='sweets'] {
   --bar: var(--till-sweets);
 }
 
@@ -271,7 +287,7 @@
   height: var(--tile-h);
   padding: 8px 10px 9px;
   padding-inline-start: 12px;
-  border: 1px solid var(--till-edge);
+  border: 1px solid var(--till-key-edge);
   border-inline-start: 5px solid var(--bar);
   border-radius: 6px;
   background: var(--till-key);
@@ -280,8 +296,10 @@
   text-align: start;
   cursor: pointer;
 }
-.till-tile:enabled:hover {
-  background: #fff;
+@media (hover: hover) {
+  .till-tile:enabled:hover {
+    background: #fff;
+  }
 }
 .till-tile:enabled:active {
   background: #eef1ee;
@@ -289,10 +307,20 @@
 .till-tile:disabled {
   cursor: default;
 }
-/* Once a sale is paid its keys rest until the next sale is started. */
-.till[data-phase='paid'] .till-tile {
+/* Once a sale is paid its keys rest until the next sale is started: the
+   products, the payment and the discount. The tender paid keeps its graphite
+   ring, so the amount handed over still reads. The language and the
+   categories still work. */
+.till-app[data-phase='paid'] :is(.till-tile, .till-pay .till-option > span, .till-other input, .till-switch) {
   color: var(--color-graphite-soft);
   background: transparent;
+}
+.till-app[data-phase='paid'] .till-switch .till-track {
+  border-color: var(--color-graphite-soft);
+  background: transparent;
+}
+.till-app[data-phase='paid'] .till-switch .till-knob {
+  background: var(--color-graphite-soft);
 }
 .till-tile-name {
   font-weight: 600;
@@ -417,6 +445,8 @@
   height: 44px;
   padding: 0;
   border: 0;
+  /* Round, so the focus ring follows the round key. */
+  border-radius: 50%;
   background: none;
   color: var(--color-graphite);
   cursor: pointer;
@@ -427,7 +457,7 @@
   grid-area: 1 / 1;
   width: 34px;
   height: 34px;
-  border: 1px solid var(--till-edge);
+  border: 1px solid var(--till-key-edge);
   border-radius: 50%;
   background: #fff;
 }
@@ -435,8 +465,10 @@
   grid-area: 1 / 1;
   position: relative;
 }
-.till-step button:enabled:hover::before {
-  border-color: var(--color-graphite);
+@media (hover: hover) {
+  .till-step button:enabled:hover::before {
+    border-color: var(--color-graphite);
+  }
 }
 .till-qty {
   min-width: 1.6em;
@@ -448,19 +480,21 @@
   justify-self: end;
   color: var(--color-graphite-soft);
 }
-.till-drop:enabled:hover {
-  color: var(--color-graphite);
+@media (hover: hover) {
+  .till-drop:enabled:hover {
+    color: var(--color-graphite);
+  }
 }
 .till-step button:disabled,
 .till-drop:disabled {
   cursor: default;
 }
 /* A paid sale is read, not changed: its keys go, and the quantity stays. */
-.till[data-phase='paid'] .till-step button,
-.till[data-phase='paid'] .till-drop {
+.till-app[data-phase='paid'] .till-step button,
+.till-app[data-phase='paid'] .till-drop {
   display: none;
 }
-.till[data-phase='paid'] .till-line {
+.till-app[data-phase='paid'] .till-line {
   min-height: 44px;
 }
 
@@ -585,6 +619,14 @@
   gap: 6px;
   min-height: calc(2 * 48px + 6px);
 }
+/* With nothing on the order there is nothing to tender: a hint holds the
+   place instead. */
+.till-tenders-hint {
+  grid-column: 1 / -1;
+  align-self: center;
+  margin: 0;
+  color: var(--color-graphite-soft);
+}
 .till-tenders .till-option > span {
   flex-direction: column;
   gap: 0;
@@ -672,13 +714,19 @@
   font-weight: 700;
   cursor: pointer;
 }
-.till-charge:enabled:hover {
-  background: #ff8a5c;
+@media (hover: hover) {
+  .till-charge:enabled:hover {
+    background: #ff8a5c;
+  }
 }
 .till-charge:disabled {
+  cursor: default;
+}
+/* Greyed only when the sale cannot be charged yet. The static till's Charge
+   is disabled but drawn ready, as the working one is for the opening sale. */
+.till-charge[data-held] {
   background: #d3dad6;
   color: var(--color-graphite-soft);
-  cursor: default;
 }
 .till-charge-figure {
   font-size: 1.25rem;
@@ -717,7 +765,7 @@
   font-variation-settings: 'wdth' 70;
   color: var(--color-chalk-dim);
 }
-.till[dir='rtl'] .till-printer-name {
+.till-app[dir='rtl'] .till-printer-name {
   font-size: 0.8125rem;
   letter-spacing: normal;
 }
@@ -776,8 +824,10 @@
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
 }
-.till-ask:hover {
-  color: var(--color-ruler);
+@media (hover: hover) {
+  .till-ask:hover {
+    color: var(--color-ruler);
+  }
 }
 
 /* The printed receipt. Plex Mono throughout in English; Arabic and Kurdish
@@ -794,7 +844,7 @@
 .till-paper[dir='rtl'] {
   font-family: var(--font-rtl);
   font-size: 0.875rem;
-  line-height: 1.7;
+  line-height: 1.85;
 }
 .till-paper[dir='ltr'] {
   line-height: 1.5;
@@ -865,8 +915,10 @@
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
-.till-paper-ask:hover {
-  text-decoration-thickness: 2px;
+@media (hover: hover) {
+  .till-paper-ask:hover {
+    text-decoration-thickness: 2px;
+  }
 }
 
 /* ---------- Motion ----------
