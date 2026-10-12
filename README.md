@@ -49,6 +49,7 @@ toggled client-side.
 | `app/[lang]/_pages/` | The page layouts, one per page, shared by all three languages |
 | `components/bench/` | The first screen: the name on the mat and the three devices, drawn as CSS 3D boxes |
 | `components/exhibits/` | The three working devices: the site viewer, the till and the teardown. Each loads its code only when the visitor nears it |
+| `components/PageMorph.jsx` | Carries a project's screen between Projects and the project's own page, both ways, including Back and Forward |
 | `components/RequestBuilder.jsx` | The request a visitor writes, shown as a chat message, which opens in their own WhatsApp or email |
 | `components/sections.jsx` | The shared vocabulary the pages are built from: headings, ruled lists, links, browser windows and device screens |
 | `lib/jobs.js` | The list of work, with the screenshot each job has |

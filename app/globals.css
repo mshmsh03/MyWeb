@@ -276,6 +276,15 @@ html[data-vt='mirror']::view-transition-new(root) {
   animation: mirror-in 260ms var(--ease-out-expo) 180ms both;
 }
 
+/* The pictures a transition draws are laid out from their left edge in every
+   language, but on a right-to-left page Chrome measures their movement from
+   the right one, so a picture that changes width as a device morphs counts as
+   layout shift on every frame. Laid out left to right they look the same,
+   frame for frame, and nothing is counted. They hold no text. */
+:root::view-transition {
+  direction: ltr;
+}
+
 /* ---------- A project and its page ----------
    A project's screen on Projects and its software at full size on its own
    page are one device: going between them carries it across (PageMorph). The
@@ -292,9 +301,15 @@ html[data-vt='mirror']::view-transition-new(root) {
    no easing or transition of its own, so it is the same with motion off.
    Only where the header stays on screen (768px up); on a phone it scrolls
    away with the page and the mark would never be seen. Browsers without
-   scroll-driven animations draw no mark. */
+   scroll-driven animations draw no mark, and neither does a page too short
+   to scroll: its timeline is inactive, so the keyframes, which are what make
+   the mark visible, do not apply. */
 @keyframes ruler-read {
+  from {
+    opacity: 1;
+  }
   to {
+    opacity: 1;
     translate: var(--read-end) 0;
   }
 }
@@ -313,6 +328,7 @@ html[data-vt='mirror']::view-transition-new(root) {
       bottom: 0;
       height: 16px;
       pointer-events: none;
+      opacity: 0;
       background: linear-gradient(var(--color-ruler), var(--color-ruler)) no-repeat 0 100% / 3px 100%;
       animation: ruler-read linear both;
       animation-timeline: scroll(root block);

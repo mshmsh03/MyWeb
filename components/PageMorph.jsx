@@ -8,11 +8,13 @@ import { effectsOn } from './MotionRoot';
 // Going from one to the other (a link, or the browser's Back and Forward)
 // carries the screen across with a View Transition, the way the bench grows a
 // device into its exhibit on the home page. With Effects off, or where View
-// Transitions are missing, it is a plain navigation; either way focus lands on
-// the new page's h1.
+// Transitions are missing, it is a plain navigation; either way focus lands as
+// focusLanding says.
 //
 // Both ends render this with the same `name`; `to` is the other end's path,
 // basePath included. The element that travels is the `[data-frame]` inside.
+// `item` marks the end that is one item in a list (see focusLanding); `as` is
+// the element rendered, so an item needs no wrapper of its own.
 //
 // Timing. The router fetches the new page first and only then renders it, so
 // the transition is not started on the click, which would hold the screen
@@ -26,6 +28,35 @@ import { effectsOn } from './MotionRoot';
 // The navigation on its way from one end to the other. Module state, because
 // the end that sets it is gone by the time the other end reads it.
 let leaving = null;
+
+// Whether the trip is coming to this end: the other end of the pair, the one
+// whose `to` is the page the trip left. Not this end mounting again, as it
+// does when the visitor comes back to the page the trip left.
+function arrivingAt(trip, name, to) {
+  return trip?.name === name && new URL(to, location.href).pathname === trip.origin;
+}
+
+// Where the visitor was on each page a trip left, by history entry.
+//
+// On Back and Forward the browser puts a page back where it was, but only once
+// the page is drawn again, which the transition holds off until the new page's
+// picture is taken: the page would jump under the morph, to the wrong place.
+// And it decides whether to do this as the visitor leaves the entry, not on
+// the way back. So a trip that leaves an entry keeps its place here and tells
+// the browser to leave that entry alone (scrollRestoration, which belongs to
+// the current entry); the next arrival there puts the place back itself and
+// gives the job back to the browser (takePlace). Only with the Navigation API,
+// which is also what makes Back and Forward a trip.
+const places = new Map();
+
+function takePlace() {
+  if (history.scrollRestoration !== 'manual') return undefined;
+  history.scrollRestoration = 'auto';
+  const key = window.navigation?.currentEntry?.key;
+  const y = places.get(key);
+  places.delete(key);
+  return y;
+}
 
 const TAKE_MS = 1000; // longest wait for the old page's picture
 const LAND_MS = 2000; // longest wait for the new page (and its picture) to be ready
@@ -82,58 +113,102 @@ function start(trip) {
   });
 }
 
-// The new page's heading takes focus, without scrolling: on the way back the
-// page may stand where the visitor left it.
-function focusTitle() {
-  const h1 = document.querySelector('main h1');
-  if (!h1) return;
-  h1.tabIndex = -1;
-  h1.focus({ preventScroll: true });
+// Where focus lands on arrival, without scrolling. On a page of its own, the
+// page's h1. On an `item` end (one project among others on Projects), the
+// item's link back to the page just left, so the visitor carries on from the
+// item they opened.
+function focusLanding(el, item, target) {
+  const link = item
+    ? [...(el?.querySelectorAll('a[href]') ?? [])].find((a) => new URL(a.href).pathname === target)
+    : null;
+  const to = link ?? document.querySelector('main h1');
+  if (!to) return;
+  if (!link) to.tabIndex = -1;
+  to.focus({ preventScroll: true });
 }
 
-export default function PageMorph({ name, to, className, children }) {
+export default function PageMorph({ name, to, item = false, as: Tag = 'div', className, children }) {
   const ref = useRef(null);
 
   // Arriving: hold this render until the old page's picture is taken.
   const trip = leaving;
-  if (trip && trip.name === name && trip.from !== ref && typeof document !== 'undefined') {
+  if (typeof document !== 'undefined' && arrivingAt(trip, name, to)) {
     if (!trip.taken) start(trip);
     use(trip.taken.promise);
   }
 
   useLayoutEffect(() => {
     const trip = leaving;
-    if (!trip || trip.name !== name || trip.from === ref) return;
-    leaving = null;
-    if (!trip.vt) {
-      focusTitle();
-      return;
-    }
+    const arriving = arrivingAt(trip, name, to);
+    if (arriving) leaving = null;
+    const target = new URL(to, location.href).pathname;
     // The router scrolls the new page into place in its own layout effect,
-    // which runs after this one; the frame is looked at once it has.
+    // which runs after this one; the frame is looked at once it has. Back or
+    // Forward to a page a trip left puts it where the visitor was (takePlace),
+    // also when this visit is not a trip itself. Otherwise the router has put
+    // the page at its top, so an item, which may be far down it, is brought to
+    // the middle of the screen.
     queueMicrotask(() => {
-      const to = frameIn(ref.current);
-      if (onScreen(to)) {
-        to.style.viewTransitionName = name;
-        trip.to = to;
+      const place = takePlace();
+      const goBack = () => window.scrollTo({ top: place, behavior: 'instant' });
+      if (!arriving) {
+        // Not a trip: the place goes back a frame after the page is drawn, as
+        // the browser itself does it. Moved in the same frame as the page goes
+        // in, a short page being left counts as layout shift.
+        if (place !== undefined) requestAnimationFrame(() => setTimeout(goBack, 0));
+        return;
       }
-      focusTitle();
+      if (place !== undefined) goBack();
+      else if (item) ref.current?.scrollIntoView({ behavior: 'instant', block: 'center' });
+      focusLanding(ref.current, item, target);
+      if (!trip.vt) return;
+      const frame = frameIn(ref.current);
+      if (onScreen(frame)) {
+        frame.style.viewTransitionName = name;
+        trip.to = frame;
+      }
       // A picture coming back into a fresh page may not be decoded yet; its
-      // frame would be captured empty.
-      const img = to?.querySelector('img');
+      // frame would be captured empty. A lazy one is not even fetched until
+      // the page is drawn, which the transition holds off, so it is asked
+      // for now.
+      const img = frame?.querySelector('img');
+      if (img?.loading === 'lazy') img.loading = 'eager';
       Promise.resolve(img?.decode?.())
         .catch(() => {})
         .then(trip.landed.done);
     });
-  }, [name]);
+  }, [name, to, item]);
 
-  // Leaving: a link to the other end that the router took over (it calls
-  // preventDefault on the click), or Back and Forward landing on it.
+  // Leaving: a click on a link to the other end that the router took over (it
+  // calls preventDefault on the click), or a `navigate` event for Back or
+  // Forward landing on it. Where the Navigation API is missing, Back and
+  // Forward are plain navigations without the morph.
   useEffect(() => {
     const target = new URL(to, location.href).pathname;
     const go = () => {
-      leaving = { name, from: ref };
-      // Never left waiting if the router does not get there after all.
+      leaving = { name, from: ref, origin: location.pathname };
+      const nav = window.navigation;
+      if (nav?.currentEntry) {
+        const left = nav.currentEntry.key;
+        places.set(left, window.scrollY);
+        history.scrollRestoration = 'manual';
+        // An entry pushed from this one takes on 'manual' as well. Wherever
+        // the visitor lands next, an entry with no place kept here is handed
+        // straight back to the browser: a page that is not an end of the pair
+        // would never hand it back itself.
+        const onChange = () => {
+          if (nav.currentEntry.key === left) return;
+          nav.removeEventListener('currententrychange', onChange);
+          if (!places.has(nav.currentEntry.key)) history.scrollRestoration = 'auto';
+        };
+        nav.addEventListener('currententrychange', onChange);
+      }
+      // The other end consumes the trip when it renders. If it never does (the
+      // fetch fails and the router loads the page in full, or the visitor goes
+      // somewhere else first), the trip is dropped, so a later visit to the
+      // other end does not start a morph from a page long gone. Ten seconds
+      // covers a slow phone fetching the page. The place kept above stays: a
+      // return to this entry by Back puts it back all the same.
       const trip = leaving;
       setTimeout(() => {
         if (leaving === trip) leaving = null;
@@ -157,8 +232,8 @@ export default function PageMorph({ name, to, className, children }) {
   }, [name, to]);
 
   return (
-    <div ref={ref} className={className}>
+    <Tag ref={ref} className={className}>
       {children}
-    </div>
+    </Tag>
   );
 }

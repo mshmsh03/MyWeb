@@ -115,20 +115,9 @@ export default function Projects({ lang, t }) {
         <SubHeading>{t.projects.groups.software}</SubHeading>
         {pictured('software').map((j) => {
           const c = t.jobs[j.id];
-          return (
-            <article
-              key={j.id}
-              className="on-grid mt-6 grid items-center gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
-            >
-              {/* A job with a page of its own carries its screen across
-                  to it, and back. */}
-              {j.page ? (
-                <PageMorph name={j.id} to={BASE_PATH + pagePath(lang, j.page)}>
-                  <DeviceScreen frame alt={c.alt} {...shot(j, WIDE)} />
-                </PageMorph>
-              ) : (
-                <DeviceScreen alt={c.alt} {...shot(j, WIDE)} />
-              )}
+          const card = (
+            <>
+              <DeviceScreen frame={Boolean(j.page)} alt={c.alt} {...shot(j, WIDE)} />
               <div>
                 <JobText c={c} />
                 <TextLink href={pagePath(lang, j.page)} className="mt-2">
@@ -136,6 +125,19 @@ export default function Projects({ lang, t }) {
                   <Icon name="arrow" />
                 </TextLink>
               </div>
+            </>
+          );
+          const className =
+            'on-grid mt-6 grid items-center gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]';
+          // A job with a page of its own carries its screen across to it, and
+          // back.
+          return j.page ? (
+            <PageMorph key={j.id} as="article" item name={j.id} to={BASE_PATH + pagePath(lang, j.page)} className={className}>
+              {card}
+            </PageMorph>
+          ) : (
+            <article key={j.id} className={className}>
+              {card}
             </article>
           );
         })}
