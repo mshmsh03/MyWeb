@@ -317,4 +317,10 @@ export default {
       ],
     },
   },
+
+  // Section 7 features. Each slot is filled by the step that builds it.
+  preview: {},
+  lamp: {},
+  menu: {},
+  offline: {},
 };
