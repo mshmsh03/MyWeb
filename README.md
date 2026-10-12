@@ -3,6 +3,10 @@
 Personal portfolio site for Mustafa Deari Ahmed, Computer Engineering
 student — software & hardware.
 
+> **Work in progress:** the redesign on this branch is part-way through. Before
+> changing anything, read [`docs/HANDOFF.md`](docs/HANDOFF.md): where the work
+> stands, the rules it follows and what to do next.
+
 **Live:** https://mshmsh03.github.io/MyWeb/
 
 ## Stack
