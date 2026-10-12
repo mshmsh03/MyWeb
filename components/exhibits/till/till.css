@@ -211,6 +211,21 @@ html[dir='rtl'] .till-langs :is([lang='ar'], [lang='ckb']) {
       'pay order'
       'pay go';
   }
+  /* Side by side, the receipt runs the full height of its column with the
+     totals at its foot, as Qasa draws it, so a short or empty order leaves
+     paper rather than a hole above Charge. */
+  .till-order {
+    display: flex;
+    flex-direction: column;
+  }
+  .till-slip {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .till-slip .till-sums {
+    margin-top: auto;
+  }
 }
 .till-cat {
   grid-area: cat;
@@ -664,7 +679,9 @@ html[dir='rtl'] .till-langs :is([lang='ar'], [lang='ckb']) {
   outline: 2px solid var(--color-graphite);
   outline-offset: 2px;
 }
-.till-other input:disabled {
+/* With script, a disabled field looks like the others in the static till;
+   without script, the page's own rule dims it with every other control. */
+html[data-motion] .till-other input:disabled {
   opacity: 1;
   -webkit-text-fill-color: currentColor;
 }

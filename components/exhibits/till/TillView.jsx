@@ -396,7 +396,7 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
                       enterKeyHint="done"
                       dir="ltr"
                       value={sale.other}
-                      aria-invalid={view.unreadable || undefined}
+                      aria-invalid={(!empty && view.unreadable) || undefined}
                       aria-describedby="till-change"
                       onChange={ordering ? (e) => act({ type: 'other', text: e.target.value }) : undefined}
                       onBlur={ordering ? () => act({ type: 'otherDone' }) : undefined}

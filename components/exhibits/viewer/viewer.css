@@ -76,9 +76,11 @@
   white-space: nowrap;
   cursor: pointer;
 }
-.vw-tab:enabled:hover {
-  background: #232b2d;
-  color: var(--color-chalk);
+@media (hover: hover) {
+  .vw-tab:enabled:not([aria-selected='true']):hover {
+    background: #232b2d;
+    color: var(--color-chalk);
+  }
 }
 /* Without scripts the other tab cannot open, and looks it. */
 .vw-tab:disabled:not([aria-selected='true']) {
@@ -188,6 +190,12 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 0;
+}
+/* The outgoing picture, kept on show until its replacement has loaded, is
+   fitted whole: after a size switch it no longer has the window's shape, and
+   covering the new shape would show it zoomed and cropped. */
+.vw-shot:not(:last-child) {
+  object-fit: contain;
 }
 /* While the window is resized, the new page is drawn from the top at the
    width it will end at (no wider than the window on the way there), and the
