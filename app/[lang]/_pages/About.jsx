@@ -1,6 +1,5 @@
 import { NAME, pagePath } from '@/lib/site-data';
 import RequestBuilder from '@/components/RequestBuilder';
-import Mixed from '@/components/Mixed';
 import { Band, Icon, Name, PageTitle, RULE_TOP, TextLink } from '@/components/sections';
 import './about.css';
 
@@ -54,9 +53,7 @@ export default function About({ lang, t }) {
               {rows.map(([label, value]) => (
                 <div key={label} className="col-span-full grid grid-cols-subgrid border-b border-graphite/20 py-3">
                   <dt className="label pt-1 text-graphite-soft">{label}</dt>
-                  <dd className="m-0 mt-1 max-w-[60ch] sm:mt-0">
-                    <Mixed>{value}</Mixed>
-                  </dd>
+                  <dd className="m-0 mt-1 max-w-[60ch] sm:mt-0">{value}</dd>
                 </div>
               ))}
             </dl>

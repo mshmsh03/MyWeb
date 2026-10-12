@@ -18,9 +18,11 @@ export default function Contact({ t }) {
     <>
       <Band rule={false} className="sm:!pt-18 !pb-0">
         <PageTitle>{c.title}</PageTitle>
-        <Lead className="mt-5">
-          {c.lead} {c.open}
-        </Lead>
+        {/* One string, so one run of text: two runs side by side in a
+            paragraph each start where the last one ends, and when the line
+            breaks move as a font arrives the second one's start jumps along
+            the line, which counts as the page shifting. */}
+        <Lead className="mt-5">{`${c.lead} ${c.open}`}</Lead>
       </Band>
 
       <RequestBuilder t={t.ticket} r={t.request} />

@@ -1,6 +1,5 @@
 import { SHOTS, pagePath } from '@/lib/site-data';
 import RequestBuilder from '@/components/RequestBuilder';
-import Mixed from '@/components/Mixed';
 import Till from '@/components/exhibits/till';
 import {
   Band,
@@ -37,9 +36,7 @@ export default function Qasa({ lang, t }) {
           <span className="ltr-fixed">Qasa POS</span>
         </PageTitle>
         <p className="label mt-4 mb-0 !text-[0.95rem] text-chalk rtl:!text-[1.05rem]">{q.role}</p>
-        <Lead className="mt-5">
-          <Mixed>{q.lead}</Mixed>
-        </Lead>
+        <Lead className="mt-5">{q.lead}</Lead>
         <div className="mt-10 sm:mt-14">
           {/* The page's title is the h1, so the till's own headings are one
               level higher than on the home page, where it sits under an h2. */}
@@ -103,12 +100,8 @@ export default function Qasa({ lang, t }) {
           <h3 className="display wd-wide m-0 text-[1.3rem] leading-snug font-extrabold rtl:leading-[1.6]">
             <Name>{c.name}</Name>
           </h3>
-          <p className="m-0 mt-1 font-semibold">
-            <Mixed>{c.job}</Mixed>
-          </p>
-          <p className="m-0 mt-2 text-chalk-dim">
-            <Mixed>{c.done}</Mixed>
-          </p>
+          <p className="m-0 mt-1 font-semibold">{c.job}</p>
+          <p className="m-0 mt-2 text-chalk-dim">{c.done}</p>
         </div>
       </Band>
 

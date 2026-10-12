@@ -1,7 +1,6 @@
 import { pagePath } from '@/lib/site-data';
 import { JOBS, siteUrl } from '@/lib/jobs';
 import RequestBuilder from '@/components/RequestBuilder';
-import Mixed from '@/components/Mixed';
 import {
   Band,
   BrowserFrame,
@@ -29,12 +28,8 @@ function JobText({ c, level = 'h3' }) {
       <H className="display wd-wide m-0 text-[1.3rem] leading-snug font-extrabold rtl:leading-[1.6]">
         <Name>{c.name}</Name>
       </H>
-      <p className="m-0 mt-1 font-semibold">
-        <Mixed>{c.job}</Mixed>
-      </p>
-      <p className="m-0 mt-2 max-w-[60ch] text-chalk-dim">
-        <Mixed>{c.done}</Mixed>
-      </p>
+      <p className="m-0 mt-1 font-semibold">{c.job}</p>
+      <p className="m-0 mt-2 max-w-[60ch] text-chalk-dim">{c.done}</p>
     </>
   );
 }
@@ -56,13 +51,9 @@ function JobLines({ jobs, t }) {
               <h3 className="display wd-wide m-0 text-[1.1rem] leading-snug font-bold rtl:leading-[1.6]">
                 <Name>{c.name}</Name>
               </h3>
-              <p className="m-0 font-semibold text-pretty">
-                <Mixed>{c.job}</Mixed>
-              </p>
+              <p className="m-0 font-semibold text-pretty">{c.job}</p>
             </div>
-            <p className="m-0 max-w-[60ch] text-pretty text-chalk-dim">
-              <Mixed>{c.done}</Mixed>
-            </p>
+            <p className="m-0 max-w-[60ch] text-pretty text-chalk-dim">{c.done}</p>
           </li>
         );
       })}

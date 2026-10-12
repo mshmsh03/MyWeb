@@ -4,7 +4,6 @@ import { useEffect, useId, useState } from 'react';
 import { NAME, PHONE_DISPLAY, PHONE_HREF } from '@/lib/site-data';
 import { compose, sendLinks } from '@/lib/request';
 import { BAND } from '@/components/sections';
-import Mixed from '@/components/Mixed';
 
 // The request builder, on every page that asks for work. The visitor says
 // what they need, and may add a line and their name; the message is drawn as
@@ -84,7 +83,7 @@ export default function RequestBuilder({ t, r }) {
                     <svg viewBox="0 0 16 16" className="hidden size-4" aria-hidden="true">
                       <path d="m3 8.5 3.2 3L13 4.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <Mixed>{t.jobs[key]}</Mixed>
+                    {t.jobs[key]}
                   </span>
                 </label>
               ))}

@@ -6,7 +6,6 @@ import SiteViewer from '@/components/exhibits/viewer';
 import Till from '@/components/exhibits/till';
 import Teardown from '@/components/exhibits/teardown';
 import { BAND, Icon, Name, RULE_ROW, RULE_TOP, RULED, TextLink } from '@/components/sections';
-import Mixed from '@/components/Mixed';
 
 const H2 =
   'display wd-display m-0 text-[clamp(1.9rem,4vw,3rem)] leading-[1.02] font-extrabold tracking-[-0.015em] outline-none rtl:leading-[1.45] rtl:tracking-normal';
@@ -28,11 +27,9 @@ export default function Home({ lang, t }) {
           <section key={id} id={id} className={`${BAND} ${RULE_TOP}`}>
             <div className="wrap">
               <h2 tabIndex={-1} className={H2}>
-                <Mixed>{service.title}</Mixed>
+                {service.title}
               </h2>
-              <p className="m-0 mt-4 max-w-[60ch] text-chalk-dim">
-                <Mixed>{service.text}</Mixed>
-              </p>
+              <p className="m-0 mt-4 max-w-[60ch] text-chalk-dim">{service.text}</p>
               <div className="mt-10 sm:mt-12">
                 <Exhibit lang={lang} t={t} requestHref="#request" />
               </div>
@@ -55,9 +52,7 @@ export default function Home({ lang, t }) {
                   <span className="display wd-wide text-[1.1rem] leading-snug font-bold rtl:leading-[1.6]">
                     <Name>{c.name}</Name>
                   </span>
-                  <span className="text-chalk-dim">
-                    <Mixed>{c.job}</Mixed>
-                  </span>
+                  <span className="text-chalk-dim">{c.job}</span>
                 </li>
               );
             })}

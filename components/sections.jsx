@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { asset } from '@/lib/site-data';
-import Mixed from './Mixed';
 
 // The site's vocabulary for pages on the bench. Everything a page is made of
 // is printed on the mat (headings, text, ruled rows, links) or is a device
@@ -184,9 +183,7 @@ export function RuledRow({ term, children }) {
   return (
     <div className={`grid gap-x-10 gap-y-1 ${RULE_ROW} @2xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] @2xl:items-baseline`}>
       <dt className="display wd-wide text-[1.1rem] leading-snug font-bold rtl:leading-[1.6]">{term}</dt>
-      <dd className="m-0 max-w-[60ch] text-chalk-dim">
-        <Mixed>{children}</Mixed>
-      </dd>
+      <dd className="m-0 max-w-[60ch] text-chalk-dim">{children}</dd>
     </div>
   );
 }
@@ -239,11 +236,7 @@ export function DeviceScreen({ caption, className = '', ...shot }) {
       <div className={`rounded-[10px] bg-graphite p-2 sm:p-2.5 ${DEVICE_SHADOW}`}>
         <img {...shotProps(shot)} className="block h-auto w-full rounded-[3px]" />
       </div>
-      {caption ? (
-        <figcaption className="mt-3 text-[0.95rem] text-chalk-dim">
-          <Mixed>{caption}</Mixed>
-        </figcaption>
-      ) : null}
+      {caption ? <figcaption className="mt-3 text-[0.95rem] text-chalk-dim">{caption}</figcaption> : null}
     </figure>
   );
 }
