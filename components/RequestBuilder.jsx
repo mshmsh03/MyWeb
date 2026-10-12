@@ -3,6 +3,8 @@
 import { useEffect, useId, useState } from 'react';
 import { NAME, PHONE_DISPLAY, PHONE_HREF } from '@/lib/site-data';
 import { compose, sendLinks } from '@/lib/request';
+import { BAND } from '@/components/sections';
+import Mixed from '@/components/Mixed';
 
 // The request builder, on every page that asks for work. The visitor says
 // what they need, and may add a line and their name; the message is drawn as
@@ -51,7 +53,7 @@ export default function RequestBuilder({ t, r }) {
   const { whatsapp, mail } = sendLinks(message, touched, r.subject);
 
   return (
-    <section id="request" aria-labelledby={`${id}-title`} className="scroll-mt-24 py-16 sm:py-24">
+    <section id="request" aria-labelledby={`${id}-title`} className={BAND}>
       <div className="wrap grid items-start gap-x-12 gap-y-10 lg:grid-cols-[minmax(0,1fr)_384px]">
         <div>
           <h2
@@ -82,7 +84,7 @@ export default function RequestBuilder({ t, r }) {
                     <svg viewBox="0 0 16 16" className="hidden size-4" aria-hidden="true">
                       <path d="m3 8.5 3.2 3L13 4.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    {t.jobs[key]}
+                    <Mixed>{t.jobs[key]}</Mixed>
                   </span>
                 </label>
               ))}
@@ -93,14 +95,17 @@ export default function RequestBuilder({ t, r }) {
             <label className="block">
               <span className="label text-chalk">{t.customerHint}</span>{' '}
               <span className="text-[0.85rem] text-chalk-dim">({r.optional})</span>
+              {/* Both fields start from the page's direction while they are
+                  empty, and each line then takes the direction of what is
+                  typed on it (plaintext), so a Latin name reads left to
+                  right on an Arabic page. */}
               <input
                 type="text"
                 name="name"
-                dir="auto"
                 autoComplete="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-2 block min-h-12 w-full rounded-part border-0 bg-screen px-3.5 text-graphite"
+                className="mt-2 block min-h-12 w-full rounded-part border-0 bg-screen px-3.5 text-graphite [unicode-bidi:plaintext]"
               />
             </label>
             <label className="block sm:col-span-2">
@@ -108,7 +113,6 @@ export default function RequestBuilder({ t, r }) {
               <span className="text-[0.85rem] text-chalk-dim">({r.optional})</span>
               <textarea
                 name="details"
-                dir="auto"
                 rows={3}
                 value={details}
                 onChange={(e) => setDetails(e.target.value)}
@@ -148,7 +152,7 @@ export default function RequestBuilder({ t, r }) {
                   {message}
                 </p>
               ) : (
-                <p className="m-0 self-center text-center text-[0.95rem] text-graphite-soft">{r.blank}</p>
+                <p className="m-0 self-center text-center text-[0.95rem] text-balance text-graphite-soft">{r.blank}</p>
               )}
             </div>
 

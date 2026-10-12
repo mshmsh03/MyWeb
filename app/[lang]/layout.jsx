@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation';
-import Script from 'next/script';
 import { Archivo, Noto_Kufi_Arabic, Noto_Sans_Arabic } from 'next/font/google';
 import { LANGS, SITE, asset } from '@/lib/site-data';
 import { BASE } from '@/lib/metadata';
@@ -57,11 +56,12 @@ export const metadata = {
 // switched Effects off in the header (remembered in localStorage, which wins
 // over the system setting in either direction).
 //
-// Delivered through next/script at beforeInteractive rather than as a bare
-// <script> tag. A raw script element inside a component is server-rendered but
-// never executed on the client, so React logs a console error for it on every
-// render; beforeInteractive is the supported way to get the same inline code
-// into the initial HTML without that.
+// A plain <script> in <head>, written into the HTML by the server. The
+// browser runs it while it parses the head. next/script's beforeInteractive
+// would not do: in a static export it only queues the code for Next's own
+// bundle to run, which is after first paint and often after pagereveal.
+// React never runs a script element on the client, which is fine, as the
+// page is not rendered in the browser before this has run.
 //
 // It also decides the transition into this page when it was reached by a full
 // page load from another page of the site, which in practice is the language
@@ -105,16 +105,23 @@ export default async function LangLayout({ children, params }) {
       suppressHydrationWarning
     >
       <head>
-        <Script id="arm-motion" strategy="beforeInteractive">
-          {ARM_MOTION}
-        </Script>
+        <script dangerouslySetInnerHTML={{ __html: ARM_MOTION }} />
       </head>
       <body>
         <MotionRoot />
+        {/* The first stop for the keyboard: past the header to the page. */}
+        <a
+          href="#main"
+          className="sr-only z-[60] rounded-part bg-ruler px-4 py-3 font-semibold text-graphite focus:not-sr-only focus:fixed focus:start-3 focus:top-3"
+        >
+          {t.skip}
+        </a>
         {/* Header and footer sit in the layout, not in the pages, so the router
             swaps only the page body between routes. */}
         <Header lang={lang} />
-        <main>{children}</main>
+        <main id="main" tabIndex={-1} className="outline-none">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

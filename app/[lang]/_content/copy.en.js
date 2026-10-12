@@ -167,7 +167,8 @@ export default {
       text: 'Design and development of websites, including multilingual sites supporting Arabic and Kurdish.',
     },
     {
-      title: 'Point-of-Sale Systems',
+      // Word joiners (U+2060) keep the compound on one line.
+      title: 'Point\u2060-\u2060of\u2060-\u2060Sale Systems',
       text: 'A till built around your shop, kiosk or restaurant, in Kurdish, Arabic and English. Works without internet.',
     },
     {
@@ -202,7 +203,7 @@ export default {
     },
     chrispyPos: {
       name: 'Chrispy POS',
-      job: 'Point-of-sale system for a street-food kiosk',
+      job: 'Point\u2060-\u2060of\u2060-\u2060sale system for a street\u2060-\u2060food kiosk',
       done: 'Qasa rebuilt around the kiosk: its own menu and prices, add-ons, kitchen tickets, cash drawer and daily reports.',
     },
     krofi: {

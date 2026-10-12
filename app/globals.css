@@ -19,7 +19,7 @@
     /* Fonts are loaded and named in app/[lang]/layout.jsx. One Latin family
        in three widths; a kufi for Arabic and Kurdish display and a plain sans
        for reading them. */
-    --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+    --font-sans: var(--font-archivo), 'Archivo Metric', ui-sans-serif, system-ui, sans-serif;
     --font-rtl: var(--font-arabic), 'Segoe UI', Tahoma, sans-serif;
     --font-rtl-display: var(--font-kufi), var(--font-arabic), 'Segoe UI', Tahoma, sans-serif;
 
@@ -61,10 +61,43 @@
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    /* A label that wraps keeps its lines even, never one word left alone. */
+    text-wrap: balance;
     &:where([dir="rtl"] *) {
         font-size: 0.88rem;
+        line-height: 1.6;
         letter-spacing: normal;
     }
+}
+
+/* While Archivo is still on its way the text is set in a system face scaled
+   to Archivo's width and height, so the line breaks do not move when it
+   arrives. next/font writes one such face, but only from Arial, which phones
+   and Linux do not have; these add the faces with Arial's widths that they
+   do have (Liberation Sans, Arimo, Helvetica) and Roboto, which differs from
+   them by under half a percent. Numbers from Next's capsize metrics:
+   Archivo 440 / Arial 913 of 2048 average width, ascent 878, descent 210. */
+@font-face {
+    font-family: 'Archivo Metric';
+    src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans'), local('Arimo'),
+        local('Helvetica'), local('Roboto'), local('Roboto-Regular');
+    font-weight: 100 500;
+    size-adjust: 98.7%;
+    ascent-override: 88.96%;
+    descent-override: 21.28%;
+    line-gap-override: 0%;
+}
+@font-face {
+    font-family: 'Archivo Metric';
+    src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold'),
+        local('Arimo Bold'), local('Arimo-Bold'), local('Helvetica Bold'), local('Helvetica-Bold'), local('Roboto Bold'),
+        local('Roboto-Bold');
+    font-weight: 600 900;
+    /* Archivo Bold 472 / Arial Bold 983 of 2048. */
+    size-adjust: 98.3%;
+    ascent-override: 89.32%;
+    descent-override: 21.36%;
+    line-gap-override: 0%;
 }
 
 /* ---------- The mat's grid ----------
@@ -74,6 +107,22 @@
 :root {
     --unit: 24px;
     --gutter: 20px;
+    /* Three cells: the header's height where it stays on screen. */
+    --header-h: 72px;
+}
+/* The rows of the grid are the page's rows too. Every band of a page, and
+   every block that carries a rule, is a whole number of cells tall, so each
+   rule printed across the page lands on a grid line instead of beside one.
+   Content sets the height and it is rounded up to the next cell. Browsers
+   without calc-size() lay the page out exactly the same, without the
+   rounding. */
+@layer components {
+    @supports (height: calc-size(auto, size)) {
+        main > *,
+        .on-grid {
+            height: calc-size(auto, round(up, size, var(--unit)));
+        }
+    }
 }
 @media (min-width: 640px) {
     :root {
@@ -100,6 +149,14 @@
   }
   html[data-motion="on"] {
     scroll-behavior: smooth;
+  }
+  /* From 768px up the header stays on screen, so anything scrolled to (an
+     anchor, or a control taking keyboard focus) stops a cell below it rather
+     than under it. */
+  @media (min-width: 768px) {
+    html {
+      scroll-padding-top: calc(var(--header-h) + var(--unit));
+    }
   }
   body {
     font-size: 1.0625rem;
@@ -140,7 +197,8 @@
 
   /* Arabic and Kurdish switch family and take looser leading: joined script
      with marks above and below needs the room. */
-  [dir="rtl"] {
+  [dir="rtl"],
+  [dir="rtl"] body {
     font-family: var(--font-rtl);
     line-height: 1.85;
   }

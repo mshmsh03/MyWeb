@@ -21,31 +21,36 @@ function routeFromPathname(pathname) {
 }
 
 // The mark under the current page is a short bar in ruler yellow that grows
-// from the reading start, so its origin flips for Arabic and Kurdish.
+// from the reading start, so its origin flips for Arabic and Kurdish. It only
+// grows when motion is on; otherwise it is simply there.
 const MARK =
-  "after:absolute after:inset-x-2 after:bottom-2 after:h-0.5 after:origin-left after:scale-x-0 after:bg-ruler after:transition-transform after:duration-200 after:content-[''] rtl:after:origin-right";
+  "after:absolute after:inset-x-2 after:bottom-2 after:h-0.5 after:origin-left after:scale-x-0 after:bg-ruler in-data-[motion=on]:after:transition-transform after:duration-200 after:content-[''] rtl:after:origin-right";
 
 // The header is the ruler printed along the top edge of the mat: an opaque
 // strip with its ticks standing on the bottom edge. It is sticky from 768px
-// up; on a phone it takes two rows and scrolls away with the page.
+// up, three grid cells tall; on a phone it takes two rows (four cells) and
+// scrolls away with the page.
 export default function Header({ lang }) {
   const t = SITE[lang];
   const pathname = usePathname();
   const { section, path } = routeFromPathname(pathname);
 
   return (
-    <header className="ruler-edge z-50 bg-mat pb-2 md:sticky md:top-0 md:pb-3.5">
+    <header className="ruler-edge on-grid z-50 bg-mat pb-2 md:sticky md:top-0 md:flex md:h-(--header-h) md:items-center md:pb-3.5">
       <div className="wrap flex flex-wrap items-center justify-between gap-x-6">
         {/* The home link. The home page prints the name large across the mat
-            right under it, so on a phone, where room is short, it is left out
-            and Home in the nav does the job. */}
+            right under it, so where room is short it is left out and Home in
+            the nav does the job. */}
         <Link
           href={pagePath(lang, 'index')}
-          className="ltr-fixed wd-wide hidden py-3 text-[0.95rem] leading-tight font-extrabold tracking-[0.01em] uppercase md:inline-block"
+          prefetch={false}
+          className="ltr-fixed wd-wide hidden min-h-11 items-center text-[0.95rem] leading-tight font-extrabold tracking-[0.01em] uppercase lg:inline-flex"
         >
           {NAME}
         </Link>
 
+        {/* Not prefetched: the pages are small, and prefetching them would
+            fetch every other page's pictures and styles on every visit. */}
         <nav className="-mx-2 flex w-full flex-wrap items-center md:ms-auto md:w-auto">
           {PAGES.map((p) => {
             const active = p === section;
@@ -53,8 +58,9 @@ export default function Header({ lang }) {
               <Link
                 key={p}
                 href={pagePath(lang, p)}
+                prefetch={false}
                 aria-current={active ? 'page' : undefined}
-                className={`relative inline-block px-2 py-2.5 text-[0.95rem] font-medium transition-colors ${MARK} ${
+                className={`relative inline-flex h-11 items-center px-2 text-[0.95rem] font-medium transition-colors ${MARK} ${
                   active ? 'text-chalk after:scale-x-100' : 'text-chalk-dim hover:text-chalk hover:after:scale-x-100'
                 }`}
               >
@@ -70,20 +76,27 @@ export default function Header({ lang }) {
               switch is a full page load: the page turns over like a mirror
               into the new direction (the view transition in globals.css),
               and nothing is prefetched on a phone's data for a switch few
-              visitors make. */}
-          <div className="ltr-fixed flex items-center">
+              visitors make. Each is read out as its code and then the
+              language's own name, in that language. That name is only for
+              screen readers, so it is set in a system face: drawn in the
+              page's Arabic face it would load that font on every English
+              page. */}
+          <div role="group" aria-label={t.langSwitchLabel} className="ltr-fixed flex items-center">
             {LANGS.map((l) => (
               <a
                 key={l}
                 href={`${BASE_PATH}${pagePath(l, path)}`}
                 hrefLang={SITE[l].hreflang}
                 aria-current={l === lang ? 'true' : undefined}
-                aria-label={`${t.langSwitchLabel}: ${SITE[l].langName}`}
-                className={`label inline-flex min-h-11 min-w-9 items-center justify-center px-1.5 !text-[0.85rem] transition-colors ${
+                className={`label inline-flex h-11 min-w-11 items-center justify-center px-1.5 !text-[0.85rem] transition-colors ${
                   l === lang ? 'text-ruler' : 'text-chalk-dim hover:text-chalk'
                 }`}
               >
                 {SITE[l].langName}
+                <span className="sr-only font-[sans-serif]" lang={SITE[l].hreflang} dir={SITE[l].dir}>
+                  {' '}
+                  {SITE[l].selfName}
+                </span>
               </a>
             ))}
           </div>

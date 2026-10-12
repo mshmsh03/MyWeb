@@ -7,7 +7,9 @@ export default function Footer() {
   return (
     <footer className="border-t border-mat-line bg-mat py-9">
       <div className="wrap flex flex-wrap items-center justify-between gap-x-10 gap-y-3">
-        <p className="ltr-fixed wd-wide m-0 text-[0.95rem] font-bold">{MOTTO}</p>
+        <p lang="en" className="ltr-fixed wd-wide m-0 text-[0.95rem] font-bold">
+          {MOTTO}
+        </p>
         <p className="m-0 flex flex-wrap items-center gap-x-6 text-[0.95rem] text-chalk-dim">
           <a href={`mailto:${EMAIL}`} className="ltr-fixed py-2.5 transition-colors hover:text-chalk">
             {EMAIL}

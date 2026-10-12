@@ -7,36 +7,42 @@
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0f3d30">
 <style>
+  /*{{FONTS}}*/
   /* The mat, as on every page: a minor line every 24px, a heavier one every
-     120px, drawn from the centre. */
+     120px, drawn from the centre. Everything below is a whole number of
+     cells tall, so each rule lies on a grid line. */
   html{background:#0f3d30;color:#f3f6f2;
     background-image:linear-gradient(to right,#2c6a55 1px,transparent 1px),linear-gradient(to bottom,#2c6a55 1px,transparent 1px),
       linear-gradient(to right,rgb(44 106 85/.42) 1px,transparent 1px),linear-gradient(to bottom,rgb(44 106 85/.42) 1px,transparent 1px);
     background-size:120px 120px,120px 120px,24px 24px,24px 24px;
     background-position:calc(50% + 60px) 0,0 0,calc(50% + 12px) 0,0 0}
-  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:48px 20px;box-sizing:border-box;
-    font:400 17px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
-  main{width:100%;max-width:560px}
+  body{margin:0;padding:96px 0 48px;
+    font:400 17px/1.6 Archivo,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-variation-settings:"wdth" 100}
+  /* Twelve cells wide, centred, so both edges fall on grid lines; on a phone,
+     the widest whole number of pairs of cells that fits. */
+  main{width:min(576px,round(down,100% - 40px,48px));margin:0 auto}
+  @supports not (width:round(down,100px,48px)){main{width:min(576px,100% - 40px)}}
   /* A piece of motherboard with four memory slots. Three hold a stick; the
-     third slot is empty, and a dimension line in ruler yellow marks it. */
-  .board{position:relative;height:170px;border-radius:6px;background:#2c6a55;
+     third slot is empty, and a dimension line in ruler yellow marks its
+     width, with the figure above it in chalk. */
+  .board{position:relative;height:192px;border-radius:6px;background:#2c6a55;
     box-shadow:0 22px 36px -14px rgb(3 18 13/.75)}
-  .slots{position:absolute;inset:28px 40px 22px;display:flex;justify-content:space-between}
+  .slots{position:absolute;inset:56px 40px 24px;display:flex;justify-content:space-between}
   .slot{position:relative;width:18%;border-radius:3px;background:#14191a}
   .slot i{position:absolute;inset:6px 5px;border-radius:2px;
     background:repeating-linear-gradient(#c9d0cc 0 3px,#9aa5a0 3px 5px)}
   .slot.empty i{background:none;border:2px dashed #f2d24b}
-  .dim{position:absolute;left:0;right:0;top:-24px;display:flex;align-items:center;gap:6px;
-    color:#f2d24b;font:600 13px/1 system-ui,sans-serif;letter-spacing:.06em}
-  .dim::before,.dim::after{content:"";flex:1;height:9px;border-inline-start:1px solid #f2d24b;
+  .dim{position:absolute;left:0;right:0;top:-14px;height:9px;border-inline:1px solid #f2d24b;
     background:linear-gradient(#f2d24b,#f2d24b) 0 50%/100% 1px no-repeat}
-  .dim::after{border-inline-start:0;border-inline-end:1px solid #f2d24b}
-  section{margin-top:28px;padding-top:18px;border-top:1px solid #2c6a55}
-  section:first-of-type{margin-top:40px}
-  h1,h2{margin:0;font-size:26px;line-height:1.2;font-weight:800}
+  .dim b{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+    color:#f3f6f2;font:700 13px/1 Archivo,system-ui,sans-serif;letter-spacing:.06em;font-variation-settings:"wdth" 70}
+  section{box-sizing:border-box;padding:24px 0;border-top:1px solid #2c6a55}
+  section:first-of-type{margin-top:48px}
+  @supports (height:calc-size(auto,size)){section{height:calc-size(auto,round(up,size,24px))}}
+  h1,h2{margin:0;font-size:28px;line-height:1.2;font-weight:800;font-variation-settings:"wdth" 115}
   p{margin:6px 0 0;color:#b5ccc2}
   [dir=rtl]{font-family:'Noto Sans Arabic','Segoe UI',Tahoma,sans-serif;line-height:1.85}
-  [dir=rtl] h2{line-height:1.5}
+  [dir=rtl] h2{font-family:'Noto Kufi Arabic','Noto Sans Arabic','Segoe UI',Tahoma,sans-serif;font-size:24px;line-height:1.5}
   a{display:inline-flex;align-items:center;min-height:44px;color:#f3f6f2;font-weight:600;
     text-decoration:underline;text-decoration-color:#f2d24b;text-decoration-thickness:2px;text-underline-offset:4px}
   a:hover{color:#f2d24b}
@@ -49,7 +55,7 @@
     <div class="slots">
       <span class="slot"><i></i></span>
       <span class="slot"><i></i></span>
-      <span class="slot empty"><i></i><span class="dim">404</span></span>
+      <span class="slot empty"><i></i><span class="dim"><b>404</b></span></span>
       <span class="slot"><i></i></span>
     </div>
   </div>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { asset } from '@/lib/site-data';
+import Mixed from './Mixed';
 
 // The site's vocabulary for pages on the bench. Everything a page is made of
 // is printed on the mat (headings, text, ruled rows, links) or is a device
@@ -10,7 +11,10 @@ import { asset } from '@/lib/site-data';
 
 // One anchor for every destination. mailto:, tel:, in-page and off-site links
 // have nothing for the client router to do; everything else goes through
-// next/link so it picks up the basePath.
+// next/link so it picks up the basePath. Nothing is prefetched: a prefetch
+// fetches the other page's first-screen pictures and styles too, on a
+// visitor's phone data, for a page they may never open. The pages are small
+// static files and arrive quickly on the click.
 export function Anchor({ href, className, children, ...rest }) {
   if (/^(mailto:|tel:|https?:|#)/.test(href)) {
     return (
@@ -25,7 +29,7 @@ export function Anchor({ href, className, children, ...rest }) {
     );
   }
   return (
-    <Link href={href} className={className} {...rest}>
+    <Link href={href} prefetch={false} className={className} {...rest}>
       {children}
     </Link>
   );
@@ -101,10 +105,18 @@ export function Name({ children }) {
 // ---------- The mat ----------
 
 // A band of the page. Bands after the first are divided by a hairline, the
-// way the mat's heavier lines divide it.
+// way the mat's heavier lines divide it. The padding is two cells on a phone
+// and four above, the same on every page (BAND), and the band is a whole
+// number of cells tall (globals.css), so the hairline lies on a grid line.
+// The hairline is painted over the band's top edge (RULE_TOP) rather than
+// being a border, which would push everything in the band a pixel off the
+// grid.
+export const BAND = 'py-12 sm:py-24';
+export const RULE_TOP = 'shadow-[inset_0_1px_0_var(--color-mat-line)]';
+
 export function Band({ id, rule = true, className = '', children }) {
   return (
-    <section id={id} className={`scroll-mt-20 py-14 sm:py-20 ${rule ? 'border-t border-mat-line' : ''} ${className}`}>
+    <section id={id} className={`${BAND} ${rule ? RULE_TOP : ''} ${className}`}>
       <div className="wrap">{children}</div>
     </section>
   );
@@ -120,11 +132,13 @@ export function PageTitle({ children }) {
   );
 }
 
+// Headings are a whole number of cells tall, so a ruled list a cell or two
+// under one starts on a grid line.
 export function Heading({ id, children }) {
   return (
     <h2
       id={id}
-      className={`${DISPLAY} text-[clamp(1.9rem,4vw,3rem)] leading-[1.02] tracking-[-0.015em] rtl:leading-[1.45]`}
+      className={`${DISPLAY} on-grid text-[clamp(1.9rem,4vw,3rem)] leading-[1.02] tracking-[-0.015em] rtl:leading-[1.45]`}
     >
       {children}
     </h2>
@@ -133,7 +147,7 @@ export function Heading({ id, children }) {
 
 export function SubHeading({ children }) {
   return (
-    <h2 className={`${DISPLAY} text-[clamp(1.4rem,2.6vw,1.9rem)] leading-[1.1] tracking-[-0.01em] rtl:leading-[1.5]`}>
+    <h2 className={`${DISPLAY} on-grid text-[clamp(1.4rem,2.6vw,1.9rem)] leading-[1.1] tracking-[-0.01em] rtl:leading-[1.5]`}>
       {children}
     </h2>
   );
@@ -146,15 +160,33 @@ export function Lead({ className = '', children }) {
 // A ruled list printed on the mat: a name on one side, a sentence about it on
 // the other. The two sides sit side by side only when the list itself is
 // wide enough; it is a container, so the same list stacks in a narrow column.
-export function RuledList({ className = '', children }) {
-  return <dl className={`@container m-0 border-t border-mat-line ${className}`}>{children}</dl>;
+//
+// Each row is a whole number of cells tall with its text centred in it, and
+// draws the rule above itself; the list draws the last one just below its
+// bottom edge. So every rule falls exactly on a grid line and picks it out.
+// RULED and RULE_ROW are shared with the other ruled lists of the site.
+//
+// A list that shares its rows with a neighbour through subgrid cannot be a
+// container (containment makes it lay out on its own), so it passes
+// `contained={false}` and its rows stay stacked.
+export const RULED = 'm-0 shadow-[0_1px_0_var(--color-mat-line)]';
+export const RULE_ROW = 'on-grid content-center border-t border-mat-line py-4';
+
+export function RuledList({ contained = true, className = '', children }) {
+  return (
+    <dl className={`${contained ? '@container' : ''} ${RULED} ${className}`}>
+      {children}
+    </dl>
+  );
 }
 
 export function RuledRow({ term, children }) {
   return (
-    <div className="grid gap-x-10 gap-y-1 border-b border-mat-line py-4 @2xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] @2xl:items-baseline">
+    <div className={`grid gap-x-10 gap-y-1 ${RULE_ROW} @2xl:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] @2xl:items-baseline`}>
       <dt className="display wd-wide text-[1.1rem] leading-snug font-bold rtl:leading-[1.6]">{term}</dt>
-      <dd className="m-0 max-w-[60ch] text-chalk-dim">{children}</dd>
+      <dd className="m-0 max-w-[60ch] text-chalk-dim">
+        <Mixed>{children}</Mixed>
+      </dd>
     </div>
   );
 }
@@ -163,8 +195,28 @@ export function RuledRow({ term, children }) {
 
 const DEVICE_SHADOW = 'shadow-[0_22px_36px_-14px_rgb(3_18_13/0.75)]';
 
+// The attributes of a screenshot's <img>. `copies` are [file, width] pairs of
+// the same picture, offered with the original for the browser to choose from
+// by `sizes`. A `first` picture is the largest thing on the first screen, so
+// it is fetched at once and ahead of everything else rather than lazily.
+function shotProps({ src, width, height, alt, copies, sizes, first }) {
+  return {
+    src: asset(src),
+    srcSet: copies
+      ? [...copies.map(([file, w]) => `${asset(`/assets/work/${file}`)} ${w}w`), `${asset(src)} ${width}w`].join(', ')
+      : undefined,
+    sizes: copies ? sizes : undefined,
+    width,
+    height,
+    alt,
+    loading: first ? 'eager' : 'lazy',
+    fetchPriority: first ? 'high' : undefined,
+    decoding: 'async',
+  };
+}
+
 // A browser window showing a screenshot of a site: the address in its bar.
-export function BrowserFrame({ address, src, width, height, alt, className = '' }) {
+export function BrowserFrame({ address, className = '', ...shot }) {
   return (
     <figure className={`on-screen m-0 overflow-hidden rounded-part bg-screen text-graphite ${DEVICE_SHADOW} ${className}`}>
       <div className="flex items-center gap-1.5 bg-[#e6ebe7] px-3 py-2" aria-hidden="true">
@@ -175,35 +227,23 @@ export function BrowserFrame({ address, src, width, height, alt, className = '' 
           {address}
         </span>
       </div>
-      <img
-        src={asset(src)}
-        width={width}
-        height={height}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        className="block h-auto w-full"
-      />
+      <img {...shotProps(shot)} className="block h-auto w-full" />
     </figure>
   );
 }
 
 // A device's screen: a graphite bezel round a screenshot of software.
-export function DeviceScreen({ src, width, height, alt, caption, className = '' }) {
+export function DeviceScreen({ caption, className = '', ...shot }) {
   return (
     <figure className={`m-0 ${className}`}>
       <div className={`rounded-[10px] bg-graphite p-2 sm:p-2.5 ${DEVICE_SHADOW}`}>
-        <img
-          src={asset(src)}
-          width={width}
-          height={height}
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          className="block h-auto w-full rounded-[3px]"
-        />
+        <img {...shotProps(shot)} className="block h-auto w-full rounded-[3px]" />
       </div>
-      {caption ? <figcaption className="mt-3 text-[0.95rem] text-chalk-dim">{caption}</figcaption> : null}
+      {caption ? (
+        <figcaption className="mt-3 text-[0.95rem] text-chalk-dim">
+          <Mixed>{caption}</Mixed>
+        </figcaption>
+      ) : null}
     </figure>
   );
 }
