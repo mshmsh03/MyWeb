@@ -275,3 +275,51 @@ html[data-vt='mirror']::view-transition-old(root) {
 html[data-vt='mirror']::view-transition-new(root) {
   animation: mirror-in 260ms var(--ease-out-expo) 180ms both;
 }
+
+/* ---------- A project and its page ----------
+   A project's screen on Projects and its software at full size on its own
+   page are one device: going between them carries it across (PageMorph). The
+   page around it crossfades. Only started with motion on. */
+::view-transition-group(qasa) {
+  animation-duration: 460ms;
+  animation-timing-function: var(--ease-out-expo);
+}
+
+/* ---------- How far down the page ----------
+   A mark in ruler yellow travels along the header's ruler from the reading
+   start as the page scrolls: at the start edge at the top of the page, at
+   the far edge at the bottom. The scroll position drives it directly, with
+   no easing or transition of its own, so it is the same with motion off.
+   Only where the header stays on screen (768px up); on a phone it scrolls
+   away with the page and the mark would never be seen. Browsers without
+   scroll-driven animations draw no mark. */
+@keyframes ruler-read {
+  to {
+    translate: var(--read-end) 0;
+  }
+}
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 768px) {
+    /* The mark is drawn at the start edge of a layer as wide as the header,
+       and the layer slides by its own width; the header clips it. */
+    .ruler-edge {
+      overflow-x: clip;
+    }
+    .ruler-edge::after {
+      --read-end: calc(100% - 3px);
+      content: '';
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      height: 16px;
+      pointer-events: none;
+      background: linear-gradient(var(--color-ruler), var(--color-ruler)) no-repeat 0 100% / 3px 100%;
+      animation: ruler-read linear both;
+      animation-timeline: scroll(root block);
+    }
+    [dir='rtl'] .ruler-edge::after {
+      --read-end: calc(3px - 100%);
+      background-position: 100% 100%;
+    }
+  }
+}

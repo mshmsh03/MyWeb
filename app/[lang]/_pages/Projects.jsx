@@ -1,5 +1,6 @@
-import { pagePath } from '@/lib/site-data';
+import { BASE_PATH, pagePath } from '@/lib/site-data';
 import { JOBS, siteUrl } from '@/lib/jobs';
+import PageMorph from '@/components/PageMorph';
 import RequestBuilder from '@/components/RequestBuilder';
 import {
   Band,
@@ -119,7 +120,15 @@ export default function Projects({ lang, t }) {
               key={j.id}
               className="on-grid mt-6 grid items-center gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
             >
-              <DeviceScreen alt={c.alt} {...shot(j, WIDE)} />
+              {/* A job with a page of its own carries its screen across
+                  to it, and back. */}
+              {j.page ? (
+                <PageMorph name={j.id} to={BASE_PATH + pagePath(lang, j.page)}>
+                  <DeviceScreen frame alt={c.alt} {...shot(j, WIDE)} />
+                </PageMorph>
+              ) : (
+                <DeviceScreen alt={c.alt} {...shot(j, WIDE)} />
+              )}
               <div>
                 <JobText c={c} />
                 <TextLink href={pagePath(lang, j.page)} className="mt-2">

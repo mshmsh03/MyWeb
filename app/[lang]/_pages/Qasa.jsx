@@ -1,4 +1,5 @@
-import { SHOTS, pagePath } from '@/lib/site-data';
+import { BASE_PATH, SHOTS, pagePath } from '@/lib/site-data';
+import PageMorph from '@/components/PageMorph';
 import RequestBuilder from '@/components/RequestBuilder';
 import Till from '@/components/exhibits/till';
 import {
@@ -37,11 +38,12 @@ export default function Qasa({ lang, t }) {
         </PageTitle>
         <p className="label mt-4 mb-0 !text-[0.95rem] text-chalk rtl:!text-[1.05rem]">{q.role}</p>
         <Lead className="mt-5">{q.lead}</Lead>
-        <div className="mt-10 sm:mt-14">
+        {/* The till's screen is where the screenshot on Projects lands. */}
+        <PageMorph name="qasa" to={BASE_PATH + pagePath(lang, 'projects')} className="mt-10 sm:mt-14">
           {/* The page's title is the h1, so the till's own headings are one
               level higher than on the home page, where it sits under an h2. */}
           <Till lang={lang} t={t} requestHref="#request" headingLevel={2} />
-        </div>
+        </PageMorph>
       </Band>
 
       <Band>

@@ -229,11 +229,13 @@ export function BrowserFrame({ address, className = '', ...shot }) {
   );
 }
 
-// A device's screen: a graphite bezel round a screenshot of software.
-export function DeviceScreen({ caption, className = '', ...shot }) {
+// A device's screen: a graphite bezel round a screenshot of software. A
+// `frame` screen is the one that travels to the software's own page
+// (PageMorph).
+export function DeviceScreen({ caption, frame = false, className = '', ...shot }) {
   return (
     <figure className={`m-0 ${className}`}>
-      <div className={`rounded-[10px] bg-graphite p-2 sm:p-2.5 ${DEVICE_SHADOW}`}>
+      <div data-frame={frame || undefined} className={`rounded-[10px] bg-graphite p-2 sm:p-2.5 ${DEVICE_SHADOW}`}>
         <img {...shotProps(shot)} className="block h-auto w-full rounded-[3px]" />
       </div>
       {caption ? <figcaption className="mt-3 text-[0.95rem] text-chalk-dim">{caption}</figcaption> : null}
