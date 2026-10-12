@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="{{LANG}}" dir="{{DIR}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0f3d30">
+<link rel="icon" href="{{BASE}}/assets/favicon.svg" type="image/svg+xml">
+<style>
+  /*{{FONTS}}*/
+  /* The service worker shows this page in place of one it has not saved, at
+     that page's own address, so every link here is absolute. Set like
+     404.html: the mat, chalk text, and every block a whole number of 24px
+     cells tall so each rule lies on a grid line. */
+  html{background:#0f3d30;color:#f3f6f2;
+    background-image:linear-gradient(to right,#2c6a55 1px,transparent 1px),linear-gradient(to bottom,#2c6a55 1px,transparent 1px),
+      linear-gradient(to right,rgb(44 106 85/.42) 1px,transparent 1px),linear-gradient(to bottom,rgb(44 106 85/.42) 1px,transparent 1px);
+    background-size:120px 120px,120px 120px,24px 24px,24px 24px;
+    background-position:calc(50% + 60px) 0,0 0,calc(50% + 12px) 0,0 0}
+  body{margin:0;padding:96px 0 48px;
+    font:400 17px/1.6 Archivo,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-variation-settings:"wdth" 100}
+  main{width:min(576px,round(down,100% - 40px,48px));margin:0 auto}
+  @supports not (width:round(down,100px,48px)){main{width:min(576px,100% - 40px)}}
+  /* A network port on a board with its plug pulled out. A dimension line in
+     ruler yellow measures the gap. The drawing follows the reading
+     direction: in Arabic and Kurdish the cable leaves to the left. */
+  .board{position:relative;height:192px;border-radius:6px;background:#2c6a55;
+    box-shadow:0 22px 36px -14px rgb(3 18 13/.75);overflow:hidden}
+  .port{position:absolute;inset-inline-start:40px;top:56px;width:88px;height:80px;border-radius:3px;background:#14191a}
+  .port i{position:absolute;inset:14px 12px 22px;border-radius:2px;border:2px dashed #f2d24b}
+  .port i::after{content:"";position:absolute;left:50%;bottom:-12px;width:28px;height:10px;margin-left:-14px;background:#14191a;border:2px dashed #f2d24b;border-top:0}
+  .plug{position:absolute;inset-inline-start:216px;top:68px;width:64px;height:56px;border-radius:3px 3px 8px 8px;
+    background:repeating-linear-gradient(90deg,#c9d0cc 0 6px,#9aa5a0 6px 8px)}
+  .cable{position:absolute;inset-inline-start:280px;inset-inline-end:0;top:88px;height:16px;background:#14191a}
+  .dim{position:absolute;inset-inline-start:128px;width:88px;top:92px;height:9px;border-inline:1px solid #f2d24b;
+    background:linear-gradient(#f2d24b,#f2d24b) 0 50%/100% 1px no-repeat}
+  section{box-sizing:border-box;margin-top:48px;padding:24px 0;border-top:1px solid #2c6a55}
+  @supports (height:calc-size(auto,size)){section{height:calc-size(auto,round(up,size,24px))}}
+  h1{margin:0;font-size:28px;line-height:1.2;font-weight:800;font-variation-settings:"wdth" 115}
+  p{margin:6px 0 0;color:#b5ccc2;max-width:65ch}
+  [dir=rtl]{font-family:'Noto Sans Arabic','Segoe UI',Tahoma,sans-serif;line-height:1.85}
+  [dir=rtl] h1{font-family:'Noto Kufi Arabic','Noto Sans Arabic','Segoe UI',Tahoma,sans-serif;font-size:24px;line-height:1.5}
+  nav{display:flex;flex-wrap:wrap;column-gap:24px}
+  a{display:inline-flex;align-items:center;min-height:44px;color:#f3f6f2;font-weight:600;
+    text-decoration:underline;text-decoration-color:#f2d24b;text-decoration-thickness:2px;text-underline-offset:4px}
+  a:hover{color:#f2d24b}
+  a:focus-visible{outline:2px solid #f2d24b;outline-offset:3px}
+</style>
+</head>
+<body>
+<main>
+  <div class="board" aria-hidden="true">
+    <span class="port"><i></i></span>
+    <span class="dim"></span>
+    <span class="plug"></span>
+    <span class="cable"></span>
+  </div>
+  <section>
+    <h1>{{HEADING}}</h1>
+    <p>{{TEXT}}</p>
+    <nav>
+      <a href="">{{RETRY}}</a>
+      <a href="{{BASE}}/{{SEGMENT}}/">{{HOME}}</a>
+    </nav>
+  </section>
+</main>
+</body>
+</html>

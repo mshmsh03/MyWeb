@@ -43,7 +43,9 @@ jobs:
               [ -f "$f" ] || { echo "missing $f"; exit 1; }
             done
           done
-          for f in out/index.html out/404.html out/.nojekyll; do
+          for f in out/index.html out/404.html out/.nojekyll out/sw.js \
+            out/manifest.en.webmanifest out/manifest.ar.webmanifest out/manifest.ku.webmanifest \
+            out/offline/en.html out/offline/ar.html out/offline/ku.html; do
             [ -f "$f" ] || { echo "missing $f"; exit 1; }
           done
           echo "export looks complete"

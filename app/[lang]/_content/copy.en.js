@@ -338,5 +338,13 @@ export default {
   },
   lamp: {},
   menu: {},
-  offline: {},
+  // The page the service worker shows, while there is no connection, for a
+  // page it has not saved. scripts/offline.mjs sets these into
+  // scripts/offline.html at build time.
+  offline: {
+    title: 'No connection | Mustafa Deari Ahmed',
+    heading: 'No connection.',
+    text: 'This page is not saved on this device yet. The home page and the pages you have visited before work without internet.',
+    retry: 'Try again',
+  },
 };

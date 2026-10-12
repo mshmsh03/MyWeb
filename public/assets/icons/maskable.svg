@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- icon.svg edge to edge: the device cuts a maskable icon to its own shape. -->
+  <defs>
+    <pattern id="cell" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0V32H0" fill="none" stroke="#2c6a55" stroke-opacity=".42" stroke-width="2"/>
+    </pattern>
+    <pattern id="major" width="128" height="128" patternUnits="userSpaceOnUse">
+      <path d="M128 0V128H0" fill="none" stroke="#2c6a55" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="512" height="512" fill="#0f3d30"/>
+  <rect width="512" height="512" fill="url(#cell)"/>
+  <rect width="512" height="512" fill="url(#major)"/>
+  <g transform="translate(256 256) scale(12) translate(-16 -16)">
+    <rect x="6" y="8" width="20" height="17" rx="1.5" fill="#f2d24b" transform="rotate(5 16 16)"/>
+    <rect x="6" y="7" width="20" height="18" rx="1.5" fill="#f3f6f2"/>
+    <rect x="18" y="10" width="5" height="3" rx="0.5" fill="#ff6a2b"/>
+    <path d="M9 16h14M9 20h9" stroke="#14191a" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -5,6 +5,7 @@ import { BASE } from '@/lib/metadata';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MotionRoot from '@/components/MotionRoot';
+import OfflineWorker from '@/components/OfflineWorker';
 import '../globals.css';
 
 // next/font fetches these at build time and ships them from the site's own
@@ -45,7 +46,10 @@ export const metadata = {
   metadataBase: new URL(BASE),
   // asset() adds the GitHub Pages project prefix — Next does not apply
   // basePath to icon URLs in metadata.
-  icons: { icon: [{ url: asset('/assets/favicon.svg'), type: 'image/svg+xml' }] },
+  icons: {
+    icon: [{ url: asset('/assets/favicon.svg'), type: 'image/svg+xml' }],
+    apple: [{ url: asset('/assets/icons/apple-touch-icon.png'), sizes: '180x180' }],
+  },
 };
 
 // Arms motion before the first paint, so nothing shows its resting state for a
@@ -110,9 +114,16 @@ export default async function LangLayout({ children, params }) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: ARM_MOTION }} />
+        {/* One manifest per language, written by scripts/offline.mjs after
+            the build, so the installed app opens in the language it was
+            installed from. A development server has none to serve. */}
+        {process.env.NODE_ENV === 'production' && (
+          <link rel="manifest" href={asset(`/manifest.${lang}.webmanifest`)} />
+        )}
       </head>
       <body>
         <MotionRoot />
+        <OfflineWorker />
         {/* The first stop for the keyboard: past the header to the page. */}
         <a
           href="#main"

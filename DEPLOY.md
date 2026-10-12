@@ -56,6 +56,16 @@ cannot win that race — the export copies `public/` first and writes route outp
 over the top. The site's own 404 lives at `scripts/404.html`; the base path is
 filled into its links as it is copied.
 
+Last, `scripts/offline.mjs` makes the site installable and usable offline. It
+writes `out/manifest.{en,ar,ku}.webmanifest`, the offline page in each language
+(`out/offline/*.html`, from `scripts/offline.html` and the `offline` words in
+the copy files) and the service worker `out/sw.js` (from `scripts/sw.js`). The
+worker's install list and cache version are read from that build's `out/`, so
+each deploy replaces the old cache on the visitor's next page load. The worker
+is registered by `components/OfflineWorker.jsx` in production builds only; to
+see it, serve `out/` as below. In Chrome, DevTools → Application → Service
+workers → Unregister clears it.
+
 ## Deploying
 
 Push to `main`. `.github/workflows/deploy.yml` builds, checks the expected files

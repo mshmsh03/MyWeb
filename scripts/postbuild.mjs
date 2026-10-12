@@ -12,7 +12,11 @@
 // wrote for the build, under hashed names, so their @font-face rules are
 // copied out of the build's stylesheets: Archivo's Latin file and the Arabic
 // files of the two Arabic faces, with the URLs made absolute.
+//
+// Then scripts/offline.mjs adds the manifests, the offline pages and the
+// service worker.
 import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { writeOffline } from './offline.mjs';
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '/MyWeb';
 const CHUNKS = 'out/_next/static/chunks';
@@ -32,3 +36,12 @@ const fonts = wanted.map((f) => f.replaceAll('url(../media/', `url(${BASE}/_next
 const page = await readFile('scripts/404.html', 'utf8');
 await writeFile('out/404.html', page.replace('/*{{FONTS}}*/', fonts).replaceAll('{{BASE}}', BASE));
 console.log('postbuild: 404.html in place');
+
+// The offline page is set in the same faces. The service worker saves Archivo
+// and the till's receipt face (both weights of IBM Plex Mono's Latin file) at
+// install. The two Arabic faces (about 290KB) are left to be saved when an
+// Arabic or Kurdish page first uses them, so an English visitor's phone does
+// not download them.
+const mono = faces.filter((f) => f.includes('font-family:IBM Plex Mono;') && f.includes('unicode-range:U+??,'));
+const fontFiles = [wanted[0], ...mono].map((f) => f.match(/url\(\.\.\/media\/([^)]+)\)/)[1]);
+await writeOffline({ base: BASE, fonts, fontFiles });
