@@ -330,7 +330,12 @@ export default {
   },
 
   // Section 7 features. Each slot is filled by the step that builds it.
-  preview: {},
+  // Link previews: the description of the picture a shared link shows.
+  // {page} is the page's name as the picture prints it.
+  preview: {
+    home: 'The name Mustafa Deari Ahmed above a laptop, a till and an open computer on a green cutting mat',
+    page: 'The name Mustafa Deari Ahmed and the page name {page} above a laptop, a till and an open computer on a green cutting mat',
+  },
   lamp: {},
   menu: {},
   offline: {},

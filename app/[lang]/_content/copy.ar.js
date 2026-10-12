@@ -289,7 +289,10 @@ export default {
   },
 
   // Section 7 features. Each slot is filled by the step that builds it.
-  preview: {},
+  preview: {
+    home: 'اسم Mustafa Deari Ahmed فوق حاسوب محمول وجهاز نقطة بيع وحاسوب مفتوح على لوح قصّ أخضر',
+    page: 'اسم Mustafa Deari Ahmed وعنوان الصفحة «{page}» فوق حاسوب محمول وجهاز نقطة بيع وحاسوب مفتوح على لوح قصّ أخضر',
+  },
   lamp: {},
   menu: {},
   offline: {},

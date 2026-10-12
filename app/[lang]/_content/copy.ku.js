@@ -319,7 +319,10 @@ export default {
   },
 
   // Section 7 features. Each slot is filled by the step that builds it.
-  preview: {},
+  preview: {
+    home: 'ناوی Mustafa Deari Ahmed لە سەرووی لاپتۆپێک، ئامێرێکی فرۆشتن و کۆمپیوتەرێکی کراوە لەسەر تەختەیەکی سەوز',
+    page: 'ناوی Mustafa Deari Ahmed و ناوی پەڕەی «{page}» لە سەرووی لاپتۆپێک، ئامێرێکی فرۆشتن و کۆمپیوتەرێکی کراوە لەسەر تەختەیەکی سەوز',
+  },
   lamp: {},
   menu: {},
   offline: {},
