@@ -66,6 +66,24 @@ export default function BenchStage({ className, children }) {
         return;
       }
       e.preventDefault();
+      // One morph at a time: once the page is on its way to an exhibit, a
+      // further tap on the bench is let go.
+      const root = document.documentElement;
+      if (root.dataset.morphing) return;
+      // While the morph runs the page is marked, so the exhibit waits to
+      // swap in its working version until the morph has landed (useIsland).
+      // Nothing is styled off this mark: any change to the root's style
+      // restyles the whole page.
+      root.dataset.morphing = '1';
+
+      // The device is picked up at once, and that frame is painted before the
+      // transition starts: taking the snapshots restyles the whole page
+      // several times over, which on a slow phone holds the screen still for
+      // a third of a second, too long for a tap to go unanswered. Focus moves
+      // to the section's heading now too, while that is cheap; inside the
+      // transition's update it would force one more of those restyles.
+      link.dataset.picked = '';
+      heading();
 
       // The device's screen and the exhibit's frame take turns carrying the
       // one transition name, so the browser morphs one into the other. The
@@ -74,23 +92,22 @@ export default function BenchStage({ className, children }) {
       const screens = link.querySelectorAll('[data-screen]');
       const from = screens[document.dir === 'rtl' ? screens.length - 1 : 0];
       const to = exhibit.querySelector('[data-frame]');
-      // While the morph runs the page is marked, so the exhibit waits to
-      // swap in its working version until the morph has landed (useIsland).
-      const root = document.documentElement;
-      from.style.viewTransitionName = 'exhibit';
-      root.dataset.morphing = '1';
-      const vt = document.startViewTransition(() => {
-        from.style.viewTransitionName = '';
-        if (to) to.style.viewTransitionName = 'exhibit';
-        exhibit.scrollIntoView({ behavior: 'instant', block: 'start' });
-        history.pushState(null, '', `#${id}`);
-        heading();
-      });
-      vt.finished.finally(() => {
-        if (to) to.style.viewTransitionName = '';
-        delete root.dataset.morphing;
-        window.dispatchEvent(new Event('morphend'));
-      });
+      const morph = () => {
+        from.style.viewTransitionName = 'exhibit';
+        const vt = document.startViewTransition(() => {
+          from.style.viewTransitionName = '';
+          if (to) to.style.viewTransitionName = 'exhibit';
+          exhibit.scrollIntoView({ behavior: 'instant', block: 'start' });
+          history.pushState(null, '', `#${id}`);
+        });
+        vt.finished.finally(() => {
+          if (to) to.style.viewTransitionName = '';
+          delete link.dataset.picked;
+          delete root.dataset.morphing;
+          window.dispatchEvent(new Event('morphend'));
+        });
+      };
+      requestAnimationFrame(() => setTimeout(morph, 0));
     };
 
     stage.addEventListener('pointermove', onMove);

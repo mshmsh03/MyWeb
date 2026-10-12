@@ -152,20 +152,28 @@ function Num({ n, mark }) {
 // Colours ease only while effects are on, like every other change here.
 const EASE = 'in-data-[motion=on]:transition-colors';
 const CHIP = `inline-flex min-h-12 items-center rounded-part border border-chalk-dim/55 px-4 font-medium text-chalk ${EASE}`;
-const BUTTON = `td-btn inline-flex min-h-11 items-center rounded-part border border-chalk-dim/55 px-4 font-semibold text-chalk ${EASE}`;
+const BUTTON = `td-btn inline-flex min-h-12 items-center rounded-part border border-chalk-dim/55 px-4 font-semibold text-chalk ${EASE}`;
 
 export default function TeardownView({ copy, requestHref, open, part, symptom, on, frameRef }) {
   const suspects = symptom ? SUSPECTS[symptom] : [];
   const word = copy.at[openWord(open)].replace('{n}', open);
 
+  // In one column: the drawing, the controls, the symptoms, the request. Side
+  // by side, the drawing has the symptoms that light it up straight under it
+  // and the request under those, while the controls run down the other side
+  // the whole height; the last row takes what the controls need beyond the
+  // first two, so nothing opens a gap under the drawing.
   return (
-    <div className="td grid grid-cols-[minmax(0,1fr)] items-start gap-x-12 gap-y-10 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]" data-live={on ? '' : undefined}>
+    <div
+      className="td grid grid-cols-[minmax(0,1fr)] items-start gap-x-12 gap-y-10 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] xl:grid-rows-[auto_auto_1fr]"
+      data-live={on ? '' : undefined}
+    >
       {/* The drawing is a picture of the controls beside it: every part in it
           is also a button in the list, so it is hidden from assistive
           technology and nothing in it takes focus. Once live, --open is the
           spring's to write: the value given here stays the same on every
           render, so React never writes over it. */}
-      <div className="td-frame-wrap">
+      <div className="td-frame-wrap xl:col-start-1 xl:row-start-1">
         <div
           ref={frameRef}
           data-frame
@@ -200,7 +208,7 @@ export default function TeardownView({ copy, requestHref, open, part, symptom, o
         )}
       </div>
 
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-8">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 xl:col-start-2 xl:row-span-3 xl:row-start-1">
         {/* Opening it: a slider for the reader who drags, two buttons for
             the reader who would rather press. */}
         <div role="group" aria-labelledby="td-open" className="grid max-w-[36rem] gap-3">
@@ -298,7 +306,7 @@ export default function TeardownView({ copy, requestHref, open, part, symptom, o
       </div>
 
       {/* What it is doing: each symptom lights up the parts usually behind it. */}
-      <fieldset className="m-0 min-w-0 border-0 p-0">
+      <fieldset className="m-0 min-w-0 border-0 p-0 xl:col-start-1 xl:row-start-2">
         <legend className="label p-0 text-chalk">{copy.symptoms}</legend>
         <div className="mt-3 flex flex-wrap gap-2.5">
           {SYMPTOMS.map((id) => (
@@ -347,7 +355,7 @@ export default function TeardownView({ copy, requestHref, open, part, symptom, o
         </p>
       </fieldset>
 
-      <div className="grid justify-items-start gap-4 border-t border-mat-line pt-6 xl:border-0 xl:pt-0">
+      <div className="grid justify-items-start gap-4 border-t border-mat-line pt-6 xl:col-start-1 xl:row-start-3">
         <p className="m-0 max-w-[60ch] text-chalk-dim">{copy.repairs}</p>
         <a
           {...requestLinkProps(requestHref, 'repair', symptom ? copy.report[symptom] : undefined)}

@@ -536,6 +536,20 @@
 .td-choice input:checked + span .td-dot {
   background: radial-gradient(circle, currentColor 0 3px, transparent 3.5px);
 }
+/* Forced colours (Windows contrast themes) paint every chip alike, so a
+   chosen part or symptom takes the system's own highlight instead. Left as
+   drawn, the chosen symptom's dot keeps its fill, which the theme would
+   otherwise drop with every gradient. */
+@media (forced-colors: active) {
+  .td-chip[aria-pressed='true'],
+  .td-chip[aria-pressed='true']:not(:disabled):hover,
+  .td-choice input:checked + span {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+}
 .td-clear:disabled {
   opacity: 0.5;
   cursor: default;

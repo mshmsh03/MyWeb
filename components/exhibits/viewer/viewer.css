@@ -257,8 +257,8 @@
    so all of its 44px can be pressed. */
 .vw-mark {
   position: absolute;
-  left: clamp(22px, var(--x) + var(--dx, 0px), 100% - 22px);
-  top: clamp(22px, var(--y) + var(--dy, 0px), 100% - 22px);
+  left: clamp(22px, var(--x) + var(--dx, 0px) + var(--sx, 0px), 100% - 22px);
+  top: clamp(22px, var(--y) + var(--dy, 0px) + var(--sy, 0px), 100% - 22px);
   display: grid;
   place-items: center;
   width: 44px;
@@ -276,8 +276,9 @@
 .vw-mark:disabled {
   cursor: default;
 }
-/* On a small picture the 44px buttons overlap. Every dot sits above every
-   button, so a dot always opens its own mark; the lines sit above both. */
+/* On a small picture the 44px buttons would overlap, so the working viewer
+   moves them apart (--sx, --sy, from ViewerLive). Every dot sits above every
+   button all the same, and the lines sit above both. */
 .vw-mark .vw-dot {
   position: relative;
   z-index: 1;
@@ -319,10 +320,15 @@
   font-weight: 700;
   line-height: 1;
 }
+/* The focus ring is drawn round the dot. The transparent outline is for
+   forced colours (Windows contrast themes), which drop the box-shadow but
+   draw the outline in the system's colour. */
 .vw-mark:focus-visible {
   outline: none;
 }
 .vw-mark:focus-visible .vw-dot {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   box-shadow:
     0 0 0 2px var(--color-graphite),
     0 0 0 4px var(--color-screen),

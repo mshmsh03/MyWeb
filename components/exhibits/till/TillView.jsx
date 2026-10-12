@@ -116,7 +116,7 @@ function Line({ line, t, act, fresh }) {
 
 // The receipt as it came out of the printer. It keeps the language the till
 // was in when it was printed, like paper would.
-function Receipt({ sale, requestHref }) {
+function Receipt({ sale, requestHref, Heading }) {
   const t = WORDS[sale.lang];
   const usd = sale.currency === 'usd';
   const iqd = (n) => <Dinars amount={n} t={t} />;
@@ -125,9 +125,9 @@ function Receipt({ sale, requestHref }) {
       <p className="till-paper-brand">
         <Num>Qasa POS</Num>
       </p>
-      <h3 id="till-receipt-title" className="till-paper-title">
+      <Heading id="till-receipt-title" className="till-paper-title">
         {t.receipt}
-      </h3>
+      </Heading>
       <ul className="till-paper-lines" role="list">
         {sale.lines.map((l) => (
           <li key={l.id}>
@@ -197,8 +197,11 @@ function announce(sale, view, t) {
   return said.n % 2 ? `${text} ` : text;
 }
 
-export default function TillView({ sale, view, requestHref, act, rootRef }) {
+// `headingLevel` sets the level of the till's headings, the order's and the
+// receipt's: 3 under a section's h2, 2 where the till follows a page's h1.
+export default function TillView({ sale, view, requestHref, headingLevel = 3, act, rootRef }) {
   const t = WORDS[sale.lang];
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
   const open = view.open;
   const usd = sale.currency === 'usd';
   const empty = sale.lines.length === 0;
@@ -287,9 +290,9 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
               <section className="till-order" aria-labelledby="till-order-title">
                 <div className="till-slip">
                   <div className="till-slip-head">
-                    <h3 id="till-order-title" tabIndex={-1}>
+                    <Heading id="till-order-title" className="till-order-title" tabIndex={-1}>
                       {open ? t.order : t.paid}
-                    </h3>
+                    </Heading>
                     <span className="till-count">{countItems(t, sale.lines.length)}</span>
                   </div>
                   {empty ? (
@@ -467,7 +470,7 @@ export default function TillView({ sale, view, requestHref, act, rootRef }) {
           </div>
           <div className="till-out">
             {sale.printed ? (
-              <Receipt sale={sale.printed} requestHref={requestHref} />
+              <Receipt sale={sale.printed} requestHref={requestHref} Heading={Heading} />
             ) : (
               <span className="till-stub" aria-hidden="true" />
             )}

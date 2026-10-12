@@ -64,6 +64,8 @@ export default function ViewerView({
   onMarkWake,
   onShotLoad,
   onShotIn,
+  onPointerEnter,
+  onFocus,
 }) {
   const s = site(siteId);
   const { width, height } = SIZES[size];
@@ -73,7 +75,7 @@ export default function ViewerView({
   const alt = `${copy.alts[siteId]}${copy.shot[shotLang]}${size === 'phone' ? copy.shot.phone : ''}`;
 
   return (
-    <div>
+    <div onPointerEnter={onPointerEnter} onFocus={onFocus}>
       <div className="flex flex-wrap gap-x-10 gap-y-5">
         <Choice
           legend={copy.language}

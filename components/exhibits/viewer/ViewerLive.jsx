@@ -12,6 +12,8 @@ import { LANGS, SITES, shotSrc, site } from './sites';
 const RESIZE_MS = 420;
 // --ease-out-quart: a resize this long reads as a snap on the steeper expo.
 const EASE_OUT = 'cubic-bezier(0.25, 1, 0.5, 1)';
+// A mark's button, which is what a finger presses (viewer.css).
+const MARK = 44;
 
 // Screenshots fetched ahead of a click. Kept for the page's life, so a
 // picture is asked for at most once.
@@ -153,6 +155,59 @@ export default function ViewerLive({ lang, copy, requestHref }) {
     return () => document.removeEventListener('pointerdown', onDown);
   }, [open]);
 
+  // On a small picture two marks can come closer than the 44px each is
+  // pressed by, and one would take part of the other. Such marks are moved
+  // apart along the line between them, just far enough and never out of the
+  // picture (--sx, --sy in viewer.css); their dots go with them, a few pixels
+  // further off what they mark.
+  useEffect(() => {
+    const screen = frameRef.current?.querySelector('.vw-screen');
+    if (!screen || !('ResizeObserver' in window)) return;
+    const spread = () => {
+      const marks = [...screen.querySelectorAll('.vw-mark')];
+      for (const m of marks) {
+        m.style.removeProperty('--sx');
+        m.style.removeProperty('--sy');
+      }
+      const box = screen.getBoundingClientRect();
+      const at = marks.map((m) => {
+        const r = m.getBoundingClientRect();
+        return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top];
+      });
+      const to = at.map(([x, y]) => [x, y]);
+      const half = MARK / 2;
+      for (let round = 0; round < 6; round++) {
+        for (let i = 0; i < to.length; i++) {
+          for (let j = i + 1; j < to.length; j++) {
+            const dx = to[j][0] - to[i][0];
+            const dy = to[j][1] - to[i][1];
+            const d = Math.hypot(dx, dy);
+            if (d >= MARK) continue;
+            const [ux, uy] = d ? [dx / d, dy / d] : [1, 0];
+            const push = (MARK - d) / 2;
+            to[i][0] -= ux * push;
+            to[i][1] -= uy * push;
+            to[j][0] += ux * push;
+            to[j][1] += uy * push;
+          }
+        }
+        for (const p of to) {
+          p[0] = Math.min(Math.max(p[0], half), box.width - half);
+          p[1] = Math.min(Math.max(p[1], half), box.height - half);
+        }
+      }
+      marks.forEach((m, i) => {
+        const [sx, sy] = [to[i][0] - at[i][0], to[i][1] - at[i][1]];
+        if (Math.abs(sx) < 0.5 && Math.abs(sy) < 0.5) return;
+        m.style.setProperty('--sx', `${sx.toFixed(1)}px`);
+        m.style.setProperty('--sy', `${sy.toFixed(1)}px`);
+      });
+    };
+    const ro = new ResizeObserver(spread);
+    ro.observe(screen);
+    return () => ro.disconnect();
+  }, [siteId, shotLang, size]);
+
   // Escape puts away every line on show, whether a mark was pressed, is
   // focused or is pointed at, without moving the focus or the pointer.
   useEffect(() => {
@@ -170,24 +225,38 @@ export default function ViewerLive({ lang, copy, requestHref }) {
     return () => document.removeEventListener('keydown', onKey);
   }, []);
 
-  // Once the window is on screen, the current site's other languages at
-  // this size, and this language at the other size, are fetched while the
-  // browser is idle, so the next switch has its picture ready. Nothing is
-  // fetched for a visitor who scrolls past.
+  // Once the visitor shows an interest in the viewer, the current site's
+  // other languages at this size, and this language at the other size, are
+  // fetched while the browser is idle, so the next switch has its picture
+  // ready. An interest is a mouse over the viewer, focus in it, or the window
+  // held at least half on screen for a second; a visitor who scrolls past
+  // fetches nothing. Touch shows no interest before a tap: a finger landing
+  // on the viewer may only be scrolling.
+  const interested = () => setSeen(true);
+  const onPointerEnter = (e) => {
+    if (e.pointerType === 'mouse') interested();
+  };
   useEffect(() => {
+    if (seen) return;
     const el = frameRef.current;
     if (!('IntersectionObserver' in window)) {
       setSeen(true);
       return;
     }
-    const io = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      setSeen(true);
-      io.disconnect();
-    });
+    let dwell = 0;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        clearTimeout(dwell);
+        if (entry.intersectionRatio >= 0.5) dwell = setTimeout(() => setSeen(true), 1000);
+      },
+      { threshold: 0.5 },
+    );
     io.observe(el);
-    return () => io.disconnect();
-  }, []);
+    return () => {
+      clearTimeout(dwell);
+      io.disconnect();
+    };
+  }, [seen]);
 
   useEffect(() => {
     if (!seen) return;
@@ -226,6 +295,8 @@ export default function ViewerLive({ lang, copy, requestHref }) {
       onMarkWake={wake}
       onShotLoad={onShotLoad}
       onShotIn={onShotIn}
+      onPointerEnter={seen ? undefined : onPointerEnter}
+      onFocus={seen ? undefined : interested}
     />
   );
 }

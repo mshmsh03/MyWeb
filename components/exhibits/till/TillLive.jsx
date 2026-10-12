@@ -6,7 +6,7 @@ import { describe, openingSale, reduce } from './sale';
 
 // The working till. It starts from the same sale the server drew, so taking
 // over from the static version changes nothing on screen.
-export default function TillLive({ lang, requestHref }) {
+export default function TillLive({ lang, requestHref, headingLevel }) {
   const [sale, dispatch] = useReducer(reduce, lang, openingSale);
   const root = useRef(null);
   // Where focus should land when the control holding it goes away: a line
@@ -55,5 +55,14 @@ export default function TillLive({ lang, requestHref }) {
     if (printer.getBoundingClientRect().top > window.innerHeight - 160) printer.scrollIntoView({ block: 'nearest' });
   }, [printed]);
 
-  return <TillView sale={sale} view={describe(sale)} requestHref={requestHref} act={act} rootRef={root} />;
+  return (
+    <TillView
+      sale={sale}
+      view={describe(sale)}
+      requestHref={requestHref}
+      headingLevel={headingLevel}
+      act={act}
+      rootRef={root}
+    />
+  );
 }

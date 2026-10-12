@@ -18,8 +18,13 @@
   --till-paper: #fdfdf9; /* receipt paper, a shade warmer than the screen */
   --till-edge: #c3ccc7; /* hairlines on the screen and the paper */
   --till-key-edge: #7a8580; /* the edge of a key: 3.2:1 on the ground, 3.6 on a key */
-  --till-hot: var(--color-ruler);
-  --till-cold: var(--color-mat-line);
+  /* The categories' own marks, the till's alone: red for hot and blue for
+     cold, as on a tap, and graphite for sweets. Each is over 4:1 on a key and
+     on the ground, and the three stay apart for red-green colour blindness
+     (the category is written beside each mark too). Not ruler yellow or the
+     mat's line, which mean other things on the bench. */
+  --till-hot: #b9503a;
+  --till-cold: #2f6aa0;
   --till-sweets: var(--color-graphite-soft);
   font-size: 0.9375rem;
 }
@@ -175,6 +180,17 @@
   outline: 2px solid var(--color-graphite);
   outline-offset: 3px;
 }
+/* Forced colours (Windows contrast themes) paint every key alike and drop
+   the ring, so a chosen key takes the system's own highlight instead. */
+@media (forced-colors: active) {
+  .till-option > :checked + span,
+  .till-option > :checked + span:hover {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+}
 .till-langs .till-option > span {
   padding-inline: 10px;
 }
@@ -299,7 +315,9 @@ html[dir='rtl'] .till-langs :is([lang='ar'], [lang='ckb']) {
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  height: var(--tile-h);
+  /* A minimum, so a name that takes more room (larger text, wider
+     spacing) grows its tile rather than spilling out of it. */
+  min-height: var(--tile-h);
   padding: 8px 10px 9px;
   padding-inline-start: 12px;
   border: 1px solid var(--till-key-edge);
@@ -337,9 +355,15 @@ html[dir='rtl'] .till-langs :is([lang='ar'], [lang='ckb']) {
 .till-app[data-phase='paid'] .till-switch .till-knob {
   background: var(--color-graphite-soft);
 }
+/* Should a name still not fit (larger text, wider spacing), it wraps rather
+   than running out of its tile: hyphenated by the rules of the till's
+   language where the browser has them, broken anywhere where not. */
 .till-tile-name {
+  max-width: 100%;
   font-weight: 600;
   line-height: 1.25;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
 .till-tile-cat {
   font-size: 0.8125rem;
@@ -350,6 +374,18 @@ html[dir='rtl'] .till-langs :is([lang='ar'], [lang='ckb']) {
   margin-top: auto;
   font-size: 1rem;
   font-weight: 600;
+}
+/* The narrowest till, on a 320px phone: the tiles give up a little padding
+   and the names are set a little smaller and narrower, on Archivo's width
+   axis, so the longest ("Cheesecake", 70px) still fits on one line. */
+@container till-cat (max-width: 15rem) {
+  .till-tile {
+    padding-inline: 9px 6px;
+  }
+  .till-tile-name {
+    font-size: 0.875rem;
+    font-variation-settings: 'wdth' 85;
+  }
 }
 .till-note {
   margin: 10px 0 0;
@@ -383,13 +419,13 @@ html[dir='rtl'] .till-langs :is([lang='ar'], [lang='ckb']) {
   padding-bottom: 8px;
   border-bottom: 1px dashed var(--till-edge);
 }
-.till-slip-head h3 {
+.till-order-title {
   margin: 0;
   font-size: 1.125rem;
   font-weight: 700;
   line-height: 1.3;
 }
-.till-slip-head h3:focus {
+.till-order-title:focus {
   outline: none;
 }
 .till-count {
@@ -829,22 +865,30 @@ html[data-motion] .till-other input:disabled {
 .till-wait p {
   margin: 0;
 }
-.till-ask {
+/* The request that ends the exhibit, as the viewer's and the teardown's do:
+   drawn as the outline button, since Charge is the till's one filled action. */
+.till-ask,
+.till-paper-ask {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  margin-top: 4px;
-  color: var(--color-chalk);
+  min-height: 48px;
+  padding: 6px 20px;
+  border: 1px solid;
+  border-radius: 6px;
   font-weight: 600;
-  text-decoration: underline;
-  text-decoration-color: var(--color-ruler);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
+}
+.till-ask {
+  margin-top: 12px;
+  border-color: color-mix(in oklab, var(--color-chalk-dim) 60%, transparent);
+  color: var(--color-chalk);
 }
 @media (hover: hover) {
   .till-ask:hover {
-    color: var(--color-ruler);
+    border-color: var(--color-chalk);
   }
+}
+[data-motion='on'] :is(.till-ask, .till-paper-ask) {
+  transition: border-color 160ms var(--ease-out-quart);
 }
 
 /* The printed receipt. Plex Mono throughout in English; Arabic and Kurdish
@@ -922,60 +966,50 @@ html[data-motion] .till-other input:disabled {
   margin: 10px 0 0;
   color: var(--color-graphite-soft);
 }
+/* On the paper the same button is drawn in graphite: its edge is graphite at
+   60%, 4.6:1 on the paper. */
 .till-paper-ask {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  margin-top: 6px;
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  margin-top: 12px;
+  padding-inline: 14px;
+  border-color: color-mix(in oklab, var(--color-graphite) 60%, transparent);
 }
 @media (hover: hover) {
   .till-paper-ask:hover {
-    text-decoration-thickness: 2px;
+    border-color: var(--color-graphite);
   }
 }
 
 /* ---------- Motion ----------
    Physical and short: a receipt is printed out of the slot, a line that
    arrives slides into the order, a quantity that changes bumps, the switch's
-   knob slides across. With motion off the same changes happen at once. */
-@keyframes till-feed {
-  from {
+   knob slides across. With motion off the same changes happen at once.
+
+   The receipt, a new line and a new quantity are each a new element, and
+   each moves from a starting style, which applies only when an element is
+   first drawn. So they move when they are printed or rung up, and never
+   again: switching Effects on later does not print the receipt twice. */
+[data-motion='on'] .till-paper {
+  transition: transform 480ms var(--ease-out-quart);
+}
+[data-motion='on'] .till-line[data-fresh='new'] {
+  transition:
+    opacity 260ms var(--ease-out-quart),
+    transform 260ms var(--ease-out-quart);
+}
+[data-motion='on'] .till-line[data-fresh='qty'] .till-qty {
+  transition: transform 260ms var(--ease-set-down);
+}
+@starting-style {
+  [data-motion='on'] .till-paper {
     transform: translateY(-100%);
   }
-  to {
-    transform: none;
-  }
-}
-@keyframes till-line-in {
-  from {
+  [data-motion='on'] .till-line[data-fresh='new'] {
     opacity: 0;
     transform: translateY(-6px);
   }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes till-bump {
-  from {
+  [data-motion='on'] .till-line[data-fresh='qty'] .till-qty {
     transform: scale(1.35);
   }
-  to {
-    transform: none;
-  }
-}
-[data-motion='on'] .till-paper {
-  animation: till-feed 480ms var(--ease-out-quart) both;
-}
-[data-motion='on'] .till-line[data-fresh='new'] {
-  animation: till-line-in 260ms var(--ease-out-quart) both;
-}
-[data-motion='on'] .till-line[data-fresh='qty'] .till-qty {
-  animation: till-bump 260ms var(--ease-set-down) both;
 }
 [data-motion='on'] .till-tile:enabled:active {
   transform: translateY(1px);

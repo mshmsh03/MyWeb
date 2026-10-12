@@ -346,29 +346,33 @@
 
 /* ---------- Choosing a device ---------- */
 
-/* Pointed at or focused, a device is picked up off the mat. */
+/* Pointed at, focused or chosen, a device is picked up off the mat. */
 .plot:hover .dev,
-.plot:focus-visible .dev {
+.plot:focus-visible .dev,
+.plot[data-picked] .dev {
   --lift: -14px;
-}
-[data-motion='on'] .dev {
-  transition: transform 380ms var(--ease-set-down);
 }
 .plot:focus-visible {
   outline-offset: 6px;
 }
 
-/* On load the devices are set down on the mat, one after another. Only the
-   `translate` property moves, so the lift above composes with it. */
-@keyframes set-down {
-  from { translate: 0 -34px; }
-  to { translate: 0 0; }
-}
+/* When the bench is first drawn the devices are set down on the mat, one
+   after another. Only `translate` moves, so the lift composes with it. The
+   drop starts from a starting style, which applies only to an element being
+   drawn for the first time: switching Effects on later does not drop the
+   devices again. */
 [data-motion='on'] .dev {
-  animation: set-down 480ms var(--ease-set-down) both;
+  transition:
+    transform 380ms var(--ease-set-down),
+    translate 480ms var(--ease-set-down) var(--set-after, 0ms);
 }
-[data-motion='on'] li:nth-child(2) .dev { animation-delay: 90ms; }
-[data-motion='on'] li:nth-child(3) .dev { animation-delay: 180ms; }
+@starting-style {
+  [data-motion='on'] .dev {
+    translate: 0 -34px;
+  }
+}
+.bench li:nth-child(2) .dev { --set-after: 90ms; }
+.bench li:nth-child(3) .dev { --set-after: 180ms; }
 
 /* The chosen screen grows into its exhibit (View Transitions). */
 ::view-transition-group(exhibit) {
