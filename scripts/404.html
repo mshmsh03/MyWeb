@@ -6,16 +6,25 @@
 <title>404 | Mustafa Deari Ahmed</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0f3d30">
+<script>try{if(localStorage.getItem('lamp')==='on'){document.documentElement.dataset.lamp='on';
+document.querySelector('meta[name="theme-color"]').content='#e6ede7';}}catch(e){}</script>
 <style>
   /*{{FONTS}}*/
   /* The mat, as on every page: a minor line every 24px, a heavier one every
      120px, drawn from the centre. Everything below is a whole number of
      cells tall, so each rule lies on a grid line. */
-  html{background:#0f3d30;color:#f3f6f2;
-    background-image:linear-gradient(to right,#2c6a55 1px,transparent 1px),linear-gradient(to bottom,#2c6a55 1px,transparent 1px),
-      linear-gradient(to right,rgb(44 106 85/.42) 1px,transparent 1px),linear-gradient(to bottom,rgb(44 106 85/.42) 1px,transparent 1px);
+  html{--mat:#0f3d30;--line:#2c6a55;--ink:#f3f6f2;--ink-dim:#b5ccc2;--ruler:#f2d24b;--drop:3 18 13;--drop-k:1;
+    background:var(--mat);color:var(--ink);
+    background-image:linear-gradient(to right,var(--line) 1px,transparent 1px),linear-gradient(to bottom,var(--line) 1px,transparent 1px),
+      linear-gradient(to right,color-mix(in srgb,var(--line) 42%,transparent) 1px,transparent 1px),
+      linear-gradient(to bottom,color-mix(in srgb,var(--line) 42%,transparent) 1px,transparent 1px);
     background-size:120px 120px,120px 120px,24px 24px,24px 24px;
     background-position:calc(50% + 60px) 0,0 0,calc(50% + 12px) 0,0 0}
+  /* The site's lamp switch lights this page too: the light bench and the
+     lamp's pool of light, as in app/globals.css. The board keeps its colours. */
+  html[data-lamp=on]{--mat:#e6ede7;--line:#93b3a3;--ink:#0f3d30;--ink-dim:#3d6455;--ruler:#8a5a00;--drop:22 46 36;--drop-k:.55}
+  html[data-lamp=on] body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(ellipse 80% 65% at 50% -10%,rgb(255 251 236/.85),rgb(255 251 236/.3) 50%,transparent 80%)}
   body{margin:0;padding:96px 0 48px;
     font:400 17px/1.6 Archivo,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-variation-settings:"wdth" 100}
   /* Twelve cells wide, centred, so both edges fall on grid lines; on a phone,
@@ -26,7 +35,7 @@
      third slot is empty, and a dimension line in ruler yellow marks its
      width, with the figure above it in chalk. */
   .board{position:relative;height:192px;border-radius:6px;background:#2c6a55;
-    box-shadow:0 22px 36px -14px rgb(3 18 13/.75)}
+    box-shadow:0 22px 36px -14px rgb(var(--drop)/calc(.75*var(--drop-k)))}
   .slots{position:absolute;inset:56px 40px 24px;display:flex;justify-content:space-between}
   .slot{position:relative;width:18%;border-radius:3px;background:#14191a}
   .slot i{position:absolute;inset:6px 5px;border-radius:2px;
@@ -36,17 +45,17 @@
     background:linear-gradient(#f2d24b,#f2d24b) 0 50%/100% 1px no-repeat}
   .dim b{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
     color:#f3f6f2;font:700 13px/1 Archivo,system-ui,sans-serif;letter-spacing:.06em;font-variation-settings:"wdth" 70}
-  section{box-sizing:border-box;padding:24px 0;border-top:1px solid #2c6a55}
+  section{box-sizing:border-box;padding:24px 0;border-top:1px solid var(--line)}
   section:first-of-type{margin-top:48px}
   @supports (height:calc-size(auto,size)){section{height:calc-size(auto,round(up,size,24px))}}
   h1,h2{margin:0;font-size:28px;line-height:1.2;font-weight:800;font-variation-settings:"wdth" 115}
-  p{margin:6px 0 0;color:#b5ccc2}
+  p{margin:6px 0 0;color:var(--ink-dim)}
   [dir=rtl]{font-family:'Noto Sans Arabic','Segoe UI',Tahoma,sans-serif;line-height:1.85}
   [dir=rtl] h2{font-family:'Noto Kufi Arabic','Noto Sans Arabic','Segoe UI',Tahoma,sans-serif;font-size:24px;line-height:1.5}
-  a{display:inline-flex;align-items:center;min-height:44px;color:#f3f6f2;font-weight:600;
-    text-decoration:underline;text-decoration-color:#f2d24b;text-decoration-thickness:2px;text-underline-offset:4px}
-  a:hover{color:#f2d24b}
-  a:focus-visible{outline:2px solid #f2d24b;outline-offset:3px}
+  a{display:inline-flex;align-items:center;min-height:44px;color:var(--ink);font-weight:600;
+    text-decoration:underline;text-decoration-color:var(--ruler);text-decoration-thickness:2px;text-underline-offset:4px}
+  a:hover{color:var(--ruler)}
+  a:focus-visible{outline:2px solid var(--ruler);outline-offset:3px}
 </style>
 </head>
 <body>

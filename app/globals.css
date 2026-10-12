@@ -321,15 +321,35 @@ html[data-vt='mirror']::view-transition-new(root) {
 
 /* ---------- Switching the lamp ----------
    The whole page is one picture while the lamp changes: the lit one grows out
-   of the switch over the dark one, or shrinks back into it, drawn by
-   LampSwitch. Nothing fades. */
+   of the switch over the dark one, or shrinks back into it. LampSwitch sets
+   where the switch is (--lamp-x, --lamp-y) and how far away the farthest
+   corner is (--lamp-r). Nothing fades, and nothing blends. */
+@keyframes lamp-light {
+  from {
+    clip-path: circle(0 at var(--lamp-x) var(--lamp-y));
+  }
+  to {
+    clip-path: circle(var(--lamp-r) at var(--lamp-x) var(--lamp-y));
+  }
+}
 html[data-vt^='lamp']::view-transition-old(root),
 html[data-vt^='lamp']::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
 }
+html[data-vt='lamp-on']::view-transition-new(root) {
+  animation: lamp-light 560ms var(--ease-out-expo) both;
+}
 html[data-vt='lamp-off']::view-transition-old(root) {
   z-index: 1;
+  animation: lamp-light 420ms cubic-bezier(0.5, 0, 0.75, 0) reverse both;
+}
+/* The colours change in one go: a control that eases its colour would still
+   be fading after the light had passed it. */
+html[data-switching] *,
+html[data-switching] *::before,
+html[data-switching] *::after {
+  transition: none !important;
 }
 
 /* The pictures a transition draws are laid out from their left edge in every
