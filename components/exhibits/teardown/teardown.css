@@ -39,6 +39,7 @@
   --ox: calc(50cqi - 45px * var(--s));
   --floor: 51px;
   --stage-h: 252px;
+  --lean: 0;
   position: relative;
   height: var(--stage-h);
   overflow: hidden;
@@ -66,17 +67,11 @@
 @container (min-width: 760px) {
   .td-frame { --s: 0.92; --floor: 111px; --stage-h: 536px; }
 }
-/* Beside the controls, the drawing takes the full height of their column
-   and stands in the middle of it, so nothing is left hanging below it. That
-   column never changes height, so neither does the drawing. */
-@media (min-width: 1280px) {
-  .td-frame-wrap {
-    align-self: stretch;
-  }
-  .td-frame {
-    height: 100%;
-    min-height: var(--stage-h);
-  }
+/* Arabic and Kurdish names run longer (Storage by up to 40px), and in a
+   column under 620px they would run out of the frame, so there the flags
+   keep to numbers, as in a small drawing, and the drawing stays centred. */
+@container (min-width: 520px) and (max-width: 619px) {
+  [dir='rtl'] .td-frame { --ox: calc(50cqi - 45px * var(--s)); }
 }
 
 /* Right-to-left mirrors the finished picture, so the computer turns the
@@ -350,17 +345,13 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  margin: 0;
-  padding: 0;
-  border: 0;
   border-radius: 999px;
   background: var(--color-graphite);
   color: var(--color-chalk);
-  font: inherit;
   white-space: nowrap;
-  cursor: pointer;
+  cursor: default;
 }
-.td-flag:disabled { cursor: default; }
+.td[data-live] .td-flag { cursor: pointer; }
 /* Every flag is at least 44px to a finger, however small it is drawn. */
 .td-flag::before {
   content: '';
@@ -375,9 +366,54 @@
 }
 .td-name { padding-inline: 0 12px; }
 .td-pin[data-run='start'] .td-name { padding-inline: 12px 0; }
-/* In a small drawing only the numbers: the names are in the list. */
+/* In a small drawing only the numbers: the names are in the list, and the
+   chosen one is named under the drawing. The pins there draw closer than
+   the flags, which keep their size, so a leaning flag tips its leader 40°
+   back toward the start, keeping every two flags a fingertip (44px) apart
+   at any opening. */
 @container (max-width: 519px) {
+  .td-frame { --lean: 1; }
   .td-name { display: none; }
+}
+@container (min-width: 520px) and (max-width: 619px) {
+  [dir='rtl'] .td-frame { --lean: 1; }
+  [dir='rtl'] .td-name { display: none; }
+}
+.td-pin[data-lean]::before {
+  transform-origin: 50% 100%;
+  transform: rotate(calc(var(--lean) * var(--dir) * -40deg));
+}
+/* The flag's centre moves to the end of the tipped leader, 37px out. */
+.td-pin[data-lean] .td-flag {
+  transform: translate(calc(var(--lean) * var(--dir) * -23.8px), calc(var(--lean) * 8.7px));
+}
+
+/* The chosen part's name under a small drawing, drawn as its chosen flag.
+   It hangs in the 40px gap below the frame, whose last 12px the drawing
+   never reaches, so it covers nothing and moves nothing. */
+.td-frame-wrap {
+  position: relative;
+}
+.td-caption {
+  position: absolute;
+  top: calc(100% - 4px);
+  left: 50%;
+  display: none;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding-inline-end: 12px;
+  border-radius: 999px;
+  background: var(--color-signal);
+  color: var(--color-graphite);
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+@container (max-width: 519px) {
+  .td-caption { display: flex; }
+}
+@container (min-width: 520px) and (max-width: 619px) {
+  [dir='rtl'] .td-caption { display: flex; }
 }
 
 .td-num {
@@ -423,18 +459,29 @@
   box-shadow: 0 0 0 2px var(--color-mat);
 }
 .td .td-part[data-suspect] .td-num { position: relative; }
+/* Chosen and usually responsible at once: the yellow number keeps a signal
+   ring, which a small drawing's flag (a number with no name) would
+   otherwise lose; the mark is ringed in the signal it sits on. */
+.td .td-part[data-chosen][data-suspect] .td-num {
+  box-shadow: 0 0 0 2px var(--color-graphite), 0 0 0 4.5px var(--color-signal);
+}
+.td .td-part[data-chosen] .td-num::after,
+.td-chip[aria-pressed='true'] .td-mark {
+  box-shadow: 0 0 0 2px var(--color-signal);
+}
 
 /* ---------- The controls ---------- */
 
 /* A part in the list. Chosen is a signal-orange fill under graphite; usually
-   responsible is a ruler-yellow edge and the mark on its number. */
+   responsible is a ruler-yellow edge and the mark on its number. A chosen
+   chip keeps its signal edge, and its weight, so choosing one never widens
+   it and pushes the next along. */
 .td-chip[aria-pressed='true'] {
   border-color: var(--color-signal);
   background: var(--color-signal);
   color: var(--color-graphite);
-  font-weight: 600;
 }
-.td-chip[data-suspect] {
+.td-chip[data-suspect]:not([aria-pressed='true']) {
   border-color: var(--color-ruler);
   box-shadow: inset 0 0 0 1px var(--color-ruler);
 }
@@ -471,7 +518,6 @@
   border-color: var(--color-signal);
   background: var(--color-signal);
   color: var(--color-graphite);
-  font-weight: 600;
 }
 .td-choice input:focus-visible + span {
   outline: 2px solid var(--color-ruler);
@@ -494,7 +540,15 @@
   opacity: 0.5;
   cursor: default;
 }
-.td-clear:not(:disabled):hover {
+/* Live, with nothing to clear, it keeps its focus, so only its words dim (to
+   the same as the static version's) and the focus ring stays at full
+   strength. */
+.td-clear[aria-disabled='true'] {
+  color: color-mix(in srgb, var(--color-chalk) 50%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--color-chalk-dim) 30%, transparent);
+  cursor: default;
+}
+.td-clear:not(:disabled, [aria-disabled='true']):hover {
   text-decoration-color: var(--color-chalk);
 }
 

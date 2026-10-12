@@ -84,7 +84,7 @@ export default {
     open: 'افتح الحاسوب',
     close: 'أغلق',
     openAll: 'افتح',
-    at: { closed: 'مغلق', part: 'مفتوح جزئيًا', open: 'مفتوح' },
+    at: { closed: 'مغلق', part: 'مفتوح جزئيًا، {n}%', open: 'مفتوح' },
     parts: 'القطع',
     part: {
       cooler: {

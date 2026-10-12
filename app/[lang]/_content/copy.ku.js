@@ -85,7 +85,7 @@ export default {
     open: 'کۆمپیوتەرەکە بکەرەوە',
     close: 'دایبخە',
     openAll: 'بیکەرەوە',
-    at: { closed: 'داخراوە', part: 'نیوەکراوە', open: 'کراوەیە' },
+    at: { closed: 'داخراوە', part: 'نیوەکراوە، {n}%', open: 'کراوەیە' },
     parts: 'پارچەکان',
     part: {
       cooler: {

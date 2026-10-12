@@ -90,8 +90,9 @@ export default {
     open: 'Open the computer',
     close: 'Close',
     openAll: 'Open',
-    // What a screen reader says for the slider's position.
-    at: { closed: 'Closed', part: 'Part-way open', open: 'Open' },
+    // What a screen reader says for the slider's position; {n} is how far
+    // open, in percent, in Latin digits in every language.
+    at: { closed: 'Closed', part: 'Part-way open, {n}%', open: 'Open' },
     parts: 'Parts',
     part: {
       cooler: {

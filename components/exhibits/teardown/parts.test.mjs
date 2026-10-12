@@ -36,6 +36,8 @@ for (const [lang, copy] of Object.entries({ en, ar, ku })) {
     const t = copy.teardown;
     assert.deepEqual(Object.keys(t).sort(), Object.keys(en.teardown).sort());
     assert.deepEqual(Object.keys(t.at).sort(), ['closed', 'open', 'part']);
+    // Between the ends the slider says how far open it is.
+    assert.match(t.at.part, /\{n\}%/);
     assert.deepEqual(Object.keys(t.part).sort(), [...PARTS].sort());
     for (const id of PARTS) {
       const { name, does, signs } = t.part[id];

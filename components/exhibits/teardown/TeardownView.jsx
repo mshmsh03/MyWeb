@@ -27,11 +27,13 @@ function Box({ className, faces = ['tp', 'ft', 'rt'], children = {} }) {
 // Where each part's number is pinned, in the computer's own frame (x out of
 // the open side, y up, z toward the front); whether its flag stands above or
 // hangs below the pin; and whether it runs toward the end of the line or back
-// toward its start, so that no two flags cross.
+// toward its start, so that no two flags cross. In a small drawing the pins
+// draw closer together than the flags do, so a leaning flag tips back toward
+// the start there, away from the neighbour it would touch (teardown.css).
 const PINS = {
   cooler: { x: -23, y: 381, z: -99, place: 'up', run: 'end' },
-  memory: { x: -53, y: 380, z: -34, place: 'up', run: 'start' },
-  storage: { x: -70, y: 104, z: 90, place: 'up', run: 'start' },
+  memory: { x: -53, y: 380, z: -34, place: 'up', run: 'start', lean: true },
+  storage: { x: -70, y: 104, z: 90, place: 'up', run: 'start', lean: true },
   psu: { x: 54, y: 90, z: -150, place: 'up', run: 'end' },
   board: { x: -87, y: 200, z: 16, place: 'up', run: 'start' },
 };
@@ -110,16 +112,23 @@ function Model({ part, suspects, on }) {
 
 // The numbers pinned to the parts. They move with their parts, but they are
 // a drawing of their own laid over the computer, so no part can hide one.
+// A flag is drawn, not a button: a click on it is a click on its part.
 function Pins({ copy, part, suspects, on }) {
   return PARTS.map((id, i) => {
-    const { x, y, z, place, run } = PINS[id];
+    const { x, y, z, place, run, lean } = PINS[id];
     return (
       <span key={id} className="td-part" {...partProps(id, part, suspects, on)}>
-        <span className="td-pin" data-place={place} data-run={run} style={{ '--ax': `${x}px`, '--ay': `${y}px`, '--az': `${z}px` }}>
-          <button type="button" tabIndex={-1} disabled={!on} className="td-flag">
+        <span
+          className="td-pin"
+          data-place={place}
+          data-run={run}
+          data-lean={lean || undefined}
+          style={{ '--ax': `${x}px`, '--ay': `${y}px`, '--az': `${z}px` }}
+        >
+          <span className="td-flag">
             <span className="td-num">{i + 1}</span>
             <span className="td-name label">{copy.part[id].name}</span>
-          </button>
+          </span>
         </span>
       </span>
     );
@@ -147,15 +156,15 @@ const BUTTON = `td-btn inline-flex min-h-11 items-center rounded-part border bor
 
 export default function TeardownView({ copy, requestHref, open, part, symptom, on, frameRef }) {
   const suspects = symptom ? SUSPECTS[symptom] : [];
-  const word = copy.at[openWord(open)];
+  const word = copy.at[openWord(open)].replace('{n}', open);
 
   return (
     <div className="td grid grid-cols-[minmax(0,1fr)] items-start gap-x-12 gap-y-10 xl:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]" data-live={on ? '' : undefined}>
       {/* The drawing is a picture of the controls beside it: every part in it
           is also a button in the list, so it is hidden from assistive
-          technology and its own buttons are left out of the tab order. Once
-          live, --open is the spring's to write: the value given here stays
-          the same on every render, so React never writes over it. */}
+          technology and nothing in it takes focus. Once live, --open is the
+          spring's to write: the value given here stays the same on every
+          render, so React never writes over it. */}
       <div className="td-frame-wrap">
         <div
           ref={frameRef}
@@ -179,6 +188,16 @@ export default function TeardownView({ copy, requestHref, open, part, symptom, o
             </div>
           </div>
         </div>
+        {/* A small drawing's flags carry numbers only, so the part chosen in
+            it is named just under it, where the reader is looking. It sits
+            in the gap below the drawing and moves nothing; the list says the
+            same, so it is hidden from assistive technology too. */}
+        {part && (
+          <p className="td-caption" aria-hidden="true">
+            <span className="td-num">{PARTS.indexOf(part) + 1}</span>
+            <span className="label">{copy.part[part].name}</span>
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-8">
@@ -298,16 +317,19 @@ export default function TeardownView({ copy, requestHref, open, part, symptom, o
               </span>
             </label>
           ))}
+          {/* Once live it is never disabled, only marked so, since it would
+              otherwise disable itself under the reader's focus. */}
           <button
             type="button"
-            disabled={!on || !symptom}
+            disabled={!on}
+            aria-disabled={(on && !symptom) || undefined}
             onClick={on?.clear}
             className={`td-clear inline-flex min-h-12 items-center px-2 font-semibold text-chalk underline decoration-chalk-dim/60 underline-offset-4 ${EASE}`}
           >
             {copy.clear}
           </button>
         </div>
-        <p aria-live="polite" className="td-suspects m-0 mt-4 max-w-[60ch] text-chalk-dim">
+        <p aria-live="polite" aria-atomic="true" className="td-suspects m-0 mt-4 max-w-[60ch] text-chalk-dim">
           {symptom ? (
             <>
               {copy.suspects}{' '}
