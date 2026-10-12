@@ -6,17 +6,12 @@ export default {
   offer:
     'I build and deploy websites in English, Arabic and Kurdish, build point-of-sale systems for shops, and diagnose and repair hardware.',
 
-  no: 'No.',
   more: 'Read more',
-  fields: { job: 'Job', done: 'Work done' },
 
-  // The ticket the visitor fills in.
+  // The request builder's shared wording: what can be asked for, the
+  // field hints, the send labels and the words the message is made of.
   ticket: {
-    title: 'Job ticket',
-    no: 'No.',
-    customer: 'Customer',
     customerHint: 'Your name or business',
-    job: 'Job',
     jobs: {
       website: 'Website',
       pos: 'POS system',
@@ -25,13 +20,10 @@ export default {
     },
     details: 'Details',
     detailsHint: 'What do you need, and by when?',
-    takenBy: 'Taken by',
     send: 'Send on WhatsApp',
     email: 'Email it instead',
     call: 'Call',
-    subject: 'Job ticket',
     copyLabel: 'Your message',
-    blank: 'Fill in the ticket above and your message is written here.',
     message: { hello: 'Hello Mustafa,', from: 'This is', need: 'I need:', join: ', ' },
   },
 
@@ -74,8 +66,8 @@ export default {
     ask: 'Want a site like this?',
   },
 
-  // The request builder. Its choices, field hints and message wording are
-  // the ticket's, above.
+  // The request builder's own words. Its choices, field hints and message
+  // wording are in `ticket`, above.
   request: {
     title: 'Start a request',
     lead: 'Choose what you need and your message is written as you go. The site sends nothing itself: the message opens in your own WhatsApp or email.',
@@ -167,7 +159,6 @@ export default {
   home: {
     jobs: 'Past jobs',
     allJobs: 'All projects',
-    services: 'What I take on',
   },
 
   services: [
@@ -184,14 +175,6 @@ export default {
       text: 'Diagnosing and resolving hardware issues, including part replacement and device maintenance.',
     },
   ],
-
-  next: {
-    heading: 'The next ticket is yours.',
-    start: 'Fill in a ticket',
-    whatsapp: 'WhatsApp',
-    email: 'Email me',
-    call: 'Call me',
-  },
 
   jobs: {
     ellinSite: {
@@ -265,9 +248,6 @@ export default {
       ['Fits', 'Shops · restaurants · kiosks'],
       ['Checked by', 'Over 100 automated tests'],
     ],
-    leadAlt:
-      'Qasa’s sell screen: a grid of products on the left and the order, drawn like a paper receipt, on the right',
-    leadCaption: 'The sell screen. The order on the right is drawn like the receipt it will print.',
     money: {
       heading: 'Built for how shops here take money',
       rows: [

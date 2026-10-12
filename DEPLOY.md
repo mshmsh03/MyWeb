@@ -48,12 +48,13 @@ verbatim by the export:
 | `.nojekyll` | Without it, Pages runs Jekyll, and Jekyll ignores every directory starting with `_` — including `_next`. The site would load with no CSS or JS. |
 | `index.html`, `about.html`, `projects.html`, `contact.html` | Redirect stubs for the pre-Next flat URLs. `index.html` also answers `/MyWeb/`. |
 | `robots.txt`, `sitemap.xml` | Regenerate with `node scripts/make-stubs.cjs public`. |
-| `assets/` | The favicon, and `work/`: the screenshots shown on the tickets. |
+| `assets/` | The favicon, and `work/`: the screenshots of the work. |
 
 `scripts/postbuild.mjs` then replaces `out/404.html`. Next writes its own
 unstyled 404 there from the framework's not-found route, and a file in `public/`
 cannot win that race — the export copies `public/` first and writes route output
-over the top. The branded one lives at `scripts/404.html`.
+over the top. The site's own 404 lives at `scripts/404.html`; the base path is
+filled into its links as it is copied.
 
 ## Deploying
 
@@ -94,6 +95,8 @@ npx serve /tmp/site -l 4322   # http://localhost:4322/MyWeb/
 
 ## Changing content
 
-Content lives in `app/[lang]/_content/<page>.<lang>.jsx` — one file per page per
-language. Nav labels, contact details, page titles and descriptions live in
-`lib/site-data.js`. Editing a page means editing three files.
+Every word lives in `app/[lang]/_content/` — one file per language
+(`copy.en.js`, `copy.ar.js`, `copy.ku.js`), and the till's words in
+`till.{en,ar,ku}.js`. Nav labels, contact details, page titles and
+descriptions live in `lib/site-data.js`. Changing a sentence means changing it
+in all three languages.

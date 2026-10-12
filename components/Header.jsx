@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LANGS, NAME, PAGES, SITE, pagePath } from '@/lib/site-data';
+import { BASE_PATH, LANGS, NAME, PAGES, SITE, pagePath } from '@/lib/site-data';
 import EffectsSwitch from './EffectsSwitch';
 
 // The header lives in the layout, not in each page, so client-side navigation
@@ -66,15 +66,16 @@ export default function Header({ lang }) {
 
         <div className="-mx-1.5 flex w-full items-center justify-between md:w-auto md:gap-4">
           {/* Each option links to the same page in that language, which is
-              what makes all three indexable. They are not prefetched: few
-              visitors switch, and a prefetch would also fetch that page's
-              screen images on a phone's data. */}
+              what makes all three indexable. They are plain links, so the
+              switch is a full page load: the page turns over like a mirror
+              into the new direction (the view transition in globals.css),
+              and nothing is prefetched on a phone's data for a switch few
+              visitors make. */}
           <div className="ltr-fixed flex items-center">
             {LANGS.map((l) => (
-              <Link
+              <a
                 key={l}
-                href={pagePath(l, path)}
-                prefetch={false}
+                href={`${BASE_PATH}${pagePath(l, path)}`}
                 hrefLang={SITE[l].hreflang}
                 aria-current={l === lang ? 'true' : undefined}
                 aria-label={`${t.langSwitchLabel}: ${SITE[l].langName}`}
@@ -83,7 +84,7 @@ export default function Header({ lang }) {
                 }`}
               >
                 {SITE[l].langName}
-              </Link>
+              </a>
             ))}
           </div>
           <EffectsSwitch label={t.effects} />

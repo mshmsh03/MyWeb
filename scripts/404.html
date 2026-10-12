@@ -2,29 +2,73 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>404 — Mustafa Deari Ahmed</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 | Mustafa Deari Ahmed</title>
 <meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="3; url=/MyWeb/en/">
+<meta name="theme-color" content="#0f3d30">
 <style>
-  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#1a2a7c;color:#0f1838;
-       font:400 16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;padding:24px}
-  .t{background:#fbfbf7;border-radius:3px;padding:28px 32px;max-width:440px;
-     box-shadow:0 1px 0 rgba(8,13,48,.25),0 18px 34px -16px rgba(5,9,40,.75)}
-  .l{display:flex;justify-content:space-between;align-items:baseline;color:#2540c4;font-size:12px;
-     font-weight:600;letter-spacing:.09em;text-transform:uppercase}
-  .n{color:#d1232a;font-size:22px;font-weight:700;letter-spacing:0}
-  h1{font-size:26px;line-height:1.15;margin:14px 0 8px}
-  p{margin:0;color:#3a4366}
-  a{color:#0f1838;font-weight:600;text-decoration:underline;text-decoration-color:#2540c4;
-    text-decoration-thickness:2px;text-underline-offset:4px}
-  a:hover{color:#2540c4}
+  /* The mat, as on every page: a minor line every 24px, a heavier one every
+     120px, drawn from the centre. */
+  html{background:#0f3d30;color:#f3f6f2;
+    background-image:linear-gradient(to right,#2c6a55 1px,transparent 1px),linear-gradient(to bottom,#2c6a55 1px,transparent 1px),
+      linear-gradient(to right,rgb(44 106 85/.42) 1px,transparent 1px),linear-gradient(to bottom,rgb(44 106 85/.42) 1px,transparent 1px);
+    background-size:120px 120px,120px 120px,24px 24px,24px 24px;
+    background-position:calc(50% + 60px) 0,0 0,calc(50% + 12px) 0,0 0}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:48px 20px;box-sizing:border-box;
+    font:400 17px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+  main{width:100%;max-width:560px}
+  /* A piece of motherboard with four memory slots. Three hold a stick; the
+     third slot is empty, and a dimension line in ruler yellow marks it. */
+  .board{position:relative;height:170px;border-radius:6px;background:#2c6a55;
+    box-shadow:0 22px 36px -14px rgb(3 18 13/.75)}
+  .slots{position:absolute;inset:28px 40px 22px;display:flex;justify-content:space-between}
+  .slot{position:relative;width:18%;border-radius:3px;background:#14191a}
+  .slot i{position:absolute;inset:6px 5px;border-radius:2px;
+    background:repeating-linear-gradient(#c9d0cc 0 3px,#9aa5a0 3px 5px)}
+  .slot.empty i{background:none;border:2px dashed #f2d24b}
+  .dim{position:absolute;left:0;right:0;top:-24px;display:flex;align-items:center;gap:6px;
+    color:#f2d24b;font:600 13px/1 system-ui,sans-serif;letter-spacing:.06em}
+  .dim::before,.dim::after{content:"";flex:1;height:9px;border-inline-start:1px solid #f2d24b;
+    background:linear-gradient(#f2d24b,#f2d24b) 0 50%/100% 1px no-repeat}
+  .dim::after{border-inline-start:0;border-inline-end:1px solid #f2d24b}
+  section{margin-top:28px;padding-top:18px;border-top:1px solid #2c6a55}
+  section:first-of-type{margin-top:40px}
+  h1,h2{margin:0;font-size:26px;line-height:1.2;font-weight:800}
+  p{margin:6px 0 0;color:#b5ccc2}
+  [dir=rtl]{font-family:'Noto Sans Arabic','Segoe UI',Tahoma,sans-serif;line-height:1.85}
+  [dir=rtl] h2{line-height:1.5}
+  a{display:inline-flex;align-items:center;min-height:44px;color:#f3f6f2;font-weight:600;
+    text-decoration:underline;text-decoration-color:#f2d24b;text-decoration-thickness:2px;text-underline-offset:4px}
+  a:hover{color:#f2d24b}
+  a:focus-visible{outline:2px solid #f2d24b;outline-offset:3px}
 </style>
 </head>
 <body>
-<div class="t">
-  <div class="l"><span>Job ticket</span><span class="n">404</span></div>
-  <h1>No ticket with this number.</h1>
-  <p>This page does not exist. Taking you back to <a href="/MyWeb/en/">the front of the book</a>.</p>
-</div>
+<main>
+  <div class="board" aria-hidden="true">
+    <div class="slots">
+      <span class="slot"><i></i></span>
+      <span class="slot"><i></i></span>
+      <span class="slot empty"><i></i><span class="dim">404</span></span>
+      <span class="slot"><i></i></span>
+    </div>
+  </div>
+
+  <section lang="en">
+    <h1>A part is missing.</h1>
+    <p>There is no page at this address.</p>
+    <a href="{{BASE}}/en/">Home</a>
+  </section>
+  <section lang="ar" dir="rtl">
+    <h2>قطعة مفقودة.</h2>
+    <p>لا توجد صفحة على هذا العنوان.</p>
+    <a href="{{BASE}}/ar/">الرئيسية</a>
+  </section>
+  <section lang="ckb" dir="rtl">
+    <h2>پارچەیەک ون بووە.</h2>
+    <p>هیچ پەڕەیەک لەم ناونیشانەدا نییە.</p>
+    <a href="{{BASE}}/ku/">سەرەکی</a>
+  </section>
+</main>
 </body>
 </html>

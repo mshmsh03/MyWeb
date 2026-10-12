@@ -4,9 +4,12 @@
 // unstyled, unbranded, and does not point anyone back to the site.
 //
 // A file in public/ cannot fix this: the export copies public/ first and then
-// writes the route output over the top. So the branded page is swapped in
-// after the build instead.
-import { copyFile } from 'node:fs/promises';
+// writes the route output over the top. So the site's own page is swapped in
+// after the build instead, with the base path filled in the way next.config.js
+// sets it.
+import { readFile, writeFile } from 'node:fs/promises';
 
-await copyFile('scripts/404.html', 'out/404.html');
-console.log('postbuild: branded 404.html in place');
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '/MyWeb';
+const page = await readFile('scripts/404.html', 'utf8');
+await writeFile('out/404.html', page.replaceAll('{{BASE}}', BASE));
+console.log('postbuild: 404.html in place');

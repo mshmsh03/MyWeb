@@ -10,8 +10,8 @@ student — software & hardware.
 - [Next.js](https://nextjs.org) (App Router), exported as static HTML — no
   Node server runs in production
 - [Tailwind CSS v4](https://tailwindcss.com), no component library — the
-  job-ticket look (carbon-blue ground, paper sheets, printed-form type) is
-  hand-built
+  bench (a cutting mat with working devices on it, drawn with CSS 3D
+  transforms) is hand-built; no WebGL and no animation library
 - Fonts are fetched at build time by `next/font` and served from the site's
   own files; no visitor's browser calls a font host
 - Hosted on GitHub Pages as a project page (`/MyWeb/` base path)
@@ -41,11 +41,14 @@ toggled client-side.
 
 | Path | What's there |
 | --- | --- |
-| `app/[lang]/_content/` | Every word on the site, one file per language (`copy.en.js`, `copy.ar.js`, `copy.ku.js`), all the same shape |
+| `app/[lang]/_content/` | Every word on the site, one file per language (`copy.en.js`, `copy.ar.js`, `copy.ku.js`), all the same shape; the till's own words are in `till.{en,ar,ku}.js`, because it switches language by itself |
 | `app/[lang]/_pages/` | The page layouts, one per page, shared by all three languages |
-| `components/sections.jsx` | The shared vocabulary the pages are built from: sheets, fields, tickets, ruled lists |
-| `components/JobTicket.jsx` | The ticket a visitor fills in, which turns into a WhatsApp message or an email in their own browser |
-| `lib/jobs.js` | The list of work shown as tickets, in the order it is numbered |
+| `components/bench/` | The first screen: the name on the mat and the three devices, drawn as CSS 3D boxes |
+| `components/exhibits/` | The three working devices: the site viewer, the till and the teardown. Each loads its code only when the visitor nears it |
+| `components/RequestBuilder.jsx` | The request a visitor writes, shown as a chat message, which opens in their own WhatsApp or email |
+| `components/sections.jsx` | The shared vocabulary the pages are built from: headings, ruled lists, links, browser windows and device screens |
+| `lib/jobs.js` | The list of work, with the screenshot each job has |
+| `lib/till/money.mjs` | The till's money rules (rounding, discount, change), tested with `npm test` |
 | `lib/site-data.js` | Nav labels, contact details, page titles, screenshot sizes — the site's chrome |
 | `lib/page.jsx` | `createLangPage()` — the shared boilerplate every route file is built from |
 | `lib/metadata.js` | Canonical / hreflang / OG / JSON-LD builders |

@@ -16,24 +16,6 @@
     --color-screen: #f7f8f5;       /* the ground of every screen inside a device */
     --color-bubble: #dcebe3;       /* a message the visitor is about to send */
 
-    /* The job-ticket stock. Still used by the inner pages until they move
-       onto the bench; nothing new is drawn with these. */
-    --color-carbon: #1a2a7c;
-    --color-carbon-deep: #111c5a;
-    --color-carbon-line: #4356b4;
-    --color-ground: #f4f5fb;
-    --color-ground-dim: #bcc5f0;
-    --color-sheet: #fbfbf7;
-    --color-canary: #ffe35c;
-    --color-pink: #ffc4d2;
-    --color-ink: #0f1838;
-    --color-ink-soft: #3a4366;
-    --color-form: #2540c4;
-    --color-serial: #d1232a;
-    --shadow-sheet: 0 1px 0 rgba(8, 13, 48, 0.25), 0 18px 34px -16px rgba(5, 9, 40, 0.75);
-    --shadow-lift: 0 1px 0 rgba(8, 13, 48, 0.25), 0 28px 44px -18px rgba(5, 9, 40, 0.85);
-    --radius-paper: 3px;
-
     /* Fonts are loaded and named in app/[lang]/layout.jsx. One Latin family
        in three widths; a kufi for Arabic and Kurdish display and a plain sans
        for reading them. */
@@ -144,10 +126,6 @@
   .on-screen:focus-visible {
     outline-color: var(--color-graphite);
   }
-  .on-paper :focus-visible,
-  .on-paper:focus-visible {
-    outline-color: var(--color-form);
-  }
 
   /* Without JavaScript the exhibits are drawn in their opening state with
      their controls disabled. html[data-motion] is set by the inline script
@@ -193,12 +171,10 @@
     display: inline-block;
     font-family: var(--font-sans);
   }
-  /* The row of holes a job-ticket sheet is torn along (inner pages). */
-  .perforated {
-    background-image: radial-gradient(circle at center, var(--color-mat) 0 3px, transparent 3.6px);
-    background-size: 16px 10px;
-    background-repeat: round no-repeat;
-    background-position: 0 9px;
+  /* When such a string wraps on an Arabic or Kurdish page, its lines still
+     line up with the page's start, on the right. */
+  [dir="rtl"] .ltr-fixed {
+    text-align: right;
   }
   /* A ruler's edge: a tick every 12px, a longer one every 24px and the
      longest every 120px, standing on the bottom edge. Placed like the grid,
@@ -214,99 +190,30 @@
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   MOTION
-
-   html[data-motion="on"] is set before first paint only when JS runs AND the
-   visitor has not asked for reduced motion. components/Reveal.jsx decides
-   *when* something enters; this layer decides *what* it does. No JS, stalled
-   hydration, and prefers-reduced-motion all resolve to the same safe state:
-   the page fully rendered, with no animation.
-
-   The grammar is paper: a sheet is fed in from below and comes to rest. It
-   happens once per sheet, and nothing on the site loops.
-
-   Two vars tune everything below, inheritable so a parent can set them:
-     --m-delay  when it starts
-     --m-dur    how long it runs
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-@keyframes m-feed {
-  from { opacity: 0; transform: translateY(26px); }
-  to   { opacity: 1; transform: none; }
+/* ---------- Switching language ----------
+   Pages of the site opt in to cross-page view transitions. The only full page
+   loads between them are language switches, and those turn the page over like
+   a mirror: the old page turns edge-on, the new one turns in from the other
+   side, in its own reading direction. The inline script in layout.jsx marks
+   the transition (data-vt) or skips it when motion is off. */
+@view-transition {
+  navigation: auto;
 }
-
-@keyframes m-fade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+@keyframes mirror-out {
+  to { transform: perspective(1600px) rotateY(var(--mirror-turn)); }
 }
-
-/* The copies under the top sheet slide out to where they rest. */
-@keyframes m-fan {
-  from { transform: none; }
-  to   { transform: var(--fan); }
+@keyframes mirror-in {
+  from { transform: perspective(1600px) rotateY(calc(-1 * var(--mirror-turn))); }
 }
-
-@layer components {
-  [data-motion='on'] .m-feed,
-  [data-motion='on'] .m-fade {
-    animation-delay: var(--m-delay, 0ms);
-    animation-duration: var(--m-dur, 700ms);
-    animation-timing-function: var(--ease-out-expo);
-    animation-fill-mode: both;
-  }
-  [data-motion='on'] .m-feed { animation-name: m-feed; }
-  [data-motion='on'] .m-fade { animation-name: m-fade; }
-
-  .copy-under {
-    transform: var(--fan);
-  }
-  [data-motion='on'] .copy-under {
-    animation: m-fan 900ms var(--ease-out-expo) both;
-    animation-delay: var(--m-delay, 250ms);
-  }
-
-  /* The cross in a tick box is drawn the way a pen draws it. */
-  .pen-stroke {
-    stroke-dasharray: 30;
-    stroke-dashoffset: 30;
-  }
-  input:checked + .tick-box .pen-stroke {
-    stroke-dashoffset: 0;
-  }
-  [data-motion='on'] .pen-stroke {
-    transition: stroke-dashoffset 220ms var(--ease-out-quart);
-  }
-  [data-motion='on'] .pen-stroke + .pen-stroke {
-    transition-delay: 120ms;
-  }
-
-  /* ---------- Scroll reveals ---------- */
-  [data-motion='on'] [data-reveal]:not([data-reveal='in']),
-  [data-motion='on'] [data-reveal-group]:not([data-reveal-group='in']) > * {
-    opacity: 0;
-  }
-
-  [data-motion='on'] [data-reveal='in'] {
-    animation-delay: var(--m-delay, 0ms);
-    animation-duration: var(--m-dur, 700ms);
-    animation-timing-function: var(--ease-out-expo);
-    animation-fill-mode: both;
-  }
-  [data-motion='on'] [data-reveal='in'][data-variant='register'] { animation-name: m-feed; }
-  [data-motion='on'] [data-reveal='in'][data-variant='fade']     { animation-name: m-fade; }
-  /* `wipe` exists in the shared Reveal API; here it is the same feed. */
-  [data-motion='on'] [data-reveal='in'][data-variant='wipe']     { animation-name: m-feed; }
-
-  /* A stack of tickets is a list, so it may arrive as one. Capped at four
-     steps: past that every remaining sibling shares the last delay, so a long
-     list still finishes promptly rather than dripping. */
-  [data-motion='on'] [data-reveal-group='in'] > * {
-    animation: m-feed var(--m-dur, 700ms) var(--ease-out-expo) both;
-    animation-delay: calc(var(--m-delay, 0ms) + 240ms);
-  }
-  [data-motion='on'] [data-reveal-group='in'] > *:nth-child(1) { animation-delay: calc(var(--m-delay, 0ms) + 0ms); }
-  [data-motion='on'] [data-reveal-group='in'] > *:nth-child(2) { animation-delay: calc(var(--m-delay, 0ms) + 80ms); }
-  [data-motion='on'] [data-reveal-group='in'] > *:nth-child(3) { animation-delay: calc(var(--m-delay, 0ms) + 160ms); }
-  [data-motion='on'] [data-reveal-group='in'] > *:nth-child(4) { animation-delay: calc(var(--m-delay, 0ms) + 240ms); }
+html[data-vt='mirror'] {
+  --mirror-turn: 90deg;
+}
+html[data-vt='mirror'][dir='rtl'] {
+  --mirror-turn: -90deg;
+}
+html[data-vt='mirror']::view-transition-old(root) {
+  animation: mirror-out 180ms cubic-bezier(0.5, 0, 0.75, 0) both;
+}
+html[data-vt='mirror']::view-transition-new(root) {
+  animation: mirror-in 260ms var(--ease-out-expo) 180ms both;
 }

@@ -8,8 +8,7 @@ import { useEffect } from 'react';
 //
 // Two jobs the inline script cannot do:
 //   1. Confirm hydration. The inline script arms a timer that forces motion off
-//      if this never mounts, so a broken bundle can never leave content stuck
-//      at opacity 0.
+//      if this never mounts, so a page whose script failed is left still.
 //   2. Track the system preference live, so toggling "reduce motion" in the OS
 //      takes effect without a reload. A choice made with the Effects switch in
 //      the header is the visitor's own and is left alone.

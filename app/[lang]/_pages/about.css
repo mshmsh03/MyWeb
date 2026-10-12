@@ -1,0 +1,36 @@
+/* The back panel of the device the About plate is fixed to. Drawn with
+   gradients in graphite tones; none of it is content. */
+
+/* A screw head in each corner of the panel. */
+.about-screws {
+  --screw: radial-gradient(circle, #3a4547 0 4px, #0c1011 4.5px 5.5px, transparent 6px);
+  background:
+    var(--screw) 0 0 / 14px 14px no-repeat,
+    var(--screw) 100% 0 / 14px 14px no-repeat,
+    var(--screw) 0 100% / 14px 14px no-repeat,
+    var(--screw) 100% 100% / 14px 14px no-repeat;
+}
+
+/* A fan behind its wire guard. */
+.about-fan {
+  background:
+    radial-gradient(circle, #3a4547 0 15px, transparent 15.5px),
+    repeating-radial-gradient(circle, transparent 0 9px, #2b3436 9px 11px),
+    #0c1011;
+  box-shadow: inset 0 0 0 3px #2b3436;
+}
+
+/* Slots punched in the panel. */
+.about-vents {
+  background: repeating-linear-gradient(#0c1011 0 5px, transparent 5px 11px);
+}
+
+/* The power inlet and its three pins. */
+.about-inlet {
+  background:
+    linear-gradient(#3a4547, #3a4547) 28% 62% / 4px 14px no-repeat,
+    linear-gradient(#3a4547, #3a4547) 72% 62% / 4px 14px no-repeat,
+    linear-gradient(#3a4547, #3a4547) 50% 22% / 4px 10px no-repeat,
+    #0c1011;
+  box-shadow: inset 0 0 0 2px #2b3436;
+}

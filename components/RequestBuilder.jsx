@@ -18,7 +18,7 @@ import { compose, sendLinks } from '@/lib/request';
 // Without JavaScript the fields are plain fields and the send links open an
 // empty chat or an empty email.
 //
-// `t` is the ticket copy (the needs, the field hints, the message wording and
+// `t` is the `ticket` copy (the needs, the field hints, the message wording and
 // the send labels); `r` is the builder's own copy.
 export default function RequestBuilder({ t, r }) {
   const [name, setName] = useState('');

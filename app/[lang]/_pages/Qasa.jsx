@@ -1,70 +1,50 @@
 import { SHOTS, pagePath } from '@/lib/site-data';
-import { STOCK, job } from '@/lib/jobs';
-import {
-  Band,
-  Field,
-  Fields,
-  Heading,
-  Icon,
-  JobRows,
-  NextTicket,
-  RuledList,
-  RuledRow,
-  Serial,
-  Sheet,
-  Shot,
-  Split,
-  TextLink,
-} from '@/components/sections';
+import RequestBuilder from '@/components/RequestBuilder';
+import Till from '@/components/exhibits/till';
+import { Band, DeviceScreen, Heading, Icon, Lead, Name, PageTitle, RuledList, RuledRow, TextLink } from '@/components/sections';
 
-const QASA = job('qasa');
-
+// Qasa's page: the till itself, working, at full size; then what Qasa does,
+// in the words the site already used for it.
 export default function Qasa({ lang, t }) {
   const q = t.qasa;
-  // The Kurdish page leads with the Kurdish screen and shows the English one
-  // as the mirror; the other two languages do the reverse.
-  const lead = lang === 'ku' ? SHOTS.qasaSellKu : SHOTS.qasaSell;
+  const c = t.jobs.chrispyPos;
+  // The Kurdish page shows the English screen as the mirror; the other two
+  // languages show the Kurdish one.
   const mirror = lang === 'ku' ? SHOTS.qasaSell : SHOTS.qasaSellKu;
   // The list of what is in it is long, so it is written in two columns.
   const half = Math.ceil(q.inside.rows.length / 2);
 
   return (
     <>
-      <Band className="!pt-6 !pb-8">
-        <TextLink href={pagePath(lang, 'projects')} ground className="m-fade mb-3">
+      <Band rule={false} className="!pt-6 !pb-10 sm:!pb-14">
+        <TextLink href={pagePath(lang, 'projects')} className="mb-4">
           <Icon name="arrow" className="-scale-x-100 rtl:scale-x-100" />
           {t.projects.title}
         </TextLink>
-
-        <Sheet stock={STOCK[QASA.kind]} className="m-feed p-5 sm:p-9">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-            {/* A product name, so it stays in Latin in every language. */}
-            <h1 className="display wd-wide m-0 text-[clamp(2.2rem,6vw,4rem)] leading-none font-black tracking-[-0.02em]">
-              <span className="ltr-fixed">Qasa POS</span>
-            </h1>
-            <Serial no={QASA.no} label={t.no} />
-          </div>
-          <p className="wd-cond m-0 mt-3 text-[1.05rem] leading-snug font-semibold tracking-[0.04em] text-form uppercase rtl:text-[1.1rem] rtl:tracking-normal">
-            {q.role}
-          </p>
-          <p className="m-0 mt-4 mb-6 max-w-[62ch] text-[1.05rem]">{q.lead}</p>
-          <Fields>
-            {q.facts.map(([label, value, machine]) => (
-              <Field key={label} label={label}>
-                <span className={machine ? 'ltr-fixed font-semibold' : 'font-semibold'}>{value}</span>
-              </Field>
-            ))}
-          </Fields>
-        </Sheet>
+        {/* A product name, so it stays in Latin in every language. */}
+        <PageTitle>
+          <span className="ltr-fixed">Qasa POS</span>
+        </PageTitle>
+        <p className="label mt-4 mb-0 !text-[0.95rem] text-chalk rtl:!text-[1.05rem]">{q.role}</p>
+        <Lead className="mt-5">{q.lead}</Lead>
+        <div className="mt-10 sm:mt-14">
+          <Till lang={lang} t={t} requestHref="#request" />
+        </div>
       </Band>
 
-      <Band className="!pt-4">
-        <Shot shot={lead} alt={q.leadAlt} caption={q.leadCaption} ground />
+      <Band>
+        <RuledList>
+          {q.facts.map(([label, value, machine]) => (
+            <RuledRow key={label} term={label}>
+              <span className={machine ? 'ltr-fixed text-chalk' : 'text-chalk'}>{value}</span>
+            </RuledRow>
+          ))}
+        </RuledList>
       </Band>
 
       <Band>
         <Heading>{q.money.heading}</Heading>
-        <RuledList>
+        <RuledList className="mt-8">
           {q.money.rows.map(([term, text]) => (
             <RuledRow key={term} term={term}>
               {text}
@@ -74,36 +54,52 @@ export default function Qasa({ lang, t }) {
       </Band>
 
       <Band>
-        <Heading>{q.rtl.heading}</Heading>
-        <Split media={<Shot shot={mirror} alt={q.rtl.alt} ground />}>
-          <p className="m-0 max-w-[46ch] text-[1.05rem] text-ground-dim">{q.rtl.text}</p>
-        </Split>
+        <div className="grid items-center gap-x-12 gap-y-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+          <DeviceScreen src={mirror.src} width={mirror.width} height={mirror.height} alt={q.rtl.alt} />
+          <div>
+            <Heading>{q.rtl.heading}</Heading>
+            <p className="m-0 mt-5 max-w-[46ch] text-[1.05rem] text-chalk-dim">{q.rtl.text}</p>
+          </div>
+        </div>
       </Band>
 
       <Band>
         <Heading>{q.inside.heading}</Heading>
-        <div className="grid gap-6">
-          <Shot shot={SHOTS.qasaReports} alt={q.inside.alt} caption={q.inside.caption} ground />
-          <Sheet className="grid gap-x-10 p-5 sm:p-7 md:grid-cols-2">
-            {[q.inside.rows.slice(0, half), q.inside.rows.slice(half)].map((rows, i) => (
-              <Fields key={i} className={i ? 'max-md:border-t-0' : ''}>
-                {rows.map(([term, text]) => (
-                  <Field key={term} label={term}>
-                    {text}
-                  </Field>
-                ))}
-              </Fields>
-            ))}
-          </Sheet>
+        <DeviceScreen
+          className="mt-8"
+          src={SHOTS.qasaReports.src}
+          width={SHOTS.qasaReports.width}
+          height={SHOTS.qasaReports.height}
+          alt={q.inside.alt}
+          caption={q.inside.caption}
+        />
+        <div className="mt-10 grid gap-x-10 md:grid-cols-2">
+          {[q.inside.rows.slice(0, half), q.inside.rows.slice(half)].map((rows, i) => (
+            <RuledList key={i} className={i ? 'max-md:border-t-0' : ''}>
+              {rows.map(([term, text]) => (
+                <RuledRow key={term} term={term}>
+                  {text}
+                </RuledRow>
+              ))}
+            </RuledList>
+          ))}
         </div>
       </Band>
 
-      <Band className="!pb-8">
+      <Band>
         <Heading>{q.client}</Heading>
-        <JobRows jobs={[job('chrispyPos')]} t={t} stock={STOCK.software} />
+        <div className="mt-8 max-w-[60ch] border-t border-mat-line pt-5">
+          <h3 className="display wd-wide m-0 text-[1.3rem] leading-snug font-extrabold rtl:leading-[1.6]">
+            <Name>{c.name}</Name>
+          </h3>
+          <p className="m-0 mt-1 font-semibold">{c.job}</p>
+          <p className="m-0 mt-2 text-chalk-dim">{c.done}</p>
+        </div>
       </Band>
 
-      <NextTicket t={t} href={pagePath(lang, 'contact')} />
+      <div className="border-t border-mat-line">
+        <RequestBuilder t={t.ticket} r={t.request} />
+      </div>
     </>
   );
 }

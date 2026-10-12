@@ -63,13 +63,21 @@ export const metadata = {
 // render; beforeInteractive is the supported way to get the same inline code
 // into the initial HTML without that.
 //
-// The timer is the failsafe. Scroll reveals are hidden by CSS while data-motion
-// is "on", so if the bundle never runs, MotionRoot never sets data-hydrated and
-// motion is switched back off, leaving the page fully visible.
+// It also decides the transition into this page when it was reached by a full
+// page load from another page of the site, which in practice is the language
+// switch: with motion on, the page turns in like a mirror (data-vt, styled in
+// globals.css); with motion off, the transition is skipped.
+//
+// The timer is the failsafe: if the bundle never runs, MotionRoot never sets
+// data-hydrated and motion is switched back off.
 const ARM_MOTION = `(function(){try{var d=document.documentElement,s=null;
 try{s=localStorage.getItem('effects');}catch(e){}
 var on=s?s==='on':!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-d.dataset.motion=on?'on':'off';if(!on)return;
+d.dataset.motion=on?'on':'off';
+addEventListener('pagereveal',function(e){var v=e.viewTransition;if(!v)return;
+if(d.dataset.motion!=='on'){v.skipTransition();return;}
+d.dataset.vt='mirror';v.finished.finally(function(){delete d.dataset.vt;});});
+if(!on)return;
 setTimeout(function(){if(d.dataset.hydrated!=='1')d.dataset.motion='off';},3000);
 }catch(e){}})();`;
 
