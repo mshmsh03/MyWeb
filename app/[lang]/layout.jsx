@@ -98,10 +98,14 @@ export default async function LangLayout({ children, params }) {
   return (
     // The inline script above sets data-motion on this element before React
     // hydrates, which is the one attribute the server could not have known.
+    //
+    // data-scroll-behavior tells the router that scrolling is smooth when
+    // motion is on, so it jumps to the top of a new page instead of gliding.
     <html
       lang={t.hreflang}
       dir={t.dir}
       className={`${archivo.variable} ${kufi.variable} ${arabic.variable}`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
