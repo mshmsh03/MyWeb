@@ -167,12 +167,19 @@
   flex: 1 1 auto;
   min-height: 0;
   aspect-ratio: var(--ar);
-  overflow: hidden;
   border-radius: 0 0 4px 4px;
   background: var(--color-screen);
 }
 .vw-frame[data-size='phone'] .vw-screen {
   border-radius: 0 0 20px 20px;
+}
+/* Only the pictures are cut to the page: a mark's line may run past its
+   edge, so on a small picture it is never cut off. */
+.vw-pics {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
 }
 .vw-shot {
   position: absolute;
@@ -181,6 +188,17 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 0;
+}
+/* While the window is resized, the new page is drawn from the top at the
+   width it will end at (no wider than the window on the way there), and the
+   window opens or closes around it, rather than the page swelling to cover a
+   box of the wrong shape. */
+.vw-frame[data-resizing] .vw-shot:last-child {
+  right: auto;
+  left: 50%;
+  width: var(--to);
+  height: auto;
+  translate: -50% 0;
 }
 
 /* A narrow window drops what it can do without: the window dots, the scheme
@@ -201,6 +219,9 @@
   }
   /* Smaller dots cover less of a smaller picture; what is pressed is still
      the 44px button around them. */
+  .vw-mark {
+    --r: 10.5px;
+  }
   .vw-mark .vw-dot {
     width: 21px;
     height: 21px;
@@ -210,6 +231,16 @@
 .vw-frame[data-size='phone'] .vw-strip {
   padding-inline: 10px;
 }
+/* The narrowest windows, on a 320px screen: the tabs, and a phone's strip,
+   give up some padding so each name still fits inside its tab. */
+@container (max-width: 240px) {
+  .vw-tab {
+    padding-inline: 6px;
+  }
+  .vw-frame[data-size='phone'] .vw-strip {
+    padding-inline: 4px;
+  }
+}
 
 /* ---------- Marks ----------
    Placed in the screenshot's own coordinates, so `left` and `top` are
@@ -218,9 +249,8 @@
    so all of its 44px can be pressed. */
 .vw-mark {
   position: absolute;
-  left: clamp(22px, var(--x), 100% - 22px);
-  top: clamp(22px, var(--y), 100% - 22px);
-  z-index: 1;
+  left: clamp(22px, var(--x) + var(--dx, 0px), 100% - 22px);
+  top: clamp(22px, var(--y) + var(--dy, 0px), 100% - 22px);
   display: grid;
   place-items: center;
   width: 44px;
@@ -237,6 +267,33 @@
 }
 .vw-mark:disabled {
   cursor: default;
+}
+/* On a small picture the 44px buttons overlap. Every dot sits above every
+   button, so a dot always opens its own mark; the lines sit above both. */
+.vw-mark .vw-dot {
+  position: relative;
+  z-index: 1;
+}
+/* A desktop page drawn small: at full size a dot's edge is 13 of the
+   picture's pixels from its point, clear of what it marks. Its edge stays
+   there at any size, so the dot moves off the item rather than growing
+   over it: down from the items along the top, and out past the end of the
+   headline and up, clear of a longer line under it. 1.0833cqi is those
+   13px at the picture's scale (the page is 1200px wide and fills the
+   window's width); --r is the dot's radius. */
+.vw-frame[data-size='desktop'] .vw-mark {
+  --off: max(0px, var(--r, 13px) - 1.0833cqi);
+}
+.vw-frame[data-size='desktop'] .vw-mark[data-off='d'] {
+  --dy: var(--off);
+}
+.vw-frame[data-size='desktop'] .vw-mark[data-off='r'] {
+  --dx: var(--off);
+  --dy: calc(-1 * var(--off));
+}
+.vw-frame[data-size='desktop'] .vw-mark[data-off='l'] {
+  --dx: calc(-1 * var(--off));
+  --dy: calc(-1 * var(--off));
 }
 /* Ruler yellow with a graphite rim: the yellow carries on a dark page, the
    rim on a light one. */
@@ -270,10 +327,12 @@
 /* The line beside a mark: below it, or above it near the bottom of the
    picture; centred on it, or running inward from it near either side. It
    stays in the accessibility tree while hidden, as part of the button's
-   name. */
+   name. Once shown it is part of what is pointed at, overlapping the
+   button, so the pointer can move onto it and read it. */
 .vw-tip {
   --tx: -50%;
   position: absolute;
+  z-index: 2;
   top: calc(50% + 19px);
   left: 50%;
   width: max-content;
@@ -306,28 +365,58 @@
   top: auto;
   bottom: calc(50% + 19px);
 }
-.vw-mark[data-open],
-.vw-mark:focus-visible {
-  z-index: 2;
+/* A bridge from the middle of the button to the line, so the pointer can
+   go from the round button to any part of the line without passing over
+   nothing on the way. It is a triangle with its point on the button's
+   middle: it holds every straight path from there to the line, and leaves
+   a neighbouring mark on the same row free to be pointed at. 18px is the
+   button's middle from the near end of a line that runs inward. */
+.vw-tip::before {
+  --at: 50%;
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  inset-inline: 0;
+  height: 19px;
+  clip-path: polygon(var(--at) 0, 100% 100%, 0 100%);
+}
+.vw-mark[data-h='l'] .vw-tip::before {
+  --at: 18px;
+}
+.vw-mark[data-h='r'] .vw-tip::before {
+  --at: calc(100% - 18px);
+}
+.vw-mark[data-v='u'] .vw-tip::before {
+  top: 100%;
+  bottom: auto;
+  clip-path: polygon(0 0, 100% 0, var(--at) 100%);
 }
 .vw-mark[data-open] .vw-tip,
 .vw-mark:focus-visible .vw-tip {
+  pointer-events: auto;
   opacity: 1;
   translate: var(--tx) 0;
 }
 @media (hover: hover) {
-  .vw-mark:enabled:hover {
-    z-index: 2;
-  }
   .vw-mark:enabled:hover .vw-tip {
+    pointer-events: auto;
     opacity: 1;
     translate: var(--tx) 0;
   }
 }
+/* Put away with Escape, where it stays while the mark is still pointed at
+   or focused. */
+.vw-screen .vw-mark[data-hush] .vw-tip {
+  pointer-events: none;
+  opacity: 0;
+  translate: var(--tx) -4px;
+}
 
-/* While the window changes size the picture is cropped, so the marks would
-   point at the wrong places: they wait until it has settled. */
-.vw-frame[data-resizing] .vw-mark {
+/* While the window changes size the picture is cropped, and while a new
+   picture is coming in the old one is still on show, so the marks would
+   point at the wrong places: they wait until the new one has settled. */
+.vw-frame[data-resizing] .vw-mark,
+.vw-frame[data-swapping] .vw-mark {
   visibility: hidden;
   opacity: 0;
 }

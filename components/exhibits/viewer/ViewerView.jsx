@@ -50,7 +50,8 @@ export default function ViewerView({
   size,
   live = false,
   open = null,
-  resizing = false,
+  hush = [],
+  resizing = null,
   under = null,
   fade = null,
   ready = false,
@@ -60,6 +61,7 @@ export default function ViewerView({
   onLang,
   onSize,
   onMark,
+  onMarkWake,
   onShotLoad,
   onShotIn,
 }) {
@@ -100,6 +102,8 @@ export default function ViewerView({
         data-frame
         data-size={size}
         data-resizing={resizing ? '' : undefined}
+        data-swapping={under ? '' : undefined}
+        style={resizing ? { '--to': `${resizing}px` } : undefined}
         className="vw-frame mt-7"
       >
         <div className="vw-strip">
@@ -159,23 +163,27 @@ export default function ViewerView({
           style={{ '--ar': `${width} / ${height}` }}
         >
           {/* Keyed by address, so the picture being replaced is the same
-              element, already decoded, and never blinks. */}
-          {under ? <img key={under} src={under} alt="" className="vw-shot" /> : null}
-          <img
-            key={src}
-            src={src}
-            width={width}
-            height={height}
-            alt={alt}
-            loading={live ? undefined : 'lazy'}
-            decoding="async"
-            className="vw-shot"
-            data-fade={under ? fade : undefined}
-            data-ready={under && ready ? '' : undefined}
-            onLoad={onShotLoad}
-            onError={onShotIn}
-            onAnimationEnd={onShotIn}
-          />
+              element, already decoded, and never blinks. The pictures are
+              cut to the page; the marks and their lines are not. */}
+          <div className="vw-pics">
+            {under ? <img key={under} src={under} alt="" className="vw-shot" /> : null}
+            <img
+              key={src}
+              src={src}
+              width={width}
+              height={height}
+              alt={alt}
+              loading={live ? undefined : 'lazy'}
+              decoding="async"
+              className="vw-shot"
+              data-fade={under ? fade : undefined}
+              data-ready={under && ready ? '' : undefined}
+              onLoad={onShotLoad}
+              onError={onShotIn}
+              onAnimationEnd={onShotIn}
+              onAnimationCancel={onShotIn}
+            />
+          </div>
           {/* A mark is a button the size of a fingertip around a small
               numbered dot. Its line is part of its name, and shows beside
               it on hover, on focus, or once pressed. */}
@@ -184,13 +192,17 @@ export default function ViewerView({
               key={m.id}
               type="button"
               className="vw-mark"
+              data-id={m.id}
               data-h={m.x < 34 ? 'l' : m.x > 66 ? 'r' : undefined}
               data-v={m.y > 62 ? 'u' : undefined}
+              data-off={m.off}
               data-open={open === m.id ? '' : undefined}
+              data-hush={hush.includes(m.id) ? '' : undefined}
               style={{ '--x': `${m.x.toFixed(2)}%`, '--y': `${m.y.toFixed(2)}%` }}
-              aria-expanded={live ? open === m.id : undefined}
               disabled={!live}
               onClick={onMark && (() => onMark(m.id))}
+              onPointerEnter={onMarkWake && (() => onMarkWake(m.id))}
+              onFocus={onMarkWake && (() => onMarkWake(m.id))}
             >
               <span className="vw-dot">{m.n}</span> <span className="vw-tip">{lines[m.id]}</span>
             </button>

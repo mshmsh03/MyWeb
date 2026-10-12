@@ -30,7 +30,7 @@ export const SITES = [
       desktop: {
         en: { work: [146, 70], languages: [1030, 66], client: [560, 212] },
         ar: { work: [1054, 70], languages: [172, 66], client: [395, 215] },
-        ku: { work: [1054, 70], languages: [170, 66], client: [340, 215] },
+        ku: { work: [1054, 70], languages: [170, 66], client: [370, 215] },
       },
       phone: {
         en: { work: [110, 162], languages: [685, 152], client: [618, 462] },
@@ -56,9 +56,9 @@ export const SITES = [
     // the firm's line of work.
     marks: {
       desktop: {
-        en: { hosting: [600, 80], languages: [1020, 80], client: [615, 230] },
+        en: { hosting: [480, 80], languages: [1020, 80], client: [615, 230] },
         ar: { hosting: [600, 80], languages: [180, 80], client: [490, 240] },
-        ku: { hosting: [600, 80], languages: [180, 80], client: [510, 235] },
+        ku: { hosting: [700, 80], languages: [180, 80], client: [582, 235] },
       },
       phone: {
         en: { languages: [522, 158], hosting: [693, 158], client: [500, 525] },
@@ -81,11 +81,18 @@ export const shotSrc = (s, size, lang) => asset(`/assets/work/${s.shots[size][la
 // The marks on one screenshot as percentages of it, numbered in that page's
 // own reading order: by row from the top, then from its reading start. The
 // list under the frame follows the same order, so mark 2 is line 2.
+// `off` is the side of its point a mark's dot moves to when the picture is
+// drawn small: past the end of the headline, under everything else.
 export function marksOn(s, size, lang) {
   const { width, height } = SIZES[size];
   const rtl = lang !== 'en';
   return Object.entries(s.marks[size][lang])
-    .map(([id, [x, y]]) => ({ id, x: (x / width) * 100, y: (y / height) * 100 }))
+    .map(([id, [x, y]]) => ({
+      id,
+      x: (x / width) * 100,
+      y: (y / height) * 100,
+      off: id === 'client' ? (rtl ? 'l' : 'r') : 'd',
+    }))
     .sort((a, b) => (Math.abs(a.y - b.y) > 5 ? a.y - b.y : rtl ? b.x - a.x : a.x - b.x))
     .map((m, i) => ({ ...m, n: i + 1 }));
 }
