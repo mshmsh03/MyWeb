@@ -12,6 +12,8 @@ export default {
   dir: 'ltr',
 
   language: 'Language of the till',
+  // The till's sound switch: key clicks, the Charge tone and the printer.
+  sound: 'Sound',
   categories: 'Categories',
   all: 'All',
   category: { hot: 'Hot drinks', cold: 'Cold drinks', sweets: 'Sweets' },

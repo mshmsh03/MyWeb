@@ -6,6 +6,7 @@ export default {
   dir: 'rtl',
 
   language: 'لغة نظام البيع',
+  sound: 'الصوت',
   categories: 'الفئات',
   all: 'الكل',
   category: { hot: 'مشروبات ساخنة', cold: 'مشروبات باردة', sweets: 'حلويات' },

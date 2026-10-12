@@ -7,6 +7,7 @@ export default {
   dir: 'rtl',
 
   language: 'زمانی قاسەکە',
+  sound: 'دەنگ',
   categories: 'پۆلەکان',
   all: 'هەموو',
   category: { hot: 'خواردنەوەی گەرم', cold: 'خواردنەوەی سارد', sweets: 'شیرینی' },

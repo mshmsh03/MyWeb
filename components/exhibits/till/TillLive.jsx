@@ -1,8 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useReducer, useRef } from 'react';
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import { createSound } from '@/lib/till/sound.mjs';
 import TillView from './TillView';
 import { describe, openingSale, reduce } from './sale';
+
+// The presses that click when sound is on: a product, a quantity (the cross
+// that takes a line off too), a tender.
+const KEYS = new Set(['add', 'more', 'less', 'remove', 'tender']);
 
 // The working till. It starts from the same sale the server drew, so taking
 // over from the static version changes nothing on screen.
@@ -12,8 +17,24 @@ export default function TillLive({ lang, requestHref, headingLevel }) {
   // Where focus should land when the control holding it goes away: a line
   // removed from the order, or the Charge button disabled by a new sale.
   const refocus = useRef(null);
+  // Sound starts off on every visit. The player exists only while it is on.
+  const [soundOn, setSoundOn] = useState(false);
+  const sound = useRef(null);
+
+  const toggleSound = useCallback(() => {
+    if (sound.current) {
+      sound.current.close();
+      sound.current = null;
+      setSoundOn(false);
+    } else {
+      sound.current = createSound();
+      setSoundOn(Boolean(sound.current));
+    }
+  }, []);
+  useEffect(() => () => sound.current?.close(), []);
 
   const act = useCallback((action) => {
+    if (KEYS.has(action.type)) sound.current?.play('key');
     const focused = document.activeElement;
     const line = focused?.closest?.('[data-line]');
     if (line && line.dataset.line === action.id && (action.type === 'remove' || action.type === 'less')) {
@@ -55,6 +76,13 @@ export default function TillLive({ lang, requestHref, headingLevel }) {
     if (printer.getBoundingClientRect().top > window.innerHeight - 160) printer.scrollIntoView({ block: 'nearest' });
   }, [printed]);
 
+  // A sale charged: its tone, and the printer feeding the receipt out.
+  useEffect(() => {
+    if (!printed) return;
+    sound.current?.play('charge');
+    sound.current?.play('print');
+  }, [printed]);
+
   return (
     <TillView
       sale={sale}
@@ -63,6 +91,8 @@ export default function TillLive({ lang, requestHref, headingLevel }) {
       headingLevel={headingLevel}
       act={act}
       rootRef={root}
+      sound={soundOn}
+      onSound={toggleSound}
     />
   );
 }

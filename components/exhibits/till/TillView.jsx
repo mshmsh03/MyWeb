@@ -41,6 +41,22 @@ function Icon({ d }) {
     </svg>
   );
 }
+// A speaker, with sound waves while the sound is on and a cross while off.
+function Speaker({ on }) {
+  return (
+    <svg viewBox="0 0 16 16" className="size-4 flex-none" aria-hidden="true">
+      <path d="M1.5 6h2.5l3.5-3v10l-3.5-3h-2.5z" fill="currentColor" />
+      <path
+        d={on ? 'M10.5 5.5a3.5 3.5 0 0 1 0 5M12.5 3.5a6.5 6.5 0 0 1 0 9' : 'm10.5 6 4 4m0-4-4 4'}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 const MINUS = 'M3.5 8h9';
 const PLUS = 'M3.5 8h9M8 3.5v9';
 const CROSS = 'm4 4 8 8m0-8-8 8';
@@ -199,7 +215,10 @@ function announce(sale, view, t) {
 
 // `headingLevel` sets the level of the till's headings, the order's and the
 // receipt's: 3 under a section's h2, 2 where the till follows a page's h1.
-export default function TillView({ sale, view, requestHref, headingLevel = 3, act, rootRef }) {
+//
+// `sound` and `onSound` are the till's sound switch, off and disabled in the
+// static drawing like every other control.
+export default function TillView({ sale, view, requestHref, headingLevel = 3, act, rootRef, sound = false, onSound }) {
   const t = WORDS[sale.lang];
   const Heading = headingLevel === 2 ? 'h2' : 'h3';
   const open = view.open;
@@ -228,6 +247,20 @@ export default function TillView({ sale, view, requestHref, headingLevel = 3, ac
                 Q
               </span>
               <span className="ltr-fixed font-semibold">Qasa POS</span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={Boolean(sound)}
+                className="till-sound"
+                disabled={!onSound}
+                onClick={onSound}
+              >
+                <Speaker on={sound} />
+                <span>{t.sound}</span>
+                <span className="till-track" aria-hidden="true">
+                  <span className="till-knob" />
+                </span>
+              </button>
               <Choice
                 legend={t.language}
                 hideLegend

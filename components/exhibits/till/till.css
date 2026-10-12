@@ -131,6 +131,29 @@
   margin-inline-start: auto;
 }
 
+/* The till's sound switch, at the inline end of the bar's first row, ahead
+   of the languages: on a phone the languages wrap to a row of their own
+   under it. Drawn like the discount switch, with a speaker that shows the
+   state too. It stays live once a sale is paid, so the receipt can still be
+   heard printing. */
+.till-sound {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-inline-start: auto;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--color-graphite);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.till-sound:disabled {
+  cursor: default;
+}
+
 /* ---------- Keys: radio buttons drawn as keys ---------- */
 
 .till-choice {
@@ -641,11 +664,11 @@ html[dir='rtl'] .till-langs :is([lang='ar'], [lang='ckb']) {
   background: var(--color-graphite-soft);
 }
 /* On: the knob crosses to the far side, and the track fills. */
-.till-switch[aria-checked='true'] .till-track {
+:is(.till-switch, .till-sound)[aria-checked='true'] .till-track {
   border-color: var(--color-graphite);
   background: var(--color-signal);
 }
-.till-switch[aria-checked='true'] .till-knob {
+:is(.till-switch, .till-sound)[aria-checked='true'] .till-knob {
   background: var(--color-graphite);
   translate: calc(18px * var(--dir)) 0;
 }
