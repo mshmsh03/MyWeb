@@ -336,8 +336,19 @@ export default {
     home: 'The name Mustafa Deari Ahmed above a laptop, a till and an open computer on a green cutting mat',
     page: 'The name Mustafa Deari Ahmed and the page name {page} above a laptop, a till and an open computer on a green cutting mat',
   },
-  lamp: {},
-  menu: {},
+  // The command menu (the search button in the header, or Ctrl+K). Pages,
+  // services, languages, Lamp and Effects take the words the site already
+  // uses for them.
+  menu: {
+    name: 'Search',
+    hint: 'Pages, services and more',
+    pages: 'Pages',
+    services: 'Services',
+    settings: 'Settings',
+    copyEmail: 'Copy the email address',
+    copied: 'Copied',
+    none: 'Nothing matches.',
+  },
   // The page the service worker shows, while there is no connection, for a
   // page it has not saved. scripts/offline.mjs sets these into
   // scripts/offline.html at build time.

@@ -1,0 +1,241 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE COMMAND MENU
+
+   A small device laid over the bench: a graphite bezel round a light screen,
+   like every screen on the site, so it looks the same under either light.
+   The bench behind is dimmed by the device's own shadow colour. Loaded with
+   the header, so the menu is drawn right the moment its code arrives.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.cm {
+  --cm-top: min(14vh, 112px);
+  width: min(36rem, 100% - 2 * var(--gutter));
+  max-width: none;
+  max-height: calc(100dvh - 2 * var(--cm-top));
+  margin: var(--cm-top) auto auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-graphite);
+  overflow: visible;
+}
+.cm::backdrop {
+  background: rgb(var(--drop) / calc(0.55 * var(--drop-k)));
+}
+
+.cm-device {
+  display: flex;
+  max-height: calc(100dvh - 2 * var(--cm-top));
+  padding: 10px;
+  border-radius: 16px;
+  background: var(--color-graphite);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    var(--shadow-device);
+}
+.cm-screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--color-screen);
+}
+
+/* The field. A graphite line under it while it has focus. */
+.cm-search {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding-inline: 14px;
+  border-bottom: 1px solid #c3ccc7;
+  color: var(--color-graphite-soft);
+}
+.cm-search:focus-within {
+  box-shadow: inset 0 -2px 0 var(--color-graphite);
+}
+.cm-glass {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.cm-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 52px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-graphite);
+  font: inherit;
+  font-size: 1.0625rem;
+  outline: none;
+}
+.cm-search input::placeholder {
+  color: var(--color-graphite-soft);
+  opacity: 1;
+}
+
+/* A key, as printed on a keyboard: the shortcut by the search button, Esc
+   in the field. It follows the colour of what it sits in. */
+.cm-key {
+  place-items: center;
+  height: 22px;
+  padding-inline: 6px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  font: 600 0.72rem/1 var(--font-sans);
+  font-variation-settings: 'wdth' 80;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.cm-esc {
+  display: inline-grid;
+}
+/* No Esc key on a phone. */
+@media (pointer: coarse) {
+  .cm-esc {
+    display: none;
+  }
+}
+
+/* On a phone the list takes focus when the menu opens (CommandMenu); it is
+   not a control, so nothing is drawn round it. */
+.cm-list:focus {
+  outline: none;
+}
+.cm-list {
+  flex: 1;
+  min-height: 0;
+  padding: 4px 6px 8px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cm-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cm-group {
+  margin: 0;
+  padding: 12px 10px 4px;
+  color: var(--color-graphite-soft);
+}
+
+/* One item: its name, and at the end what it leads to or how it stands. The
+   pointer greys it; the keyboard fills it in signal orange, with a graphite
+   rim, the site's active state. */
+.cm-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--color-graphite);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.35;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover: hover) {
+  .cm-item:hover {
+    background: #e6ebe7;
+  }
+}
+.cm-item:focus-visible {
+  outline: none;
+  background: var(--color-signal);
+  box-shadow: inset 0 0 0 2px var(--color-graphite);
+}
+.cm-hint {
+  margin-inline-start: auto;
+  color: var(--color-graphite-soft);
+  font-size: 0.85rem;
+}
+.cm-item:focus-visible .cm-hint {
+  color: var(--color-graphite);
+}
+/* The page or language the visitor is on. */
+.cm-check {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-inline-start: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cm-hint + .cm-check {
+  margin-inline-start: 0;
+}
+
+/* Lamp and Effects show how they stand, as their switches in the header do. */
+.cm-switch {
+  position: relative;
+  flex: none;
+  width: 32px;
+  height: 18px;
+  margin-inline-start: auto;
+  border: 1px solid var(--color-graphite-soft);
+  border-radius: 9px;
+}
+.cm-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  inset-inline-start: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-graphite-soft);
+}
+.cm-item[aria-pressed='true'] .cm-switch {
+  border-color: var(--color-graphite);
+  background: var(--color-signal);
+}
+.cm-item[aria-pressed='true'] .cm-switch::after {
+  inset-inline-start: 16px;
+  background: var(--color-graphite);
+}
+
+.cm-none {
+  margin: 0;
+  padding: 16px 10px;
+  color: var(--color-graphite-soft);
+}
+
+/* With motion on, the device is set down over the bench and the bench dims.
+   Closing is immediate. */
+@keyframes cm-set-down {
+  from {
+    opacity: 0;
+    translate: 0 -10px;
+  }
+}
+@keyframes cm-dim {
+  from {
+    opacity: 0;
+  }
+}
+[data-motion='on'] .cm[open] {
+  animation: cm-set-down 240ms var(--ease-out-expo);
+}
+[data-motion='on'] .cm[open]::backdrop {
+  animation: cm-dim 200ms var(--ease-out-quart);
+}

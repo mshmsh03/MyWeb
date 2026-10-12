@@ -8,6 +8,7 @@ follows), then `README.md` and `DEPLOY.md`.
 
 - `redesign/interactive`: the work. Pushed to GitHub. Draft pull request #1
   into `main` exists only so the build check runs.
+- `feature/command-menu`: step 6 item 5, the command menu.
 - `feature/lamp`: step 6 item 4, the lamp switch, merged into
   `redesign/interactive`.
 - `feature/transitions`: step 6 items 1 and 3, finished, checked and merged
@@ -46,7 +47,7 @@ follows), then `README.md` and `DEPLOY.md`.
 | 3 Site viewer | Done |
 | 4 Teardown | Done (repairs text: only "diagnosis, part replacement and maintenance" until the owner confirms more) |
 | 5 Projects, Qasa, About, Contact, 404 | Done, reviewed, approved by the owner |
-| 6 Section 7 features | In progress: items 1, 2, 3, 4, 6 and 7 done; 5 left |
+| 6 Section 7 features | Done; the command menu's look is waiting on the owner |
 | 7 Checks, rewrite DESIGN.md, correct PRODUCT.md | Not started |
 
 ### Step 6, section 7 features (in the spec's order)
@@ -67,8 +68,8 @@ follows), then `README.md` and `DEPLOY.md`.
 4. Lamp switch (light and dark bench): **done**, look approved by the owner,
    and the site opens on the dark bench (his choice). See "The lamp" below.
 5. Command menu (button and Ctrl+K: jump to any page or exhibit, switch
-   language, copy the email address): **not started**. Load its code on
-   demand; it must not push the home page past 200KB.
+   language, copy the email address): **done**, and it works the lamp and
+   Effects too. See "The command menu" below.
 6. Sound for the till and printer: **done**. Switch on the till, off on
    every load; Web Audio synthesis in `lib/till/sound.mjs` (tests in
    `sound.test.mjs`). Levels were judged by numbers only: listen on a real
@@ -88,9 +89,11 @@ follows), then `README.md` and `DEPLOY.md`.
 
 ## Numbers at the last push
 
-- Home page JavaScript, counting the exhibit chunks that load on scroll:
-  175.6KB (en) / 177.4KB (ar) / 177.8KB (ku) of 200KB, 1.3KB of it the
-  lamp switch.
+- Home page JavaScript, counting every chunk the page can load later (the
+  exhibits on scroll, the command menu when opened): 178.8KB (en) / 180.8KB
+  (ar) / 181.2KB (ku) of 200KB. The lamp switch is 1.3KB of it; the command
+  menu 3.2KB (its button 0.7KB, the words 0.2KB, the menu's own chunk
+  2.3KB).
 - Measured on a slow phone profile (390px, 4× CPU slowdown, 1.6 Mbit/s,
   compressed server) before step 6: largest paint under 1.6s on every page;
   layout shift 0.038 or less on all 15 pages; choosing a bench device 40–64ms;
@@ -143,12 +146,51 @@ checks the JavaScript limit; it deploys only from `main`.
   1–5 was sent; step 6 adds: till "Sound" / "الصوت" / "دەنگ", the preview
   picture descriptions in the `preview` copy slot, and the offline page words
   in the `offline` slot). The lamp's name, "المصباح" / "چرا", he approved.
+  The command menu adds the `menu` slot in each copy file: name ("Search" /
+  "بحث" / "گەڕان"), the field's hint, the group names Pages, Services and
+  Settings, "Copy the email address", "Copied" and "Nothing matches.".
 - The repairs he actually does, for the teardown.
 - Real pictures of the print work and the Chrispy screens; client quotes.
 - Whether the footer motto stays in English on Arabic and Kurdish pages.
 - Latin words inside Arabic and Kurdish sentences ("Qasa", "Excel", "(POS)")
   are drawn by the Arabic face; setting them in Archivo caused layout shift,
   so it was backed out.
+
+## The command menu
+
+The search button at the end of the nav, or Ctrl+K (⌘K on a Mac; the key's
+place, so an Arabic layout works too), opens a dialog drawn as a device: a
+graphite bezel round a light screen, so it is the same under either lamp.
+- Files: `components/command/CommandButton.jsx` (the button and the
+  shortcut, in every page's code), `CommandMenu.jsx` (the menu, its own
+  chunk, fetched once the page is idle or when the button is hovered or
+  focused), `command.css`; `lib/menu.js` builds its words in the layout from
+  the copy files, `SITE` and `PAGE_META`, so the menu needs no copy file.
+- Items: the five pages (Qasa POS included), the three services on the bench
+  and "Start a request", the three languages, copy the email address, Lamp
+  and Effects. Typing narrows the list; letters written more than one way in
+  Arabic and Kurdish match as one, and English words match in every
+  language (for example "arabic", "lamp").
+- Keys: Enter takes the first item; Down and Up move through the items and
+  back to the field; Home and End; Esc closes; a click outside closes. Focus
+  goes back where it was, except that a service on the same page brings its
+  section up and focuses its heading, as the bench does. On a phone the list
+  takes focus when it opens, so no keyboard covers it (Chrome ignores
+  `autofocus` on a dialog itself, so it is set on the list).
+- Copying falls back to selecting the address where the clipboard is not
+  allowed. Lamp and Effects close the menu first, so the lamp's light still
+  spreads from its bulb.
+- The header: the button is 44px; from 768px it shows its shortcut too.
+  Below 390px the nav links' padding is 4px (was 8px), so the button fits in
+  the first row at 360px in all three languages; from 390px nothing moved.
+- Checked: every item by keyboard and pointer in en and ar at 1440px, and
+  by touch in en at 390px and ku and ar at 360px; the accessibility tree
+  (a modal dialog named Search, a named field, five named groups); header
+  heights unchanged (72px from 768px, 96px at 360–390px); with the lamp off
+  every page is pixel-identical to before outside the header; no console
+  errors or layout shift; the lamp, its transition and the project
+  transition still pass.
+- Not checked: Firefox, Safari, a real phone, a screen reader by ear.
 
 ## The lamp
 

@@ -293,8 +293,16 @@ export default {
     home: 'اسم Mustafa Deari Ahmed فوق حاسوب محمول وجهاز نقطة بيع وحاسوب مفتوح على لوح قصّ أخضر',
     page: 'اسم Mustafa Deari Ahmed وعنوان الصفحة «{page}» فوق حاسوب محمول وجهاز نقطة بيع وحاسوب مفتوح على لوح قصّ أخضر',
   },
-  lamp: {},
-  menu: {},
+  menu: {
+    name: 'بحث',
+    hint: 'الصفحات والخدمات وغيرها',
+    pages: 'الصفحات',
+    services: 'الخدمات',
+    settings: 'الإعدادات',
+    copyEmail: 'نسخ عنوان البريد',
+    copied: 'تم النسخ',
+    none: 'لا شيء يطابق بحثك.',
+  },
   offline: {
     title: 'لا يوجد اتصال | Mustafa Deari Ahmed',
     heading: 'لا يوجد اتصال.',

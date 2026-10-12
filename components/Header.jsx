@@ -2,36 +2,26 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BASE_PATH, LANGS, NAME, PAGES, SITE, pagePath } from '@/lib/site-data';
+import { BASE_PATH, LANGS, NAME, PAGES, SITE, pagePath, routeFromPathname } from '@/lib/site-data';
+import CommandButton from './command/CommandButton';
 import EffectsSwitch from './EffectsSwitch';
 import LampSwitch from './LampSwitch';
 
 // The header lives in the layout, not in each page, so client-side navigation
-// leaves it mounted — it reads the route from the URL rather than taking it as
-// a prop. Routes are /<lang>/, /<lang>/<page>/ and /<lang>/<page>/<sub>/.
-// `section` is the nav entry the route belongs to; `path` is the whole route
-// under the language, so the language switch lands on the same page rather
-// than on its parent. next/link puts the GitHub Pages basePath in front and
-// usePathname() can return it too, so the language segment is found rather
-// than assumed to come first.
-function routeFromPathname(pathname) {
-  const parts = pathname.split('/').filter(Boolean);
-  const rest = parts.slice(parts.findIndex((p) => LANGS.includes(p)) + 1);
-  if (!PAGES.includes(rest[0])) return { section: 'index', path: 'index' };
-  return { section: rest[0], path: rest.join('/') };
-}
+// leaves it mounted — it reads the route from the URL (routeFromPathname)
+// rather than taking it as a prop.
 
 // The mark under the current page is a short bar in ruler yellow that grows
 // from the reading start, so its origin flips for Arabic and Kurdish. It only
 // grows when motion is on; otherwise it is simply there.
 const MARK =
-  "after:absolute after:inset-x-2 after:bottom-2 after:h-0.5 after:origin-left after:scale-x-0 after:bg-ruler in-data-[motion=on]:after:transition-transform after:duration-200 after:content-[''] rtl:after:origin-right";
+  "after:absolute after:inset-x-1 min-[390px]:after:inset-x-2 after:bottom-2 after:h-0.5 after:origin-left after:scale-x-0 after:bg-ruler in-data-[motion=on]:after:transition-transform after:duration-200 after:content-[''] rtl:after:origin-right";
 
 // The header is the ruler printed along the top edge of the mat: an opaque
 // strip with its ticks standing on the bottom edge. It is sticky from 768px
 // up, three grid cells tall; on a phone it takes two rows (four cells) and
 // scrolls away with the page.
-export default function Header({ lang }) {
+export default function Header({ lang, menu }) {
   const t = SITE[lang];
   const pathname = usePathname();
   const { section, path } = routeFromPathname(pathname);
@@ -51,8 +41,11 @@ export default function Header({ lang }) {
         </Link>
 
         {/* Not prefetched: the pages are small, and prefetching them would
-            fetch every other page's pictures and styles on every visit. */}
-        <nav className="-mx-2 flex w-full flex-wrap items-center md:ms-auto md:w-auto">
+            fetch every other page's pictures and styles on every visit. The
+            search button for the command menu ends the row; below 390px the
+            links' padding is a little narrower, so it fits there in all three
+            languages. */}
+        <nav className="-mx-1 flex w-full flex-wrap items-center min-[390px]:-mx-2 md:ms-auto md:w-auto">
           {PAGES.map((p) => {
             const active = p === section;
             return (
@@ -61,7 +54,7 @@ export default function Header({ lang }) {
                 href={pagePath(lang, p)}
                 prefetch={false}
                 aria-current={active ? 'page' : undefined}
-                className={`relative inline-flex h-11 items-center px-2 text-[0.95rem] font-medium transition-colors ${MARK} ${
+                className={`relative inline-flex h-11 items-center px-1 text-[0.95rem] font-medium transition-colors min-[390px]:px-2 ${MARK} ${
                   active ? 'text-chalk after:scale-x-100' : 'text-chalk-dim hover:text-chalk hover:after:scale-x-100'
                 }`}
               >
@@ -69,6 +62,7 @@ export default function Header({ lang }) {
               </Link>
             );
           })}
+          <CommandButton lang={lang} words={menu} />
         </nav>
 
         {/* On the narrowest phones (320px) the two switches take a row of

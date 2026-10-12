@@ -6,7 +6,8 @@
 // scrolling alone does, and the site viewer's starts just under the first
 // screen, so it loads at once. So the code those up-front scripts can load
 // on their own (every chunk they name) is added too, and the limit is
-// checked against that total.
+// checked against that total. That counts the command menu's code as well,
+// which loads only when the menu is opened: a little over, never under.
 //
 //   node scripts/js-budget.mjs            report en, ar and ku home pages
 //   node scripts/js-budget.mjs --check    the same, and fail over the limit
@@ -40,7 +41,7 @@ function measure(page) {
   }
   let lazy = 0;
   for (const chunk of later) lazy += gz(chunk);
-  // Inline scripts: the React payload and the motion switch.
+  // Inline scripts: the React payload, and the motion and lamp switches.
   let inline = 0;
   for (const m of html.matchAll(/<script(?![^>]*\ssrc=)[^>]*>([\s\S]*?)<\/script>/g)) {
     inline += gzipSync(Buffer.from(m[1]), { level: 9 }).length;
@@ -54,7 +55,7 @@ for (const lang of ['en', 'ar', 'ku']) {
   const r = measure(`${lang}/index.html`);
   over ||= r.total > LIMIT;
   console.log(
-    `${lang}/  ${r.files} script files ${kb(r.external)} + inline ${kb(r.inline)} + ${r.lazyFiles} exhibit chunks ${kb(r.lazy)} = ${kb(r.total)} gzipped (limit ${kb(LIMIT)})`,
+    `${lang}/  ${r.files} script files ${kb(r.external)} + inline ${kb(r.inline)} + ${r.lazyFiles} chunks loaded later ${kb(r.lazy)} = ${kb(r.total)} gzipped (limit ${kb(LIMIT)})`,
   );
 }
 if (over && process.argv.includes('--check')) {

@@ -49,6 +49,7 @@ toggled client-side.
 | `app/[lang]/_pages/` | The page layouts, one per page, shared by all three languages |
 | `components/bench/` | The first screen: the name on the mat and the three devices, drawn as CSS 3D boxes |
 | `components/exhibits/` | The three working devices: the site viewer, the till and the teardown. Each loads its code only when the visitor nears it |
+| `components/command/` | The command menu: the search button in the header (and Ctrl+K), and the menu, which loads when it is first wanted |
 | `components/LampSwitch.jsx` | The lamp in the header: switches between the dark bench and the light one |
 | `components/PageMorph.jsx` | Carries a project's screen between Projects and the project's own page, both ways, including Back and Forward |
 | `components/RequestBuilder.jsx` | The request a visitor writes, shown as a chat message, which opens in their own WhatsApp or email |
@@ -57,6 +58,7 @@ toggled client-side.
 | `lib/till/money.mjs` | The till's money rules (rounding, discount, change), tested with `npm test` |
 | `lib/site-data.js` | Nav labels, contact details, page titles, screenshot sizes — the site's chrome |
 | `lib/page.jsx` | `createLangPage()` — the shared boilerplate every route file is built from |
+| `lib/menu.js` | The command menu's words, built from the copy files for each language |
 | `lib/metadata.js` | Canonical / hreflang / OG / JSON-LD builders |
 | `app/globals.css` | Colour, type, spacing, and motion tokens |
 

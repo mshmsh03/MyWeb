@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Archivo, Noto_Kufi_Arabic, Noto_Sans_Arabic } from 'next/font/google';
 import { LANGS, SITE, asset } from '@/lib/site-data';
 import { BASE } from '@/lib/metadata';
+import { menuWords } from '@/lib/menu';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MotionRoot from '@/components/MotionRoot';
@@ -142,7 +143,7 @@ export default async function LangLayout({ children, params }) {
         </a>
         {/* Header and footer sit in the layout, not in the pages, so the router
             swaps only the page body between routes. */}
-        <Header lang={lang} />
+        <Header lang={lang} menu={menuWords(lang)} />
         <main id="main" tabIndex={-1} className="outline-none">
           {children}
         </main>

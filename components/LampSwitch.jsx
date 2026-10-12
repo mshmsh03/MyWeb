@@ -103,6 +103,14 @@ function toggle(button) {
   });
 }
 
+// The lamp switched from elsewhere (the command menu): the light still comes
+// from the bulb in the header.
+export function switchLamp() {
+  const bulb = document.querySelector('[data-lamp-switch]');
+  if (bulb) toggle(bulb);
+  else setLamp(!lampOn());
+}
+
 export default function LampSwitch({ label }) {
   const [on, setOn] = useState(null);
 
@@ -132,6 +140,7 @@ export default function LampSwitch({ label }) {
       role="switch"
       aria-checked={on === null ? undefined : on}
       title={label}
+      data-lamp-switch=""
       onClick={(e) => toggle(e.currentTarget)}
       className="inline-flex size-11 items-center justify-center text-chalk-dim transition-colors [-webkit-tap-highlight-color:transparent] hover:text-chalk"
     >
