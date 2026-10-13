@@ -49,7 +49,7 @@ follows), then `README.md` and `DEPLOY.md`.
 | 4 Teardown | Done (repairs text: only "diagnosis, part replacement and maintenance" until the owner confirms more) |
 | 5 Projects, Qasa, About, Contact, 404 | Done, reviewed, approved by the owner |
 | 6 Section 7 features | Done, approved by the owner |
-| 7 Checks, rewrite DESIGN.md, correct PRODUCT.md | In progress |
+| 7 Checks, rewrite DESIGN.md, correct PRODUCT.md | Done and recorded; the home page's largest paint is at the 2.5s limit (see "Step 7: the checks") |
 
 ### Step 6, section 7 features (in the spec's order)
 
@@ -92,15 +92,135 @@ follows), then `README.md` and `DEPLOY.md`.
 ## Numbers at the last push
 
 - Home page JavaScript, counting every chunk the page can load later (the
-  exhibits on scroll, the command menu when opened): 178.8KB (en) / 180.8KB
-  (ar) / 181.2KB (ku) of 200KB. The lamp switch is 1.3KB of it; the command
+  exhibits on scroll, the command menu when opened): 178.9KB (en) / 180.8KB
+  (ar) / 181.3KB (ku) of 200KB. The lamp switch is 1.3KB of it; the command
   menu 3.2KB (its button 0.7KB, the words 0.2KB, the menu's own chunk
   2.3KB).
-- Measured on a slow phone profile (390px, 4× CPU slowdown, 1.6 Mbit/s,
-  compressed server) before step 6: largest paint under 1.6s on every page;
-  layout shift 0.038 or less on all 15 pages; choosing a bench device 40–64ms;
-  till and request-builder taps 56–104ms. Re-measure after step 6.
+- Slow phone, measured in step 7 (method and detail below): largest paint
+  1.6–2.4s on About, Contact and Projects, 2.0–2.8s on Qasa, 2.4–3.0s on the
+  home page; layout shift 0.036 or less; every tap measured 40–104ms.
 - 37 unit tests (`npm test`).
+
+## Step 7: the checks
+
+Done on 2026-10-13 against the built site, in headless Chrome 155 driven over
+the DevTools protocol (the check scripts were kept outside the repository).
+
+### Performance on a slow phone
+
+Profile: 390px at 2x, CPU slowed 4x, 1.6 Mbit/s down and 750 kbit/s up, cold
+cache, no service worker, compressed server. DevTools' latency setting has no
+effect in this setup (the earlier "under 1.6s" figure was measured without
+any round trips, so it was too kind), so a small local proxy adds them: 150ms
+before each response, and two more round trips for each new connection. That
+is stricter than GitHub Pages, which serves a page over one HTTP/2
+connection. Two cold loads of every page in all three languages:
+
+| Page | Largest paint | Layout shift |
+|---|---|---|
+| Home | en 2.8s; ar 2.5–2.9s; ku 2.4–3.0s | 0.010 or less |
+| Projects | 1.8–2.4s | 0.036 (Kurdish, the known font shift), else 0.001 |
+| Qasa POS | 2.0–2.8s | 0.001 or less |
+| About | 1.6–2.0s | 0.004 or less |
+| Contact | 1.6–1.9s | 0.001 or less |
+
+- The largest paint is text (or, on Projects, the first project picture) and
+  comes with the first paint. The home page, and Qasa in some runs, are at or
+  a little over the 2.5s limit here. The time goes to the browser's first
+  layout once the stylesheets are in (0.7–1.2s at 4x). About a third of it is
+  Windows loading its own fonts for the fallback faces, which a phone does
+  differently, and with one HTTP/2 connection the home page measured 1.5–2.9s.
+  A real phone on a real slow connection is still the test that settles it.
+  Skipping the layout of the sections below the first screen
+  (`content-visibility`) was tried and made no reliable difference, so it was
+  not kept.
+- The first load after the machine has been idle is erratic (one 6.5s run);
+  it was repeated and not counted.
+- Lighthouse 12.8 (mobile, simulated throttling) gives the home page a
+  largest paint of 3.3s in English and 5.4–5.5s in Arabic and Kurdish (Qasa:
+  2.9s and 5.0s). Its model charges the slow network with every download that
+  finished before the first paint in a fast run, including the Arabic fonts
+  (about 345KB), which the throttled browser does not wait for.
+  PageSpeed Insights uses the same model, so expect those numbers there. The
+  same fonts share the slow connection with the scripts, which is why Arabic
+  and Kurdish pages become interactive later (about 4.5–5.5s; English 3–4s). Lighter Arabic fonts (fewer weights, or no separate display face)
+  would help both, but that changes the approved look.
+- Taps, from the touch to the next frame, in all three languages: choosing a
+  bench device 40–48ms; till keys 40–88ms; the request builder 40–56ms; the
+  lamp 64–80ms; opening the command menu 96–104ms.
+
+Found and fixed:
+- Motion was lost on slow phones. The head script switched motion off if the
+  page had not hydrated within three seconds, and nothing switched it back.
+  Arabic and Kurdish pages on this profile hydrate in 4–5.5s, so in a quarter
+  of those loads the bench, the till, the viewer, the lamp and the menu stood
+  still for the whole visit. The failsafe now allows eight seconds, and
+  `MotionRoot` puts motion back as the visitor has it when the bundle does
+  run. With scripts blocked, motion still goes off at eight seconds.
+- The lamp held up its own tap. The light's centre and reach were custom
+  properties on the root, which every element inherits, so the whole page was
+  restyled twice before the light could start (about 150ms at 4x). They are
+  now given to the transition's two pictures only, through a small style
+  element. Frames taken mid-transition are pixel-identical before and after;
+  the tap went from as much as 224ms to 64–80ms.
+- The 404 page had no icon, so browsers asked for `/favicon.ico` at the
+  domain root. It now uses the site's icon, as the offline page does.
+
+### Keyboard
+
+- Tab and Shift+Tab through every page in English, Arabic and Kurdish at
+  1440px (both lamps) and English at 390px: the same stops both ways (77 on
+  the home page), in reading order, none hidden, off screen or under the
+  sticky header, and each with a visible focus ring (the viewer's marks ring
+  their dot by design).
+- Worked by keyboard alone in all three languages: the skip link; Enter on a
+  bench device (its exhibit's heading takes focus); arrow keys in the viewer's
+  choices; Enter and Space on the till's keys, the discount switch and Charge;
+  the teardown's slider by arrow keys and End (mirrored in right-to-left, as
+  the browser does), and its parts; Space on the request builder's needs; the
+  lamp and Effects; Ctrl+K, Esc, and focus going back to where it was.
+
+### Screen readers, by what they are given
+
+- axe-core 4.10 (WCAG 2.0, 2.1 and 2.2 A and AA, and best practice) on every
+  page in all three languages, at 1440px on the dark bench and 390px on the
+  light one, and on the home page again with every exhibit worked and with
+  the command menu open: no violations. The 404 and offline pages: none.
+- The accessibility tree: banner, navigation, main and footer on every page,
+  one h1, sections as h2 and their parts as h3, named regions for the request
+  builder and the till's order; the till announces each sale ("Iced latte: 2.
+  Total 16,750 IQD.").
+- axe could not judge the contrast of text drawn over the mat's grid (it is
+  painted with gradients) or under the lamp's pool, so every piece of visible
+  text was checked against the solid colour behind it instead, in all three
+  languages, on both benches, at both widths, with the exhibits worked: all
+  of it passes AA. The one flag, the receipt printer's name on the light
+  bench, sits on the printer's own dark body (7.5:1), not on the mat.
+
+### Reduced motion and Effects off
+
+With the system's reduced motion (English, 1440px) and with Effects off
+(Arabic, 390px, touch), every moving part of the home page was worked: no
+view transition starts (bench, lamp, language switch), the bench does not
+tilt, and nothing in the till, viewer, teardown or menu moves. Still running:
+colour fades on hover and on a chosen chip, and the ruler's scroll mark, which
+follows the scroll position as a scroll bar does. A control run with motion on
+caught movement in every step.
+
+### Three languages, phone and desktop
+
+Every page in English, Arabic and Kurdish at 390 and 1440px on both benches,
+and at 360px (English, Kurdish) and 320px (Arabic): no sideways scroll, no broken
+picture, no console error, no layout shift above 0.006 on load, every tap
+target at least 44px. The skip link is the exception: 27–31px tall when it
+shows, for keyboards only, and over WCAG 2.2's 24px. Full-page screenshots
+were looked at in part. The project transition, the lamp and the command menu
+regression checks pass again; 37 unit tests pass.
+
+### Not checked
+
+Firefox, Safari, a real phone, a real slow connection, and a screen reader by
+ear (NVDA, VoiceOver, TalkBack).
 
 ## How to check
 
@@ -127,7 +247,9 @@ checks the JavaScript limit; it deploys only from `main`.
   `calc-size()` (Safari, Firefox today) lay out as before.
 - The inline head scripts in `app/[lang]/layout.jsx` set `html[data-motion]`
   and `html[data-lamp]` before first paint; every animation hangs off
-  `data-motion="on"`, the light bench off `data-lamp="on"`.
+  `data-motion="on"`, the light bench off `data-lamp="on"`. If the page has not
+  hydrated in eight seconds, motion is switched off; `MotionRoot` switches it
+  back when the bundle arrives later.
 - Colours: anything printed on the mat uses `mat`, `mat-line`, `chalk`,
   `chalk-dim` and `ruler`, which change with the lamp. Device parts use
   `graphite`, `silk` and `silk-dim` (lettering on a device body), `pcb`,
@@ -208,7 +330,8 @@ only with "Lamp" as its name, so it fits the phone header from 360px; at
   the browser bar's colour (`theme-color`). Back to a page kept in the
   browser's memory, or a switch in another tab, brings the page in line.
 - With motion on, a View Transition: the lit page grows out of the bulb
-  (`lamp-light` keyframes, centred by `--lamp-x`, `--lamp-y`, `--lamp-r`),
+  (`lamp-light` keyframes, centred by `--lamp-x`, `--lamp-y`, `--lamp-r`,
+  which are set on the transition's two pictures, never on the root),
   or shrinks back into it. Fixes after the owner found it "sometimes
   glitchy": colours change at once while it switches (`data-switching`
   turns transitions off), so no control fades in after the light has passed
