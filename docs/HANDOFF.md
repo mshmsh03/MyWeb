@@ -216,8 +216,9 @@ regression checks pass again; 37 unit tests pass.
 
 ### Not checked
 
-Firefox, Safari, a real phone, a real slow connection, and a screen reader by
-ear (NVDA, VoiceOver, TalkBack).
+Safari itself, a real phone, a real slow connection, and a screen reader by
+ear (NVDA, VoiceOver, TalkBack). Firefox and WebKit were checked after step
+7; see "Firefox and WebKit".
 
 ## Back and Forward
 
@@ -380,8 +381,55 @@ Not fixed: the small jump when the Arabic fonts arrive.
   face), a preload on Arabic and Kurdish pages (the fonts arrive sooner,
   and a slow phone's first paint comes later), or lighter fonts.
 
-Not checked: Firefox and Safari, a real phone, a real loss of connection
-(airplane mode), and an update on GitHub Pages itself.
+Not checked: a real phone, a real loss of connection (airplane mode), and
+an update on GitHub Pages itself. Firefox and WebKit: see the next section.
+
+## Firefox and WebKit
+
+Checked on 2026-10-13 with Playwright 1.56.1 and its builds of Firefox
+142.0.1 and WebKit 26.0 for Windows, against the installed Chrome 155, on the
+built site from a local server (Playwright was installed outside the
+repository; nothing was added to the project).
+
+- Every page in English, Arabic and Kurdish at 390px (touch) and 1440px, in
+  both: the page loads and its script starts, with no console error, no
+  failed request, no sideways scroll and no broken picture.
+- Layout, element by element against Chrome: nothing missing, and no element
+  in another place across the page or at another width. Heights differ by
+  the grid rounding only Chrome does (`calc-size()`, as noted under "Things
+  to know about the code"), and in WebKit by a few pixels of text height.
+- Every part worked by mouse at 1440px and by touch at 390px, in English, and
+  in Arabic and Kurdish at one width each: a bench device to its exhibit and
+  Back to the bench, the till (a product, Charge, the receipt), the viewer's
+  language, the teardown's slider and a part, the request builder's message,
+  the lamp, Effects, the command menu by its button and by Ctrl+K, a header
+  link, Read more to Qasa and Back to the card's place, and the language
+  switch: all pass, with nothing in the console. Firefox 142 has neither
+  view transitions nor the Navigation API, and the site falls back to plain
+  jumps there, as designed; WebKit 26 has view transitions but not the
+  Navigation API.
+- Looks: Firefox draws the pages as Chrome does (screenshots compared side
+  by side; the receipt's torn edge is the same close up). WebKit's Windows
+  build cannot judge them: it draws every weight and width of a variable
+  font with one outline, so the owner's name looks thin and spaced out, and
+  it draws no 3D transforms, so the bench's devices look flat. A bare test
+  page with neither the site's code nor its styles shows the same; Safari
+  itself draws both.
+- Found and fixed: offline mode did not work in Firefox at all, saved pages
+  included. With navigation preload on, an early request that fails (no
+  connection) made Firefox fail the whole page load on its own error page,
+  passing over the worker's saved page and offline page; catching the
+  failure in the worker did not help. The worker now leaves navigation
+  preload off in Firefox (told by its user agent, `scripts/sw.js`, activate)
+  and turns it off where an older worker turned it on; Chrome and Safari
+  keep it. Checked in Firefox in all three languages, with the connection
+  reset and with the server gone: the offline page for a page not saved, the
+  saved home page with its script running, nothing in the console; Chrome
+  and WebKit as before; a Firefox visitor of the old worker has preload off
+  within a second of the update, and offline works.
+
+Not checked: Safari itself (macOS and iOS), a release build of Firefox, and
+Firefox for Android.
 
 ## How to check
 

@@ -81,8 +81,13 @@ self.addEventListener('activate', (event) => {
       for (const key of await caches.keys()) {
         if (key.startsWith(PREFIX) && key !== CACHE) await caches.delete(key);
       }
-      // Lets the page request start while the worker is still waking up.
-      if (self.registration.navigationPreload) await self.registration.navigationPreload.enable();
+      // Lets the page request start while the worker is still waking up. Not
+      // in Firefox: there, when that early request fails (no connection), the
+      // whole page load fails on the browser's own error page, and neither the
+      // saved page nor the offline page is shown. A worker from before this
+      // turned it on, so it is turned off again there.
+      const preload = self.registration.navigationPreload;
+      if (preload) await (/\bFirefox\//.test(navigator.userAgent) ? preload.disable() : preload.enable());
       await self.clients.claim();
     })(),
   );
