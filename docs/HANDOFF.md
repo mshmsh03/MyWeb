@@ -8,7 +8,8 @@ follows), then `README.md` and `DEPLOY.md`.
 
 - `redesign/interactive`: the work. Pushed to GitHub. Draft pull request #1
   into `main` exists only so the build check runs.
-- `feature/command-menu`: step 6 item 5, the command menu.
+- `feature/command-menu`: step 6 item 5, the command menu, approved by the
+  owner and merged into `redesign/interactive`.
 - `feature/lamp`: step 6 item 4, the lamp switch, merged into
   `redesign/interactive`.
 - `feature/transitions`: step 6 items 1 and 3, finished, checked and merged
@@ -47,8 +48,8 @@ follows), then `README.md` and `DEPLOY.md`.
 | 3 Site viewer | Done |
 | 4 Teardown | Done (repairs text: only "diagnosis, part replacement and maintenance" until the owner confirms more) |
 | 5 Projects, Qasa, About, Contact, 404 | Done, reviewed, approved by the owner |
-| 6 Section 7 features | Done; the command menu's look is waiting on the owner |
-| 7 Checks, rewrite DESIGN.md, correct PRODUCT.md | Not started |
+| 6 Section 7 features | Done, approved by the owner |
+| 7 Checks, rewrite DESIGN.md, correct PRODUCT.md | In progress |
 
 ### Step 6, section 7 features (in the spec's order)
 
@@ -68,8 +69,9 @@ follows), then `README.md` and `DEPLOY.md`.
 4. Lamp switch (light and dark bench): **done**, look approved by the owner,
    and the site opens on the dark bench (his choice). See "The lamp" below.
 5. Command menu (button and Ctrl+K: jump to any page or exhibit, switch
-   language, copy the email address): **done**, and it works the lamp and
-   Effects too. See "The command menu" below.
+   language, copy the email address): **done**, look and words approved by
+   the owner, and it works the lamp and Effects too. See "The command menu"
+   below.
 6. Sound for the till and printer: **done**. Switch on the till, off on
    every load; Web Audio synthesis in `lib/till/sound.mjs` (tests in
    `sound.test.mjs`). Levels were judged by numbers only: listen on a real
@@ -145,10 +147,8 @@ checks the JavaScript limit; it deploys only from `main`.
 - A read of the Arabic and Kurdish wording (list of new strings from steps
   1–5 was sent; step 6 adds: till "Sound" / "الصوت" / "دەنگ", the preview
   picture descriptions in the `preview` copy slot, and the offline page words
-  in the `offline` slot). The lamp's name, "المصباح" / "چرا", he approved.
-  The command menu adds the `menu` slot in each copy file: name ("Search" /
-  "بحث" / "گەڕان"), the field's hint, the group names Pages, Services and
-  Settings, "Copy the email address", "Copied" and "Nothing matches.".
+  in the `offline` slot). Approved already: the lamp's name, "المصباح" /
+  "چرا", and the command menu's words (the `menu` slot in each copy file).
 - The repairs he actually does, for the teardown.
 - Real pictures of the print work and the Chrispy screens; client quotes.
 - Whether the footer motto stays in English on Arabic and Kurdish pages.
