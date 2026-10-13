@@ -2,7 +2,7 @@ node_modules/
 .next/
 out/
 
-# AI-assistant tooling — local to whoever's machine is running it, not
+# Editor tooling settings — local to whoever's machine is running it, not
 # part of the shipped site or something the repo's history should carry.
 .claude/
 

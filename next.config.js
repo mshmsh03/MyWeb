@@ -11,7 +11,7 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '/MyWeb';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Next 16 auto-writes AI coding-agent instruction files on every dev/build
+  // Next 16 writes instruction files for coding agents on every dev and build
   // run; this repo doesn't want those generated files.
   agentRules: false,
 

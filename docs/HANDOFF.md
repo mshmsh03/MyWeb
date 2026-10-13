@@ -6,8 +6,9 @@ follows), then `README.md` and `DEPLOY.md`.
 
 ## Branches
 
-- `redesign/interactive`: the work. Pushed to GitHub. Draft pull request #1
-  into `main` exists only so the build check runs.
+- `redesign/interactive`: the work. Merged into `main` (a fast-forward) and
+  published on 2026-10-13 at the owner's request; pull request #1 was where
+  its build check ran.
 - The step 6 feature branches (`feature/transitions`, `feature/lamp`,
   `feature/command-menu`) were merged into `redesign/interactive` and, at the
   owner's request, deleted on GitHub and locally on 2026-10-13.
@@ -15,16 +16,17 @@ follows), then `README.md` and `DEPLOY.md`.
   deleted on GitHub on 2026-10-13 at the owner's request. Nothing was lost:
   `redesign/interactive` was cut from it, so all its commits are in this
   branch's history (its last, 2571464, is the specification).
-- `main`: the live site. **Never push to it, merge into it or deploy.** The
-  owner decides when the redesign goes live.
+- `main`: the live site, the redesign since 2026-10-13. Every push to it
+  publishes (`.github/workflows/deploy.yml`), so new work goes on a branch
+  and reaches `main` only when the owner says so.
 
 ## The owner's standing rules
 
 - Commits are authored as the owner (`mshmsh03
   <161251274+mshmsh03@users.noreply.github.com>`, set in the repo's git
-  config), with plain messages: no co-author or "generated with" lines, and no
-  mention of Claude, Anthropic or AI anywhere (commits, pull requests, code
-  comments, files).
+  config), with plain messages: no co-author or "generated with" lines, and
+  nothing anywhere (commits, pull requests, code comments, files) that names
+  the coding tools used or their makers.
 - Spec section 9 (content rules) exactly: no invented facts, numbers,
   testimonials, pictures or services.
 - Spec section 8 (limits): no WebGL, no 3D library, no smooth-scroll
@@ -50,6 +52,7 @@ follows), then `README.md` and `DEPLOY.md`.
 | 5 Projects, Qasa, About, Contact, 404 | Done, reviewed, approved by the owner |
 | 6 Section 7 features | Done, approved by the owner |
 | 7 Checks, rewrite DESIGN.md, correct PRODUCT.md | Done and recorded; the home page's largest paint is at the 2.5s limit (see "Step 7: the checks") |
+| Going live | Done on 2026-10-13, at the owner's request: merged into `main` and published |
 
 ### Step 6, section 7 features (in the spec's order)
 
