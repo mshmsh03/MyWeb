@@ -11,8 +11,10 @@ follows), then `README.md` and `DEPLOY.md`.
 - The step 6 feature branches (`feature/transitions`, `feature/lamp`,
   `feature/command-menu`) were merged into `redesign/interactive` and, at the
   owner's request, deleted on GitHub and locally on 2026-10-13.
-- `redesign/job-tickets`: the job-ticket look the owner turned down, still on
-  GitHub.
+- `redesign/job-tickets`: the job-ticket look the owner turned down,
+  deleted on GitHub on 2026-10-13 at the owner's request. Nothing was lost:
+  `redesign/interactive` was cut from it, so all its commits are in this
+  branch's history (its last, 2571464, is the specification).
 - `main`: the live site. **Never push to it, merge into it or deploy.** The
   owner decides when the redesign goes live.
 
