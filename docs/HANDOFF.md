@@ -8,13 +8,11 @@ follows), then `README.md` and `DEPLOY.md`.
 
 - `redesign/interactive`: the work. Pushed to GitHub. Draft pull request #1
   into `main` exists only so the build check runs.
-- `feature/command-menu`: step 6 item 5, the command menu, approved by the
-  owner and merged into `redesign/interactive`.
-- `feature/lamp`: step 6 item 4, the lamp switch, merged into
-  `redesign/interactive`.
-- `feature/transitions`: step 6 items 1 and 3, finished, checked and merged
-  into `redesign/interactive`. The copy on GitHub is the unfinished commit
-  (fd9f4e4) from before the merge; it can be deleted.
+- The step 6 feature branches (`feature/transitions`, `feature/lamp`,
+  `feature/command-menu`) were merged into `redesign/interactive` and, at the
+  owner's request, deleted on GitHub and locally on 2026-10-13.
+- `redesign/job-tickets`: the job-ticket look the owner turned down, still on
+  GitHub.
 - `main`: the live site. **Never push to it, merge into it or deploy.** The
   owner decides when the redesign goes live.
 
@@ -82,18 +80,17 @@ follows), then `README.md` and `DEPLOY.md`.
    worker `scripts/sw.js` written to `out/sw.js` with its install list by
    `scripts/offline.mjs` (called from `scripts/postbuild.mjs`), offline page
    `scripts/offline.html` in three languages, registration in
-   `components/OfflineWorker.jsx`. About 473KB is saved at install; the
+   `components/OfflineWorker.jsx`. About 480KB is saved at install; the
    Arabic faces are saved when first used. Every build gets a new cache
-   version (Next's build id changes), so returning visitors re-download the
-   install set after each deploy. Offline, clicking a link to an unsaved page
-   logs a Next "Failed to fetch RSC payload" message before the offline page
-   shows.
+   version (Next's build id changes); the new worker copies what is unchanged
+   across from the old cache and downloads the rest (see "Small fixes after
+   step 7").
 
 ## Numbers at the last push
 
 - Home page JavaScript, counting every chunk the page can load later (the
-  exhibits on scroll, the command menu when opened): 179.0KB (en) / 181.0KB
-  (ar) / 181.4KB (ku) of 200KB. The lamp switch is 1.3KB of it; the command
+  exhibits on scroll, the command menu when opened): 179.2KB (en) / 181.1KB
+  (ar) / 181.5KB (ku) of 200KB. The lamp switch is 1.3KB of it; the command
   menu 3.2KB (its button 0.7KB, the words 0.2KB, the menu's own chunk
   2.3KB).
 - Slow phone, measured in step 7 (method and detail below): largest paint
@@ -286,9 +283,8 @@ browser's own buttons send them, `Page.navigateToHistoryEntry`):
   `history.back()` would count it, and the site never does. Before the change
   the same kind of entry came on Forward instead (0.13), marked the same way.
 
-Not changed:
-- Back pressed while the page is still gliding within itself (within a
-  second of choosing an exhibit in the command menu) stays near the exhibit.
+Not changed then (Back pressed while the page was still gliding within
+itself was fixed afterwards; see "Small fixes after step 7"):
 - The command menu check failed 4 of 16 English runs on this build and none
   of 15 on the previous one; the last 12 runs alternated the two builds and
   all passed. In each failure the word typed after Esc and Ctrl+K never
@@ -299,6 +295,93 @@ Not changed:
 
 Not checked: Firefox and Safari (whether they glide too), a real phone, and
 the phone's back gesture.
+
+## Small fixes after step 7
+
+Done on 2026-10-13 at the owner's request, for the small issues left open
+above and in step 6, with one more found on the way. Checked on the built
+site in headless Chrome 155; the offline checks used a local server that can
+drop every connection mid-check and logs every file it sends, with nothing
+left to the browser's own cache.
+
+- Back pressed while the page was still gliding within itself (to an exhibit
+  chosen in the command menu, 0.5 to 0.9s after choosing) stayed near the
+  exhibit: Chrome took the glide for the visitor scrolling and did not put
+  the page back. `MotionRoot` now keeps each history entry's place from the
+  scroll events; on Back or Forward within a page it stops a glide still
+  running and goes to that place, gliding with motion on. Checked 0.3 to 1.2s
+  after choosing, by the menu and by the bench, in English and Kurdish at
+  1440px and English and Arabic at 390px: back at the bench's place every
+  time.
+- Offline, a link to a page the worker had not saved logged Next's "Failed to
+  fetch RSC payload" (and a "Failed to load resource" line) before the
+  offline page showed. The worker now answers the router's request for a
+  page's data, when there is neither network nor a saved copy, with an empty
+  204 (`networkFirst`, only for requests with the router's `RSC: 1`); Next
+  takes that as a plain page and loads it in full without a word, and the
+  offline page answers. Checked in English and Kurdish at 1440px and Arabic
+  at 390px: the offline page in the right language, nothing in the console.
+- The offline page and the 404 page now take part in the site's
+  page-to-page transition and skip it, so they still appear at once. The
+  site's pages ask for one (`@view-transition`), and Chrome reported
+  "Transition was aborted ... opt-in disabled" as an error on a page that
+  does not take part: arriving offline, or at the 404 page from a page of
+  the site.
+- Found on the way, and older: switching language with Effects off or with
+  reduced motion logged "AbortError: Transition was skipped". The head
+  script skips the transition, and Chrome reports the rejected `ready`
+  promise unless it is caught; it now is, there and on the offline and 404
+  pages. Step 7's checks missed it. Checked: the language switch with
+  Effects off, reduced motion and motion on, and the 404 page reached from a
+  page of the site, all with nothing in the console.
+- Updates. Every deploy gave the worker a new cache, and the new worker
+  downloaded its whole install set again and dropped everything saved as it
+  was used, the Arabic fonts among them: offline after an update, Arabic and
+  Kurdish pages fell back to the system's faces. `scripts/offline.mjs` now
+  writes a hash of every file the worker may keep into it (`FILES`: the
+  install set, every picture and every hashed file, 108 in all); each worker
+  keeps that list in its cache (`sw-files`), and the next one copies across
+  every file whose hash is unchanged before it downloads the rest. A worker
+  from before the list is trusted for the hashed files only, whose names
+  change with their content. Measured (a returning visitor who has opened
+  the English and Arabic home pages):
+
+  | Update | Downloaded | Saved as used, after it |
+  |---|---|---|
+  | Previous worker, to a copy differing only in its version | all 38 install files (about 480KB as GitHub Pages sends them) | the 4 Arabic font files and 2 pictures gone |
+  | Previous worker to this one (the first deploy of this change) | 21: pages, offline pages, manifests, pictures, icons and the 2 changed scripts | all fonts kept; the 2 pictures gone, once |
+  | This worker to a rebuild of the same code | 3: the three home pages (about 75KB compressed) | all kept |
+
+  After each update the Arabic home page opened offline in its own faces,
+  with nothing in the console (after the first deploy of this change, one of
+  the two lost pictures failed to load, twice).
+
+Not fixed: the small jump when the Arabic fonts arrive.
+- With the fonts held back until after the first paint (a first visit on a
+  slow connection), their arrival moves the Arabic and Kurdish pages by up
+  to 0.036: Kurdish Projects at 390px, then the home pages (0.010 to 0.025)
+  and About at 390px (0.018 to 0.020); the rest 0.011 or less. All are under
+  Google's 0.1 line for "good". On the Kurdish home page at 1440px, 0.019 of
+  its 0.025 comes from Archivo (the owner's name, set wide), not from the
+  Arabic faces.
+- next/font's stand-in face (Arial) is sized on Latin letters. Measured on
+  the site's visible text it is about right for Arabic (0.4% wide on
+  average) and 4.5% wide for Kurdish, but single sentences are more than 3%
+  off either way (three in four Kurdish ones, two in five Arabic ones), so
+  no one size keeps every line break. Faces sized per weight on Arabic
+  letters were tried: Kurdish Projects went to 0.002, but other pages moved
+  more (Arabic Qasa 0.044 at 1440px, Arabic Contact 0.024 at 390px), 0.21 in
+  all over the 20 pages and widths against 0.17 before. Not kept. (Turbopack
+  ignores `adjustFontFallback: false`; naming a `fallback` replaces its
+  face.)
+- What would remove it is the owner's call, together with the Arabic fonts'
+  speed (step 7): `font-display: optional` (never a jump, but a first
+  visit's first page on a slow connection is set in the system's Arabic
+  face), a preload on Arabic and Kurdish pages (the fonts arrive sooner,
+  and a slow phone's first paint comes later), or lighter fonts.
+
+Not checked: Firefox and Safari, a real phone, a real loss of connection
+(airplane mode), and an update on GitHub Pages itself.
 
 ## How to check
 
@@ -342,6 +425,8 @@ checks the JavaScript limit; it deploys only from `main`.
 - Code that adds a history entry and scrolls (the bench, the command menu)
   calls `history.pushState` first: the browser keeps the place of the entry
   being left as it is at that moment.
+- A script that skips a view transition catches its `ready` promise
+  (`v.ready.catch(...)`), or Chrome logs the skip as an error.
 - Exhibits load their code near the screen (island pattern in
   `components/exhibits/*/`, `useIsland` in `components/useNearView.js`).
 
@@ -358,6 +443,9 @@ checks the JavaScript limit; it deploys only from `main`.
 - Latin words inside Arabic and Kurdish sentences ("Qasa", "Excel", "(POS)")
   are drawn by the Arabic face; setting them in Archivo caused layout shift,
   so it was backed out.
+- The Arabic fonts: keep them as they are, or make them lighter or load them
+  differently. That decides both their speed on a slow phone (step 7) and
+  the small jump when they arrive (see "Small fixes after step 7").
 
 ## The command menu
 
@@ -491,4 +579,5 @@ Found along the way, not changed (they are not this branch's):
   fixed what was wrong with Back.
 - Kurdish Projects at 390px sometimes logs a 0.036 layout shift while the
   page loads, with or without this branch (the font arriving, by its
-  timing).
+  timing). Looked into after step 7 and left for the owner; see "Small fixes
+  after step 7".

@@ -62,9 +62,12 @@ writes `out/manifest.{en,ar,ku}.webmanifest`, the offline page in each language
 the copy files) and the service worker `out/sw.js` (from `scripts/sw.js`). The
 worker's install list and cache version are read from that build's `out/`, so
 each deploy replaces the old cache on the visitor's next page load. The worker
-is registered by `components/OfflineWorker.jsx` in production builds only; to
-see it, serve `out/` as below. In Chrome, DevTools → Application → Service
-workers → Unregister clears it.
+also carries a hash of every file it may keep; the next deploy's worker copies
+what is unchanged out of the old cache (fonts and pictures saved as they were
+used included) and downloads only what changed, usually just the three home
+pages. The worker is registered by `components/OfflineWorker.jsx` in
+production builds only; to see it, serve `out/` as below. In Chrome, DevTools
+→ Application → Service workers → Unregister clears it.
 
 ## Deploying
 

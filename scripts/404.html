@@ -7,10 +7,16 @@
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0f3d30">
 <script>try{if(localStorage.getItem('lamp')==='on'){document.documentElement.dataset.lamp='on';
-document.querySelector('meta[name="theme-color"]').content='#e6ede7';}}catch(e){}</script>
+document.querySelector('meta[name="theme-color"]').content='#e6ede7';}}catch(e){}
+addEventListener('pagereveal',function(e){var v=e.viewTransition;if(!v)return;v.ready.catch(function(){});v.skipTransition();});</script>
 <link rel="icon" href="{{BASE}}/assets/favicon.svg" type="image/svg+xml">
 <style>
   /*{{FONTS}}*/
+  /* The site's pages ask for a transition into the next page. This page
+     takes part and then skips it (the script above), so it appears at once,
+     as before: Chrome reports a transition the page does not take part in as
+     an error, and so a skip whose rejection is not caught. */
+  @view-transition{navigation:auto}
   /* The mat, as on every page: a minor line every 24px, a heavier one every
      120px, drawn from the centre. Everything below is a whole number of
      cells tall, so each rule lies on a grid line. */

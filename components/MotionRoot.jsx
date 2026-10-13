@@ -16,7 +16,8 @@ import { useEffect } from 'react';
 //   2. Track the system preference live, so toggling "reduce motion" in the OS
 //      takes effect without a reload. A choice made with the Effects switch in
 //      the header is the visitor's own and is left alone.
-//   3. Keep Back and Forward to another page from gliding (pageTurnScroll).
+//   3. Put the page back where the visitor was on Back and Forward
+//      (pageTurnScroll).
 export default function MotionRoot() {
   useEffect(() => {
     const root = document.documentElement;
@@ -36,14 +37,25 @@ export default function MotionRoot() {
     };
 
     mq.addEventListener('change', sync);
-    window.navigation?.addEventListener('currententrychange', pageTurnScroll);
+    const nav = window.navigation;
+    nav?.addEventListener('currententrychange', pageTurnScroll);
+    if (nav) window.addEventListener('scroll', keepPlace, { passive: true });
     return () => {
       mq.removeEventListener('change', sync);
-      window.navigation?.removeEventListener('currententrychange', pageTurnScroll);
+      nav?.removeEventListener('currententrychange', pageTurnScroll);
+      window.removeEventListener('scroll', keepPlace);
     };
   }, []);
 
   return null;
+}
+
+// Where the visitor was on each history entry of this page, by entry.
+const places = new Map();
+
+function keepPlace() {
+  const key = window.navigation.currentEntry?.key;
+  if (key) places.set(key, window.scrollY);
 }
 
 // Back or Forward to another page of the site: the browser puts that page back
@@ -52,15 +64,27 @@ export default function MotionRoot() {
 // was scrolled: the page shows at the wrong place first and takes up to a
 // second to arrive, and the wheel does nothing until it has. For that one
 // restore the scroll is instant, as it is with motion off; the browser makes
-// it in the next frame. Back and Forward within a page still glide, from where
-// the visitor is. Only with the Navigation API, which says where the visitor
-// came from.
+// it in the next frame.
+//
+// Back and Forward within a page (an exhibit chosen on the bench or in the
+// command menu) still glide, from where the visitor is. But while the page is
+// still gliding somewhere else, Chrome takes that for the visitor scrolling
+// and leaves the page where it is; so the glide is stopped, and the page goes
+// back to the place kept here.
+//
+// Only with the Navigation API, which says where the visitor came from.
 function pageTurnScroll(e) {
   if (e.navigationType !== 'traverse' || !e.from?.url) return;
-  if (new URL(e.from.url).pathname === location.pathname) return;
   const root = document.documentElement;
-  root.style.scrollBehavior = 'auto';
-  requestAnimationFrame(() => requestAnimationFrame(() => root.style.removeProperty('scroll-behavior')));
+  if (new URL(e.from.url).pathname !== location.pathname) {
+    root.style.scrollBehavior = 'auto';
+    requestAnimationFrame(() => requestAnimationFrame(() => root.style.removeProperty('scroll-behavior')));
+    return;
+  }
+  const y = places.get(window.navigation.currentEntry.key);
+  if (y === undefined) return;
+  window.scrollTo({ top: window.scrollY, behavior: 'instant' });
+  window.scrollTo({ top: y });
 }
 
 // The visitor's own choice from the Effects switch: 'on', 'off', or null when

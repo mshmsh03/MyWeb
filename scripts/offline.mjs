@@ -103,11 +103,27 @@ export async function writeOffline({ base, fonts, fontFiles }) {
 
   // What installing costs a visitor: the files as GitHub Pages sends them,
   // text compressed, fonts and pictures as they are.
+  const fileOf = (url) => {
+    const path = url.slice(base.length);
+    return join(OUT, path.endsWith('/') ? `${path}index.html` : path);
+  };
   let bytes = 0;
   for (const url of shell) {
-    const path = url.slice(base.length);
-    const body = await readFile(join(OUT, path.endsWith('/') ? `${path}index.html` : path));
-    bytes += /\.(woff2|png|webp|jpg)$/.test(path) ? body.length : gzipSync(body, { level: 9 }).length;
+    const body = await readFile(fileOf(url));
+    bytes += /\.(woff2|png|webp|jpg)$/.test(url) ? body.length : gzipSync(body, { level: 9 }).length;
+  }
+
+  // Every file the worker may keep, with a hash of its content: the shell,
+  // every picture and every hashed file. The next build's worker copies what
+  // is unchanged out of this one's cache instead of downloading it again.
+  const files = {};
+  const contentHash = async (file) => createHash('sha256').update(await readFile(file)).digest('hex').slice(0, 12);
+  const under = async (dir) =>
+    (await readdir(join(OUT, dir), { recursive: true, withFileTypes: true }))
+      .filter((d) => d.isFile())
+      .map((d) => `${base}/${join(d.parentPath, d.name).slice(OUT.length + 1).replaceAll('\\', '/')}`);
+  for (const url of [...shell, ...(await under('assets')), ...(await under('_next/static'))].sort()) {
+    files[url] = await contentHash(fileOf(url));
   }
 
   // The version is a hash of the whole export, the worker and its shell list,
@@ -130,7 +146,10 @@ export async function writeOffline({ base, fonts, fontFiles }) {
       .replace("'/*{{BASE}}*/'", JSON.stringify(base))
       .replace("'/*{{VERSION}}*/'", JSON.stringify(version))
       .replace('/*{{SHELL}}*/ []', JSON.stringify([...shell]))
-      .replace('/*{{LANGS}}*/ []', JSON.stringify(LANGS)),
+      .replace('/*{{LANGS}}*/ []', JSON.stringify(LANGS))
+      .replace('/*{{FILES}}*/ {}', JSON.stringify(files)),
   );
-  console.log(`postbuild: sw.js ${version}, ${shell.size} files saved at install, ${(bytes / 1024).toFixed(0)}KB to download`);
+  console.log(
+    `postbuild: sw.js ${version}, ${shell.size} files saved at install, ${(bytes / 1024).toFixed(0)}KB to download the first time; ${Object.keys(files).length} files listed for updates`,
+  );
 }

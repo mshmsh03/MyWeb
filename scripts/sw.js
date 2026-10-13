@@ -1,7 +1,7 @@
 // The site's service worker: the pages keep working without a connection, the
-// way the till he builds keeps selling without one.
+// way the till Mustafa builds keeps selling without one.
 //
-// scripts/offline.mjs fills in the four constants below and publishes the
+// scripts/offline.mjs fills in the five constants below and publishes the
 // result as {BASE}/sw.js, so the shell list is read from each build's own
 // output and cannot drift from it.
 //
@@ -17,11 +17,16 @@ const BASE = '/*{{BASE}}*/';
 const VERSION = '/*{{VERSION}}*/';
 const SHELL = /*{{SHELL}}*/ [];
 const LANGS = /*{{LANGS}}*/ [];
+// Every file of this build the worker may keep (the shell, the pictures and
+// the hashed files), with a hash of its content.
+const FILES = /*{{FILES}}*/ {};
 
 // Other projects can share this origin (user.github.io/<repo>/), so the
 // caches carry the site's path and only ours are ever deleted.
 const PREFIX = `bench:${BASE}/:`;
 const CACHE = PREFIX + VERSION;
+// Each version keeps its FILES beside the files themselves, for the next one.
+const LIST = `${BASE}/sw-files`;
 
 // How long a page may wait for the network before the saved copy is shown.
 // The network answer still replaces the saved copy when it arrives.
@@ -35,17 +40,40 @@ const pageKey = (url) => url.origin + url.pathname;
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE)
+    (async () => {
+      const cache = await caches.open(CACHE);
+      await carryOver(cache);
+      const missing = [];
+      for (const url of SHELL) if (!(await cache.match(url, { ignoreVary: true }))) missing.push(url);
       // Pages are revalidated, so a page left in the HTTP cache by the last
       // build is not saved beside this build's files. Hashed files are safe
       // to take from the HTTP cache.
-      .then((cache) =>
-        cache.addAll(SHELL.map((u) => new Request(u, { cache: isStatic(u) ? 'default' : 'no-cache' }))),
-      )
-      .then(() => self.skipWaiting()),
+      await cache.addAll(missing.map((u) => new Request(u, { cache: isStatic(u) ? 'default' : 'no-cache' })));
+      await cache.put(LIST, new Response(JSON.stringify(FILES), { headers: { 'Content-Type': 'application/json' } }));
+      await self.skipWaiting();
+    })(),
   );
 });
+
+// What the last version saved and this build still has, unchanged, is copied
+// across instead of being downloaded again: the shell, and the pictures and
+// fonts saved as they were used. A version from before the list was kept is
+// trusted for the hashed files only, whose names change with their content.
+async function carryOver(cache) {
+  for (const key of await caches.keys()) {
+    if (!key.startsWith(PREFIX) || key === CACHE) continue;
+    const old = await caches.open(key);
+    const listed = await old.match(LIST);
+    const before = listed ? await listed.json().catch(() => ({})) : null;
+    for (const request of await old.keys()) {
+      const path = new URL(request.url).pathname;
+      if (!(path in FILES) || (await cache.match(path, { ignoreVary: true }))) continue;
+      if (before ? before[path] !== FILES[path] : !path.startsWith(`${BASE}/_next/static/`)) continue;
+      const res = await old.match(request, { ignoreVary: true });
+      if (res) await cache.put(path, res);
+    }
+  }
+}
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
@@ -118,6 +146,11 @@ async function networkFirst(request, url) {
   } catch (err) {
     const hit = await cache.match(pageKey(url), { ignoreVary: true });
     if (hit) return hit;
+    // The router asking for a page it has no copy of: an empty answer, which
+    // it takes as a plain page and loads in full, where the saved page or the
+    // offline page answers. Failing the request instead, it logged an error
+    // first.
+    if (request.headers.get('RSC') === '1') return new Response(null, { status: 204 });
     throw err;
   }
 }

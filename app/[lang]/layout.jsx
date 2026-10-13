@@ -71,7 +71,9 @@ export const metadata = {
 // It also decides the transition into this page when it was reached by a full
 // page load from another page of the site, which in practice is the language
 // switch: with motion on, the page turns in like a mirror (data-vt, styled in
-// globals.css); with motion off, the transition is skipped.
+// globals.css); with motion off, the transition is skipped. A skip rejects the
+// transition's ready promise, which Chrome reports as an error unless it is
+// caught.
 //
 // The timer is the failsafe: if the bundle never runs, MotionRoot never sets
 // data-hydrated and motion is switched back off. It allows eight seconds,
@@ -83,7 +85,7 @@ try{s=localStorage.getItem('effects');}catch(e){}
 var on=s?s==='on':!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 d.dataset.motion=on?'on':'off';
 addEventListener('pagereveal',function(e){var v=e.viewTransition;if(!v)return;
-if(d.dataset.motion!=='on'){v.skipTransition();return;}
+if(d.dataset.motion!=='on'){v.ready.catch(function(){});v.skipTransition();return;}
 d.dataset.vt='mirror';v.finished.finally(function(){delete d.dataset.vt;});});
 if(!on)return;
 setTimeout(function(){if(d.dataset.hydrated!=='1')d.dataset.motion='off';},8000);
