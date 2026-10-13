@@ -97,8 +97,11 @@ export default function BenchStage({ className, children }) {
         const vt = document.startViewTransition(() => {
           from.style.viewTransitionName = '';
           if (to) to.style.viewTransitionName = 'exhibit';
-          exhibit.scrollIntoView({ behavior: 'instant', block: 'start' });
+          // The new history entry before the scroll: the browser keeps the
+          // place of the entry being left as it is at pushState, so Back
+          // comes up to the bench again, not to the exhibit.
           history.pushState(null, '', `#${id}`);
+          exhibit.scrollIntoView({ behavior: 'instant', block: 'start' });
         });
         vt.finished.finally(() => {
           if (to) to.style.viewTransitionName = '';

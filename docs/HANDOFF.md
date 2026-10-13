@@ -92,8 +92,8 @@ follows), then `README.md` and `DEPLOY.md`.
 ## Numbers at the last push
 
 - Home page JavaScript, counting every chunk the page can load later (the
-  exhibits on scroll, the command menu when opened): 178.9KB (en) / 180.8KB
-  (ar) / 181.3KB (ku) of 200KB. The lamp switch is 1.3KB of it; the command
+  exhibits on scroll, the command menu when opened): 179.0KB (en) / 181.0KB
+  (ar) / 181.4KB (ku) of 200KB. The lamp switch is 1.3KB of it; the command
   menu 3.2KB (its button 0.7KB, the words 0.2KB, the menu's own chunk
   2.3KB).
 - Slow phone, measured in step 7 (method and detail below): largest paint
@@ -222,6 +222,84 @@ regression checks pass again; 37 unit tests pass.
 Firefox, Safari, a real phone, a real slow connection, and a screen reader by
 ear (NVDA, VoiceOver, TalkBack).
 
+## Back and Forward
+
+Fixed on 2026-10-13, after step 7, at the owner's request.
+
+What was wrong:
+- Back or Forward to another page glided there. With motion on, `html` has
+  `scroll-behavior: smooth`, and Chrome uses it when it puts a page back
+  where it was. The page went in where the page just left had been scrolled
+  (often its top), then glided to where the visitor had been: 0.65s on a
+  desktop, 0.85s on the slow phone profile, and the mouse wheel did nothing
+  until it got there. Forward from far down a long page to a short one showed
+  the short page's bottom first, footer and all, and glided up from there.
+- Back from an exhibit did not go back up to the bench. With motion on,
+  choosing a device on the bench scrolled to the exhibit inside the
+  transition and then pushed the `#exhibit` entry, so the entry being left
+  kept the exhibit's place instead of the bench's: Back changed the address
+  and stayed put. (With Effects off the device is a plain link and was fine;
+  the command menu pushes first and was fine.)
+- Not wrong, after all: the note under "The project transition" that Back to
+  Projects lands short of where the visitor was (1158 → 689). The check that
+  found it scrolled the page itself before clicking (bringing the sticky
+  header's link to the middle of the screen moves the page), so the page had
+  been left at 689. Back lands where the page was left, before this change
+  and after it.
+
+What changed:
+- `components/MotionRoot.jsx`, `pageTurnScroll`: on a traversal to another
+  page (the Navigation API's `currententrychange`, type "traverse", from an
+  entry with a different path), the page's scrolling is instant for two
+  frames. React draws the page during the router's `popstate` handling and
+  Chrome puts the place back in the next frame, so the page's first frame is
+  in place. Back and Forward within a page (between the bench and an exhibit)
+  still glide. Browsers without the Navigation API are left as they were.
+- `components/bench/BenchStage.jsx`: `history.pushState` before
+  `scrollIntoView` in the bench's transition.
+- `PageMorph` is unchanged; its two pages keep their own places (`manual`),
+  as before.
+
+Checked (built site, headless Chrome 155; Back and Forward sent as the
+browser's own buttons send them, `Page.navigateToHistoryEntry`):
+- Six round trips, each left from somewhere down the page, then Back, Forward
+  and Back again: Projects to About, home to Contact, home to Projects by the
+  link in the page, About to Projects, Qasa to Contact, Contact to home. In
+  English and Kurdish at 1440px and English and Arabic at 390px (touch), every
+  step lands exactly where the visitor was. Frame by frame (English 1440px,
+  and Arabic 390px with the CPU slowed 4x), the page's first frame is already
+  in place, on Back and on Forward to a short page; the previous build, run
+  alongside, glided as described above.
+- The bench and an exhibit, by the bench (Effects on and off) and by the
+  command menu, English 1440px and Arabic 390px: Back glides up to where the
+  visitor was, Forward down to the exhibit again.
+- Back across the language switch, with the browser's page memory and
+  without it: the page comes back in place without gliding (unchanged).
+- The project transition (English 1440px, Arabic 390px touch and with Effects
+  off, Kurdish with reduced motion), the lamp, the command menu, keyboard use
+  in all three languages: pass as before. 37 unit tests pass.
+- Layout shift. In some round trips the frame in which a page goes in at its
+  place is reported as a shift of the footer (0.12 to 0.25): Chrome measures
+  the footer's move between the two pages from the new scroll position. For
+  the browser's own Back and Forward the entry is marked as following input
+  (`hadRecentInput`), so it does not count towards CLS; a script calling
+  `history.back()` would count it, and the site never does. Before the change
+  the same kind of entry came on Forward instead (0.13), marked the same way.
+
+Not changed:
+- Back pressed while the page is still gliding within itself (within a
+  second of choosing an exhibit in the command menu) stays near the exhibit.
+- The command menu check failed 4 of 16 English runs on this build and none
+  of 15 on the previous one; the last 12 runs alternated the two builds and
+  all passed. In each failure the word typed after Esc and Ctrl+K never
+  reached the field: most likely Ctrl+K arrived before the menu had heard of
+  its own closing (`CommandButton` reads its state, which the dialog's
+  `close` event updates a task later) and so closed it again. A person cannot
+  press the two keys that close together; neither change touches the menu.
+
+Not checked: Firefox and Safari (whether they glide too), a real phone, and
+the phone's back gesture.
+
 ## How to check
 
 ```
@@ -261,6 +339,9 @@ checks the JavaScript limit; it deploys only from `main`.
   Arabic or Kurdish sentences): a separate run jumps when the Arabic font
   arrives and counts as layout shift.
 - Links never prefetch (`Anchor` in `components/sections.jsx`, header links).
+- Code that adds a history entry and scrolls (the bench, the command menu)
+  calls `history.pushState` first: the browser keeps the place of the entry
+  being left as it is at that moment.
 - Exhibits load their code near the screen (island pattern in
   `components/exhibits/*/`, `useIsland` in `components/useNearView.js`).
 
@@ -404,11 +485,10 @@ Not checked:
 - A real phone, and the timing on a slow one.
 
 Found along the way, not changed (they are not this branch's):
-- Back from another page (say About) to Projects, with no transition
-  involved, lands short of where the visitor was (1158 → 689 in one run,
-  1226 → 757 in another), on `redesign/interactive` as well. The browser's
-  own restoration under the router. The same `manual` and put-back approach
-  would fix it site-wide, but it touches every page.
+- Back from another page (say About) to Projects was recorded here as
+  landing short of where the visitor was (1158 → 689). It does not: the
+  check had moved the page before leaving it. See "Back and Forward", which
+  fixed what was wrong with Back.
 - Kurdish Projects at 390px sometimes logs a 0.036 layout shift while the
   page loads, with or without this branch (the font arriving, by its
   timing).

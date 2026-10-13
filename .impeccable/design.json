@@ -418,6 +418,11 @@
         "purpose": "Set before first paint unless reduced motion is asked for or Effects is off; switched off if the page has not hydrated in 8s, and back on as the visitor has it if the bundle arrives after that. Every animation hangs off it. Nothing loops."
       },
       {
+        "name": "page-scroll",
+        "value": "scroll-behavior: smooth, under the motion gate",
+        "purpose": "The page glides to a place within itself, Back and Forward within the page included. Back and Forward to another page put that page straight back where the visitor left it (MotionRoot)."
+      },
+      {
         "name": "bench-set-down",
         "value": "translate 0 -34px to 0, 480ms ease-set-down, 0 / 90 / 180ms apart, once",
         "purpose": "The three devices set down on the mat when first drawn."
