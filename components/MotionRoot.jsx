@@ -8,7 +8,11 @@ import { useEffect } from 'react';
 //
 // Two jobs the inline script cannot do:
 //   1. Confirm hydration. The inline script arms a timer that forces motion off
-//      if this never mounts, so a page whose script failed is left still.
+//      if this never mounts, so a page whose script failed is left still. A
+//      slow phone on a slow connection can take longer than the timer to get
+//      here, so motion is then put back as the visitor has it. Nothing replays:
+//      what moves when first drawn has already been drawn, as when Effects is
+//      switched on by hand.
 //   2. Track the system preference live, so toggling "reduce motion" in the OS
 //      takes effect without a reload. A choice made with the Effects switch in
 //      the header is the visitor's own and is left alone.
@@ -18,6 +22,12 @@ export default function MotionRoot() {
     root.dataset.hydrated = '1';
 
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const stored = readEffects();
+    const wanted = (stored ? stored === 'on' : !mq.matches) ? 'on' : 'off';
+    if (root.dataset.motion !== wanted) {
+      root.dataset.motion = wanted;
+      window.dispatchEvent(new Event('effectschange'));
+    }
     const sync = () => {
       if (readEffects() !== null) return;
       root.dataset.motion = mq.matches ? 'off' : 'on';

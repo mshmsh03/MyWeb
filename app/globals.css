@@ -321,9 +321,9 @@ html[data-vt='mirror']::view-transition-new(root) {
 
 /* ---------- Switching the lamp ----------
    The whole page is one picture while the lamp changes: the lit one grows out
-   of the switch over the dark one, or shrinks back into it. LampSwitch sets
-   where the switch is (--lamp-x, --lamp-y) and how far away the farthest
-   corner is (--lamp-r). Nothing fades, and nothing blends. */
+   of the switch over the dark one, or shrinks back into it. LampSwitch gives
+   the two pictures where the switch is (--lamp-x, --lamp-y) and how far away
+   the farthest corner is (--lamp-r). Nothing fades, and nothing blends. */
 @keyframes lamp-light {
   from {
     clip-path: circle(0 at var(--lamp-x) var(--lamp-y));

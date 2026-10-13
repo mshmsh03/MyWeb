@@ -74,7 +74,10 @@ export const metadata = {
 // globals.css); with motion off, the transition is skipped.
 //
 // The timer is the failsafe: if the bundle never runs, MotionRoot never sets
-// data-hydrated and motion is switched back off.
+// data-hydrated and motion is switched back off. It allows eight seconds,
+// because a slow phone on a slow connection can take four or five to get
+// there, and if the bundle is slower still, MotionRoot switches motion back
+// on when it does run.
 const ARM_MOTION = `(function(){try{var d=document.documentElement,s=null;
 try{s=localStorage.getItem('effects');}catch(e){}
 var on=s?s==='on':!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -83,7 +86,7 @@ addEventListener('pagereveal',function(e){var v=e.viewTransition;if(!v)return;
 if(d.dataset.motion!=='on'){v.skipTransition();return;}
 d.dataset.vt='mirror';v.finished.finally(function(){delete d.dataset.vt;});});
 if(!on)return;
-setTimeout(function(){if(d.dataset.hydrated!=='1')d.dataset.motion='off';},3000);
+setTimeout(function(){if(d.dataset.hydrated!=='1')d.dataset.motion='off';},8000);
 }catch(e){}})();`;
 
 // Lights the bench before the first paint if the visitor switched the lamp on

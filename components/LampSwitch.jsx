@@ -59,6 +59,19 @@ function setLamp(on) {
 // The lamp's transition, while it runs.
 let running = null;
 
+// Where the light comes from and how far it reaches, given to the
+// transition's two pictures only, which draw the circle from them
+// (globals.css). Set on the page's root they would be inherited by every
+// element, and the whole page would be restyled twice over before the light
+// could start: well over a tenth of a second on a slow phone.
+let aim = null;
+function aimLight(x, y, r) {
+  aim ??= document.head.appendChild(document.createElement('style'));
+  aim.textContent = r
+    ? `html::view-transition-old(root),html::view-transition-new(root){--lamp-x:${x}px;--lamp-y:${y}px;--lamp-r:${r}px}`
+    : '';
+}
+
 function toggle(button) {
   const root = document.documentElement;
   // Pressed again while the light is still moving: that change finishes at
@@ -81,9 +94,7 @@ function toggle(button) {
   const r = button.getBoundingClientRect();
   const x = r.left + r.width / 2;
   const y = r.top + r.height / 2;
-  root.style.setProperty('--lamp-x', `${x}px`);
-  root.style.setProperty('--lamp-y', `${y}px`);
-  root.style.setProperty('--lamp-r', `${Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))}px`);
+  aimLight(x, y, Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)));
   root.dataset.vt = on ? 'lamp-on' : 'lamp-off';
   const vt = document.startViewTransition(() => setLamp(on));
   running = vt;
@@ -99,7 +110,7 @@ function toggle(button) {
     root.removeEventListener('click', onStray);
     running = null;
     delete root.dataset.vt;
-    for (const p of ['--lamp-x', '--lamp-y', '--lamp-r']) root.style.removeProperty(p);
+    aimLight();
   });
 }
 
